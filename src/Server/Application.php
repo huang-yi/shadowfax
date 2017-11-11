@@ -91,7 +91,7 @@ class Application
     }
 
     /**
-     * @return \Illuminate\Contracts\Foundation\Application
+     * @return \Illuminate\Container\Container
      */
     public function getApplication()
     {
