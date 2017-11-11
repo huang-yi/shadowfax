@@ -11,7 +11,7 @@
 
 namespace HuangYi\Http\Server;
 
-use Illuminate\Contracts\Foundation\Application as ApplicationContract;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 
@@ -95,7 +95,7 @@ class Application
      */
     public function getApplication()
     {
-        if (! $this->application instanceof ApplicationContract) {
+        if (! $this->application instanceof Container) {
             $this->application = $this->loadApplication();
         }
 
