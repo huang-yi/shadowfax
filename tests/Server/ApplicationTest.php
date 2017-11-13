@@ -47,6 +47,12 @@ class ApplicationTest extends TestCase
     {
         $flag = false;
 
+        if (class_exists('\Laravel\Lumen\Application')) {
+            $this->assertTrue(true);
+
+            return;
+        }
+
         $application = $this->makeApplication();
         $request = Request::create('/');
         $response = $application->run($request);
