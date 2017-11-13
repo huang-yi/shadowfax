@@ -16,8 +16,6 @@
         "illuminate/support": "~5.1"
     },
     "require-dev": {
-        "laravel/framework": "~5.1",
-        "laravel/lumen-framework": "~5.1",
         "orchestra/testbench": "~3.1",
         "phpunit/phpunit": "~4.0|~5.0"
     },
