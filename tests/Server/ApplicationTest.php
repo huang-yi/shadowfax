@@ -22,53 +22,32 @@ class ApplicationTest extends TestCase
 
     public function testMake()
     {
-        $application = Application::make('laravel', $this->basePath . '/laravel');
+        $application = $this->makeApplication();
 
         $this->assertInstanceOf(Application::class, $application);
     }
 
-    public function testRun()
+    public function testMakeInvalidFramework()
     {
-        if (class_exists('\Illuminate\Foundation\Application')) {
-            $this->runLaravel();
-        } elseif (class_exists('\Laravel\Lumen\Application')) {
-            $this->runLumen();
-        } else {
-            $this->runOther();
-        }
+        $this->expectException(\Exception::class);
+
+        $this->makeApplication('other');
     }
 
-    public function runLaravel()
+    public function testRun()
     {
-        $application = Application::make('laravel', $this->basePath . '/laravel');
+        $application = $this->makeApplication();
         $response = $application->run(Request::create('/'));
 
         $this->assertInstanceOf(Response::class, $response);
         $this->assertSame('welcome', $response->getContent());
     }
 
-    public function runLumen()
-    {
-        $application = Application::make('lumen', $this->basePath . '/lumen');
-        $response = $application->run(Request::create('/'));
-
-        $this->assertInstanceOf(Response::class, $response);
-        $this->assertSame('hello', $response->getContent());
-    }
-
-    public function runOther()
-    {
-        $this->expectException(\Exception::class);
-
-        $application = Application::make('other', $this->basePath . '/laravel');
-        $application->run(Request::create('/'));
-    }
-
     public function testTerminate()
     {
         $flag = false;
 
-        $application = Application::make('laravel', $this->basePath . '/laravel');
+        $application = $this->makeApplication();
         $request = Request::create('/');
         $response = $application->run($request);
 
@@ -79,5 +58,20 @@ class ApplicationTest extends TestCase
         $application->terminate($request, $response);
 
         $this->assertTrue($flag);
+    }
+
+    protected function makeApplication($forceFramework = null)
+    {
+        if (! is_null($forceFramework)) {
+            $framework = $forceFramework;
+        } elseif (class_exists('\Illuminate\Foundation\Application')) {
+            $framework = 'laravel';
+        } elseif (class_exists('\Laravel\Lumen\Application')) {
+            $framework = 'lumen';
+        } else {
+            $framework = 'other';
+        }
+
+        return Application::make($framework, $this->basePath . '/' . $framework);
     }
 }
