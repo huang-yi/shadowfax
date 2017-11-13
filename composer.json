@@ -17,7 +17,6 @@
         "laravel/lumen-framework": "5.1.*"
     },
     "require-dev": {
-        "orchestra/testbench": "~3.1",
         "phpunit/phpunit": "~6.0"
     },
     "autoload": {
