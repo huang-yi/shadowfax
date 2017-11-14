@@ -16,6 +16,8 @@ use Swoole\Http\Server;
 
 class Manager
 {
+    const MAC_OSX = 'Darwin';
+
     /**
      * @var \Swoole\Http\Server
      */
@@ -265,6 +267,10 @@ class Manager
      */
     protected function setProcessName($process)
     {
+        if (PHP_OS === static::MAC_OSX) {
+            return;
+        }
+
         $serverName = 'swoole_http_server';
         $appName = $this->container['config']->get('app.name', 'Laravel');
 
