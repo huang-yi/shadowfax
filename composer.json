@@ -16,7 +16,7 @@
         "illuminate/support": "~5.1"
     },
     "require-dev": {
-        "huang-yi/swoole-watcher": "0.1.*",
+        "huang-yi/swoole-watcher": "0.0.*",
         "phpunit/phpunit": "~6.0"
     },
     "autoload": {
