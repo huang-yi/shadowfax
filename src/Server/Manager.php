@@ -87,6 +87,14 @@ class Manager
     }
 
     /**
+     * Reload swoole_http_server.
+     */
+    public function reload()
+    {
+        $this->server->reload();
+    }
+
+    /**
      * Initialize.
      */
     protected function initialize()
