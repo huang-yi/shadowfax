@@ -66,24 +66,7 @@ class ApplicationTest extends TestCase
         $this->assertTrue($flag);
     }
 
-    public function testLaravelResetProvider()
-    {
-        $application = $this->makeApplication();
-
-        $response = $application->run(Request::create('/'));
-        $app = $application->getApplication();
-        $this->assertSame('bar', $app['singleton.test']->foo);
-        $app->singleton('singleton.test', function () {
-            $obj = new \stdClass;
-            $obj->foo = 'foo';
-            return $obj;
-        });
-        $this->assertSame('foo', $app['singleton.test']->foo);
-        $response = $application->resetProviders();
-        $this->assertSame('bar', $app['singleton.test']->foo);
-    }
-
-    public function testLumenResetProvider()
+    public function testResetProvider()
     {
         $application = $this->makeApplication();
 
