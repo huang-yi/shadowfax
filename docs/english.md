@@ -60,29 +60,39 @@ For example, if you want to set the 'max_request':
 
 > The swoole_http_server can only run in cli environment, and this package provides convenient artisan commands to manage it.
 
-Start the swoole_http_server:
+Start:
 
 ```
 $ php artisan swoole:http start
 ```
 
-Stop the swoole_http_server:
+Stop:
 
 ```
 $ php artisan swoole:http stop
 ```
 
-Restart the swoole_http_server:
+Restart:
 
 ```
 $ php artisan swoole:http restart
 ```
 
-Reload the swoole_http_server:
+Reload:
 
 ```
 $ php artisan swoole:http reload
 ```
+
+Watch:
+
+```
+$ php artisan swoole:http watch
+```
+
+> The watch command only uses in the development environment. The processes will automatically reload when file changes.
+  It will greatly improve your development experience. This command relies on inotify extension, and you can use this
+  command `pecl install inotify` to install.
 
 ## Nginx Configuration
 

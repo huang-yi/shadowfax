@@ -60,29 +60,38 @@ $ php artisan vendor:publish
 
 > swoole_http_server只能运行在cli模式下，因此该拓展包也提供了方便的artisan命令来做管理。
 
-启动swoole_http_server：
+启动：
 
 ```
 $ php artisan swoole:http start
 ```
 
-停止swoole_http_server：
+停止：
 
 ```
 $ php artisan swoole:http stop
 ```
 
-重启swoole_http_server：
+重启：
 
 ```
 $ php artisan swoole:http restart
 ```
 
-重载swoole_http_server：
+重载：
 
 ```
 $ php artisan swoole:http reload
 ```
+
+监控：
+
+```
+$ php artisan swoole:http watch
+```
+
+> 监听模式仅适用于开发环境。当监控到文件发生改变时，进程会自动重载，这样就省去了手动重载的麻烦，让你拥有更愉悦的开发体验。
+  该命令依赖于inotify拓展，可使用命令`pecl install inotify`快速安装。
 
 ## 配置Nginx
 

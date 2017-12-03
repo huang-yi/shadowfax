@@ -11,7 +11,9 @@
 
 namespace HuangYi\Http\Commands;
 
+use HuangYi\Watcher\Watcher;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Event;
 use Swoole\Process;
 
 class HttpServerCommand extends Command
@@ -21,7 +23,7 @@ class HttpServerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'swoole:http {action : start|stop|restart|reload}';
+    protected $signature = 'swoole:http {action : start|stop|restart|reload|watch}';
 
     /**
      * The console command description.
@@ -31,7 +33,7 @@ class HttpServerCommand extends Command
     protected $description = 'Swoole HTTP Server controller.';
 
     /**
-     * The console command action. start|stop|restart|reload
+     * The console command action.
      *
      * @var string
      */
@@ -61,6 +63,8 @@ class HttpServerCommand extends Command
      */
     protected function runAction()
     {
+        $this->detectSwoole();
+
         $this->{$this->action}();
     }
 
@@ -149,14 +153,43 @@ class HttpServerCommand extends Command
     }
 
     /**
+     * Watch.
+     */
+    public function watch()
+    {
+        if ($this->isRunning($this->getPid())) {
+            $this->stop();
+        }
+
+        if ($this->isWatched()) {
+            $this->removeWatchedFile();
+        }
+
+        $this->laravel['config']->set('http.server.options.daemonize', 0);
+
+        Event::listen('http.workerStart', function () {
+            if ($this->createWatchedFile()) {
+                $watcher = $this->createWatcher();
+                $watcher->watch();
+            }
+        });
+
+        Event::listen('http.workerStop', function () {
+            $this->removeWatchedFile();
+        });
+
+        $this->start();
+    }
+
+    /**
      * Initialize command action.
      */
     protected function initAction()
     {
         $this->action = $this->argument('action');
 
-        if (! in_array($this->action, ['start', 'stop', 'restart', 'reload'])) {
-            $this->error("Invalid argument '{$this->action}'. Expected 'start', 'stop', 'restart' or 'reload'.");
+        if (! in_array($this->action, ['start', 'stop', 'restart', 'reload', 'watch'])) {
+            $this->error('Unexpected argument "' . $this->action . '".');
             exit(1);
         }
     }
@@ -250,5 +283,86 @@ class HttpServerCommand extends Command
         if (file_exists($this->getPidPath())) {
             unlink($this->getPidPath());
         }
+    }
+
+    /**
+     * Extension swoole is required.
+     */
+    protected function detectSwoole()
+    {
+        if (! extension_loaded('swoole')) {
+            $this->error('Extension swoole is required!');
+
+            exit(1);
+        }
+    }
+
+    /**
+     * Create watcher.
+     *
+     * @return \HuangYi\Watcher\Watcher
+     */
+    protected function createWatcher()
+    {
+        $config = $this->laravel['config']['http.watcher'];
+        $directories = $config['directories'];
+        $excludedDirectories = $config['excluded_directories'];
+        $suffixes = $config['suffixes'];
+
+        $watcher = new Watcher($directories, $excludedDirectories, $suffixes);
+
+        return $watcher->setHandler(function () {
+            $this->info('Reload swoole_http_server.');
+
+            $this->laravel['swoole.http']->reload();
+        });
+    }
+
+    /**
+     * If watcher is running.
+     *
+     * @return bool
+     */
+    protected function isWatched()
+    {
+        return file_exists($this->getWatchedFile());
+    }
+
+    /**
+     * Create watched flag file.
+     *
+     * @return bool
+     */
+    protected function createWatchedFile()
+    {
+        if (! $this->isWatched()) {
+            return touch($this->getWatchedFile());
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove watched flag file.
+     *
+     * @return bool
+     */
+    protected function removeWatchedFile()
+    {
+        if ($this->isWatched()) {
+            return unlink($this->getWatchedFile());
+        }
+
+        return false;
+    }
+
+    /**
+     * Get watched flag file.
+     *
+     * @return string
+     */
+    protected function getWatchedFile()
+    {
+        return base_path('storage/logs/.watched');
     }
 }
