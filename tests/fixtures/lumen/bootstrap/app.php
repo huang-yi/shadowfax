@@ -20,10 +20,6 @@ $app->register(HuangYi\Http\Tests\Fixtures\Lumen\App\Providers\TestServiceProvid
 
 $app->configure('http');
 
-$app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
-    require __DIR__ . '/../routes/web.php';
-});
-
 if (property_exists($app, 'router')) {
     $app->router->group(['namespace' => 'App\Http\Controllers'], function ($app) {
         require __DIR__ . '/../routes/web.php';
