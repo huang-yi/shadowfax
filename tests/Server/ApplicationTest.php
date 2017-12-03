@@ -68,7 +68,8 @@ class ApplicationTest extends TestCase
 
     public function testLaravelResetProvider()
     {
-        $application = Application::make('laravel', $this->basePath . '/laravel');
+        $application = $this->makeApplication();
+
         $response = $application->run(Request::create('/'));
         $app = $application->getApplication();
         $this->assertSame('bar', $app['singleton.test']->foo);
@@ -84,7 +85,8 @@ class ApplicationTest extends TestCase
 
     public function testLumenResetProvider()
     {
-        $application = Application::make('lumen', $this->basePath . '/lumen');
+        $application = $this->makeApplication();
+
         $response = $application->run(Request::create('/'));
         $app = $application->getApplication();
         $this->assertSame('bar', $app['singleton.test']->foo);
