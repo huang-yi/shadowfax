@@ -27,4 +27,8 @@ return [
 
     ],
 
+    'providers' => [
+        HuangYi\Http\Tests\Fixtures\Lumen\App\Providers\TestServiceProvider::class,
+    ],
+
 ];

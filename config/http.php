@@ -29,4 +29,8 @@ return [
 
     ],
 
+    'providers' => [
+        // App\Providers\AuthServiceProvider::class,
+    ],
+
 ];

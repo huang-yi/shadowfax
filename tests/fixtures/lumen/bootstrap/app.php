@@ -16,6 +16,10 @@ $app->singleton(
 
 $app->register(HuangYi\Http\LumenServiceProvider::class);
 
+$app->register(HuangYi\Http\Tests\Fixtures\Lumen\App\Providers\TestServiceProvider::class);
+
+$app->configure('http');
+
 $app->group(['namespace' => 'App\Http\Controllers'], function ($app) {
     require __DIR__ . '/../routes/web.php';
 });
