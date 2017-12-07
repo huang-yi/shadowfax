@@ -28,6 +28,7 @@ return [
         Illuminate\Filesystem\FilesystemServiceProvider::class,
         HuangYi\Http\LaravelServiceProvider::class,
         HuangYi\Http\Tests\Fixtures\Laravel\App\Providers\RouteServiceProvider::class,
+        HuangYi\Http\Tests\Fixtures\Laravel\App\Providers\TestServiceProvider::class,
     ],
 
     'aliases' => [],

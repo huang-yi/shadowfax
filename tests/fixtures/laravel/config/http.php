@@ -27,4 +27,8 @@ return [
 
     ],
 
+    'providers' => [
+        HuangYi\Http\Tests\Fixtures\Laravel\App\Providers\TestServiceProvider::class,
+    ],
+
 ];

@@ -11,6 +11,7 @@
 
 namespace HuangYi\Http\Server;
 
+use Illuminate\Support\ServiceProvider;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
@@ -44,6 +45,13 @@ class Application
     protected $kernel;
 
     /**
+     * Preserved service providers to be reset.
+     *
+     * @var array
+     */
+    protected $providers = [];
+
+    /**
      * Make an application.
      *
      * @param string $framework
@@ -67,6 +75,7 @@ class Application
         $this->setBasePath($basePath);
 
         $this->bootstrap();
+        $this->initProviders();
     }
 
     /**
@@ -77,6 +86,36 @@ class Application
         if ($this->framework == 'laravel') {
             $bootstrappers = $this->getBootstrappers();
             $this->getApplication()->bootstrapWith($bootstrappers);
+        }
+    }
+
+    /**
+     * Initialize customized service providers.
+     */
+    protected function initProviders()
+    {
+        $app = $this->getApplication();
+        $providers = $app['config']->get('http.providers');
+        foreach ($providers as $provider) {
+            if (! $provider instanceof ServiceProvider) {
+                $provider = new $provider($app);
+            }
+            $this->providers[get_class($provider)] = $provider;
+        }
+    }
+
+    /**
+     * Re-register and reboot service providers.
+     */
+    public function resetProviders()
+    {
+        foreach ($this->providers as $key => $provider) {
+            if (method_exists($provider, 'register')) {
+                $provider->register();
+            }
+            if (method_exists($provider, 'boot')) {
+                $this->getApplication()->call([$provider, 'boot']);
+            }
         }
     }
 
