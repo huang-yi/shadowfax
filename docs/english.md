@@ -38,6 +38,8 @@ If you want to change the default configurations, please run the following comma
 $ php artisan vendor:publish
 ```
 
+### server
+
 `server.host`: The swoole_http_server host.
 
 `server.port`: The swoole_http_server port.
@@ -55,6 +57,16 @@ For example, if you want to set the 'max_request':
     ]
 ]
 ```
+
+`providers`: A list of ServiceProviders you want to re-register on every request.
+
+### watcher
+
+`watcher.directories`: The directories to be watched;
+
+`watcher.excluded_directories`: The directories to be excluded;
+
+`watcher.suffixes`: The file will be watched if its suffix is in the `suffixes` array;
 
 ## Command
 
@@ -90,9 +102,9 @@ Watch:
 $ php artisan swoole:http watch
 ```
 
-> The watch command only uses in the development environment. The processes will automatically reload when file changes.
-  It will greatly improve your development experience. This command relies on inotify extension, and you can use this
-  command `pecl install inotify` to install.
+> It is recommended to use this command only in development environment. This command can reload the processes
+  automatically when file changes. It will greatly improve your development experience. This command relies on inotify
+  extension, and you can run the command `pecl install inotify` to install.
 
 ## Nginx Configuration
 

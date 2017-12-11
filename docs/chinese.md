@@ -38,6 +38,8 @@ $app->register(HuangYi\Http\LumenServiceProvider::class);
 $ php artisan vendor:publish
 ```
 
+### Server配置
+
 `server.host`：swoole_http_server监听的IP地址。
 
 `server.port`: swoole_http_server监听的端口。
@@ -55,6 +57,16 @@ $ php artisan vendor:publish
     ]
 ]
 ```
+
+`providers`：该选项用于配置每次请求时需要被重置的ServiceProvider列表，这能帮助开发者避免单例带来的污染问题（注意：并非所有的单例都会带来污染问题，请分析具体的使用场景）。例如Laravel的`auth`组件就是一个典型的单例，在swoole环境下，如果不重置单例，就会导致后续登录用户的身份错乱。
+
+### Watcher配置
+
+`watcher.directories`：被监控的目录列表；
+
+`watcher.excluded_directories`：不被监控的目录列表；
+
+`watcher.suffixes`：文件后缀列表，只有符合后缀条件的文件才会被监控；
 
 ## 命令
 
@@ -90,7 +102,7 @@ $ php artisan swoole:http reload
 $ php artisan swoole:http watch
 ```
 
-> 监听模式仅适用于开发环境。当监控到文件发生改变时，进程会自动重载，这样就省去了手动重载的麻烦，让你拥有更愉悦的开发体验。
+> 监听模式建议使用于开发环境。当监控到文件发生改变时，进程会自动重载，这样就省去了手动重载的麻烦，让你拥有更愉悦的开发体验。
   该命令依赖于inotify拓展，可使用命令`pecl install inotify`快速安装。
 
 ## 配置Nginx
