@@ -2,42 +2,27 @@
 
 return [
 
+    'host' => env('HTTP_HOST', '127.0.0.1'),
+
+    'port' => env('HTTP_PORT', '1215'),
+
     /*
     |--------------------------------------------------------------------------
-    | HTTP server configurations.
+    | Swoole http server configurations.
     |--------------------------------------------------------------------------
     |
     | @see https://wiki.swoole.com/wiki/page/274.html
     |
     */
 
-    'server' => [
+    'options' => [
 
-        'host' => env('HTTP_SERVER_HOST', '127.0.0.1'),
+        'pid_file' => env('HTTP_OPTIONS_PID_FILE', base_path('storage/logs/http.pid')),
 
-        'port' => env('HTTP_SERVER_PORT', '1215'),
+        'log_file' => env('HTTP_OPTIONS_LOG_FILE', base_path('storage/logs/http.log')),
 
-        'options' => [
+        'daemonize' => env('HTTP_OPTIONS_DAEMONIZE', 1),
 
-            'pid_file' => env('HTTP_SERVER_OPTIONS_PID_FILE', base_path('storage/logs/http.pid')),
-
-            'log_file' => env('HTTP_SERVER_OPTIONS_LOG_FILE', base_path('storage/logs/http.log')),
-
-            'daemonize' => env('HTTP_SERVER_OPTIONS_DAEMONIZE', 1),
-
-        ],
-
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Reset providers configurations.
-    |--------------------------------------------------------------------------
-    |
-    */
-
-    'providers' => [
-        // App\Providers\AuthServiceProvider::class,
     ],
 
     /*
