@@ -17,7 +17,6 @@
     ],
     "require": {
         "huang-yi/laravel-swoole-foundation": "dev-master",
-        "huang-yi/swoole-watcher": "0.0.*",
         "illuminate/console": "~5.6",
         "illuminate/contracts": "~5.6",
         "illuminate/http": "~5.6",
