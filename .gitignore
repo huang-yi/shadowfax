@@ -1,7 +1,4 @@
-# Files
+/.idea
+/vendor
 phpunit.xml
 composer.lock
-
-# Folders
-vendor
-.idea
