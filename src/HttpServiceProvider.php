@@ -1,28 +1,12 @@
 <?php
 
-/*
- * This file is part of the huang-yi/laravel-swoole-http package.
- *
- * (c) Huang Yi <coodeer@163.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace HuangYi\Swoole\Http;
 
-namespace HuangYi\Http;
-
-use HuangYi\Http\Commands\HttpServerCommand;
+use HuangYi\Swoole\Http\Console\HttpServerCommand;
 use Illuminate\Support\ServiceProvider;
 
-abstract class HttpServiceProvider extends ServiceProvider
+class HttpServiceProvider extends ServiceProvider
 {
-    /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
     /**
      * Register the service provider.
      *
@@ -34,13 +18,6 @@ abstract class HttpServiceProvider extends ServiceProvider
         $this->registerManager();
         $this->registerCommands();
     }
-
-    /**
-     * Register manager.
-     *
-     * @return void
-     */
-    abstract protected function registerManager();
 
     /**
      * Boot the service provider.
@@ -60,6 +37,18 @@ abstract class HttpServiceProvider extends ServiceProvider
     protected function mergeConfig()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/http.php', 'http');
+    }
+
+    /**
+     * Register manager.
+     *
+     * @return void
+     */
+    protected function registerManager()
+    {
+        $this->app->singleton('swoole.http', function ($app) {
+            return new ServerManager($app, $app['config']['http']);
+        });
     }
 
     /**
