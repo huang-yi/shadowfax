@@ -1,5 +1,5 @@
 {
-    "name": "huang-yi/laravel-swoole-http",
+    "name": "huangyi/laravel-swoole-http",
     "description": "High performance HTTP server based on Swoole. Speeds up your Laravel and Lumen applications.",
     "keywords": ["swoole", "laravel", "lumen", "http", "server", "performance"],
     "license": "MIT",
