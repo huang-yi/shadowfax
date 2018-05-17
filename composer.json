@@ -9,12 +9,6 @@
             "email": "coodeer@163.com"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://gitee.com/huang-yi/laravel-swoole-foundation.git"
-        }
-    ],
     "require": {
         "huang-yi/laravel-swoole-foundation": "dev-master",
         "illuminate/console": "~5.6",
