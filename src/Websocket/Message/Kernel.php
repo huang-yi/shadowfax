@@ -40,7 +40,7 @@ class Kernel
     {
         try {
             $message = $this->parse($frame->data);
-            $message->setSocketId($frame->id);
+            $message->setSocketId($frame->fd);
 
             $route = $this->findRoute($message);
 
