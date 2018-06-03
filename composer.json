@@ -10,23 +10,39 @@
         }
     ],
     "require": {
-        "huang-yi/laravel-swoole-foundation": "dev-master",
-        "illuminate/console": "~5.6",
-        "illuminate/contracts": "~5.6",
-        "illuminate/http": "~5.6",
-        "illuminate/support": "~5.6"
+        "illuminate/console": "~5.2",
+        "illuminate/contracts": "~5.2",
+        "illuminate/http": "~5.2",
+        "illuminate/pipeline": "~5.2",
+        "illuminate/redis": "~5.2",
+        "illuminate/routing": "~5.2",
+        "illuminate/support": "~5.2"
     },
     "require-dev": {
         "phpunit/phpunit": "~6.0"
     },
     "autoload": {
         "psr-4": {
-            "HuangYi\\Swoole\\Http\\": "src"
+            "HuangYi\\Http\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "HuangYi\\Swoole\\Http\\Tests\\": "tests"
+            "HuangYi\\Http\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "HuangYi\\Http\\HttpServiceProvider"
+            ],
+            "aliases": {
+                "SwooleServer": "HuangYi\\Http\\Facades\\Server",
+                "SwooleTable": "HuangYi\\Http\\Facades\\Table",
+                "WebsocketNamespace": "HuangYi\\Http\\Facades\\WebsocketNamespace",
+                "WebsocketRoute": "HuangYi\\Http\\Facades\\WebsocketRoute",
+                "MessageRoute": "HuangYi\\Http\\Facades\\MessageRoute"
+            }
         }
     }
 }

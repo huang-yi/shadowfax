@@ -1,19 +1,258 @@
 <?php
 
-namespace HuangYi\Swoole\Http\Console;
+namespace HuangYi\Http\Console;
 
-use HuangYi\Swoole\Foundation\ServerCommand;
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Event;
+use Swoole\Process;
 
-class HttpServerCommand extends ServerCommand
+class HttpServerCommand extends Command
 {
     /**
-     * Server name.
+     * The name and signature of the console command.
      *
-     * @return string
+     * @var string
      */
-    public function server() : string
+    protected $signature = 'swoole:http {action : start|stop|restart|reload|watch}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Swoole HTTP Server controller.';
+
+    /**
+     * The console command action.
+     *
+     * @var string
+     */
+    protected $action;
+
+    /**
+     *
+     * The pid.
+     *
+     * @var int
+     */
+    protected $pid;
+
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
+    public function handle()
     {
-        return 'http';
+        $this->initAction();
+        $this->runAction();
+    }
+
+    /**
+     * Run action.
+     */
+    protected function runAction()
+    {
+        $this->detectSwoole();
+
+        $this->{$this->action}();
+    }
+
+    /**
+     * Run swoole_http_server.
+     */
+    protected function start()
+    {
+        if ($this->isRunning($this->getPid())) {
+            $this->error('Failed! swoole_http_server process is already running.');
+            exit(1);
+        }
+
+        $this->info('Starting swoole http server...');
+
+        $this->info('> (You can run this command to ensure the ' .
+            'swoole_http_server process is running: ps aux|grep "swoole")');
+
+        $this->laravel->make('swoole.server')->start();
+    }
+
+    /**
+     * Stop swoole_http_server.
+     */
+    protected function stop()
+    {
+        $pid = $this->getPid();
+
+        if (! $this->isRunning($pid)) {
+            $this->error("Failed! There is no swoole_http_server process running.");
+            exit(1);
+        }
+
+        $this->info('Stopping swoole_http_server...');
+
+        $isRunning = $this->killProcess($pid, SIGTERM, 15);
+
+        if ($isRunning) {
+            $this->error('Unable to stop the swoole_http_server process.');
+            exit(1);
+        }
+
+        // I don't known why Swoole didn't trigger "onShutdown" after sending SIGTERM.
+        // So we should manually remove the pid file.
+        $this->removePidFile();
+
+        $this->info('> success');
+    }
+
+    /**
+     * Restart swoole http server.
+     */
+    protected function restart()
+    {
+        $pid = $this->getPid();
+
+        if ($this->isRunning($pid)) {
+            $this->stop();
+        }
+
+        $this->start();
+    }
+
+    /**
+     * Reload.
+     */
+    protected function reload()
+    {
+        $pid = $this->getPid();
+
+        if (! $this->isRunning($pid)) {
+            $this->error("Failed! There is no swoole_http_server process running.");
+            exit(1);
+        }
+
+        $this->info('Reloading swoole_http_server...');
+
+        $isRunning = $this->killProcess($pid, SIGUSR1);
+
+        if (! $isRunning) {
+            $this->error('> failure');
+            exit(1);
+        }
+
+        $this->info('> success');
+    }
+
+    /**
+     * Watch.
+     */
+    public function watch()
+    {
+        if ($this->isRunning($this->getPid())) {
+            $this->stop();
+        }
+
+        if ($this->isWatched()) {
+            $this->removeWatchedFile();
+        }
+
+        $this->laravel['config']->set('http.options.daemonize', 0);
+
+        Event::listen('http.workerStart', function () {
+            if ($this->createWatchedFile()) {
+                $watcher = $this->createWatcher();
+                $watcher->watch();
+            }
+        });
+
+        Event::listen('http.workerStop', function () {
+            $this->removeWatchedFile();
+        });
+
+        $this->start();
+    }
+
+    /**
+     * Initialize command action.
+     */
+    protected function initAction()
+    {
+        $this->action = $this->argument('action');
+
+        if (! in_array($this->action, ['start', 'stop', 'restart', 'reload', 'watch'])) {
+            $this->error('Unexpected argument "' . $this->action . '".');
+            exit(1);
+        }
+    }
+
+    /**
+     * If Swoole process is running.
+     *
+     * @param int $pid
+     * @return bool
+     */
+    protected function isRunning($pid)
+    {
+        if (! $pid) {
+            return false;
+        }
+
+        Process::kill($pid, 0);
+
+        return ! swoole_errno();
+    }
+
+    /**
+     * Kill process.
+     *
+     * @param int $pid
+     * @param int $sig
+     * @param int $wait
+     * @return bool
+     */
+    protected function killProcess($pid, $sig, $wait = 0)
+    {
+        Process::kill($pid, $sig);
+
+        if ($wait) {
+            $start = time();
+
+            do {
+                if (! $this->isRunning($pid)) {
+                    break;
+                }
+
+                usleep(100000);
+            } while (time() < $start + $wait);
+        }
+
+        return $this->isRunning($pid);
+    }
+
+    /**
+     * Get pid.
+     *
+     * @return int|null
+     */
+    protected function getPid()
+    {
+        if ($this->pid) {
+            return $this->pid;
+        }
+
+        $pid = null;
+        $path = $this->getPidPath();
+
+        if (file_exists($path)) {
+            $pid = (int) file_get_contents($path);
+
+            if (! $pid) {
+                $this->removePidFile();
+            } else {
+                $this->pid = $pid;
+            }
+        }
+
+        return $this->pid;
     }
 
     /**
@@ -21,8 +260,99 @@ class HttpServerCommand extends ServerCommand
      *
      * @return string
      */
-    protected function getPidPath() : string
+    protected function getPidPath()
     {
-        return $this->laravel['config']['http.options.pid_file'];
+        return $this->laravel['config']->get('http.options.pid_file');
+    }
+
+    /**
+     * Remove Pid file.
+     */
+    protected function removePidFile()
+    {
+        if (file_exists($this->getPidPath())) {
+            unlink($this->getPidPath());
+        }
+    }
+
+    /**
+     * Extension swoole is required.
+     */
+    protected function detectSwoole()
+    {
+        if (! extension_loaded('swoole')) {
+            $this->error('Extension swoole is required!');
+
+            exit(1);
+        }
+    }
+
+    /**
+     * Create watcher.
+     *
+     * @return \HuangYi\Watcher\Watcher
+     */
+    protected function createWatcher()
+    {
+        $config = $this->laravel['config']['http.watcher'];
+        $directories = $config['directories'];
+        $excludedDirectories = $config['excluded_directories'];
+        $suffixes = $config['suffixes'];
+
+        $watcher = new Watcher($directories, $excludedDirectories, $suffixes);
+
+        return $watcher->setHandler(function () {
+            $this->info('Reload swoole_http_server.');
+
+            $this->laravel['swoole.server']->reload();
+        });
+    }
+
+    /**
+     * If watcher is running.
+     *
+     * @return bool
+     */
+    protected function isWatched()
+    {
+        return file_exists($this->getWatchedFile());
+    }
+
+    /**
+     * Create watched flag file.
+     *
+     * @return bool
+     */
+    protected function createWatchedFile()
+    {
+        if (! $this->isWatched()) {
+            return touch($this->getWatchedFile());
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove watched flag file.
+     *
+     * @return bool
+     */
+    protected function removeWatchedFile()
+    {
+        if ($this->isWatched()) {
+            return unlink($this->getWatchedFile());
+        }
+
+        return false;
+    }
+
+    /**
+     * Get watched flag file.
+     *
+     * @return string
+     */
+    protected function getWatchedFile()
+    {
+        return base_path('storage/logs/.watched');
     }
 }
