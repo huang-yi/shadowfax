@@ -44,12 +44,12 @@ class NamespaceManager
     /**
      * Leave namespace.
      *
-     * @param string $path
      * @param int $socketId
      * @return void
      */
-    public function leave($path, $socketId)
+    public function leave($socketId)
     {
+        $path = $this->getPath($socketId);
         $pathKey = $this->getPathKey($path);
         $clientKey = $this->getClientKey($socketId);
 
