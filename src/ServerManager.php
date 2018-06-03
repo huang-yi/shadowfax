@@ -1,37 +1,48 @@
 <?php
 
-namespace HuangYi\Swoole\Http;
+namespace HuangYi\Http;
 
-use HuangYi\Swoole\Foundation\Contracts\ApplicationContract;
-use HuangYi\Swoole\Foundation\Contracts\ServerContract;
-use HuangYi\Swoole\Foundation\LaravelApplication;
-use HuangYi\Swoole\Foundation\LumenApplication;
-use HuangYi\Swoole\Http\Request as HttpRequest;
-use HuangYi\Swoole\Http\Response as HttpResponse;
+use HuangYi\Http\Contracts\TaskContract;
+use HuangYi\Http\Transformers\RequestTransformer;
+use HuangYi\Http\Transformers\ResponseTransformer;
+use HuangYi\Swoole\Websocket\Message\Kernel as MessageKernel;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Http\Request as IlluminateRequest;
-use Swoole\Http\Server;
+use Illuminate\Contracts\Http\Kernel as LaravelHttpKernel;
+use Laravel\Lumen\Application as LumenApplication;
+use RuntimeException;
+use Swoole\Http\Server as HttpServer;
+use Swoole\Table;
+use Swoole\Websocket\Server as WebsocketServer;
 
-class ServerManager implements ServerContract
+class ServerManager
 {
     /**
-     * The Laravel/Lumen container.
+     * The illuminate container.
      *
      * @var \Illuminate\Contracts\Container\Container
      */
     protected $container;
 
     /**
-     * The Swoole Http Server.
+     * The Swoole Server.
      *
-     * @var \Swoole\Http\Server
+     * @var \Swoole\Server
      */
     protected $server;
 
     /**
-     * @var \HuangYi\Swoole\Foundation\Contracts\ApplicationContract
+     * The laravel http kernel.
+     *
+     * @var \Illuminate\Contracts\Http\Kernel
      */
-    protected $application;
+    protected $laravelHttpKernel;
+
+    /**
+     * The laravel websocket kernel.
+     *
+     * @var \Illuminate\Contracts\Http\Kernel
+     */
+    protected $laravelWebsocketKernel;
 
     /**
      * Server events.
@@ -45,7 +56,7 @@ class ServerManager implements ServerContract
     ];
 
     /**
-     * The swoole-http-server Manager.
+     * The swoole server Manager.
      *
      * @param \Illuminate\Contracts\Container\Container $container
      * @return void
@@ -53,13 +64,28 @@ class ServerManager implements ServerContract
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->server = $this->createServer();
 
-        $this->macros();
+        $this->init();
     }
 
     /**
-     * Start swoole-http-server.
+     * Initialize.
+     *
+     * @return void
+     */
+    protected function init()
+    {
+        $host = $this->getConfig('host', '127.0.0.1');
+        $port = $this->getConfig('port', '1215');
+        $options = $this->getConfig('options', []);
+        $tables = $this->getConfig('tables', []);
+
+        $this->server = $this->createServer($host, $port, $options);
+        $this->server->tables = $this->createTables($tables);
+    }
+
+    /**
+     * Start swoole server.
      *
      * @return void
      */
@@ -69,7 +95,7 @@ class ServerManager implements ServerContract
     }
 
     /**
-     * Stop swoole-http-server.
+     * Stop swoole server.
      *
      * @return void
      */
@@ -79,7 +105,7 @@ class ServerManager implements ServerContract
     }
 
     /**
-     * Reload swoole-http-server.
+     * Reload swoole server.
      *
      * @return void
      */
@@ -89,17 +115,26 @@ class ServerManager implements ServerContract
     }
 
     /**
-     * Create swoole-http-server.
+     * Create swoole server.
      *
-     * @return \Swoole\Http\Server
+     * @param string $host
+     * @param string $port
+     * @param array $options
+     * @return \Swoole\Server
      */
-    protected function createServer()
+    public function createServer($host, $port, $options)
     {
-        $host = $this->getConfig('host');
-        $port = $this->getConfig('port');
-        $options = $this->getConfig('options');
+        if ($this->enableWebsocket()) {
+            if ($this->runInLumen()) {
+                throw new RuntimeException('Websocket is not supported in Lumen.');
+            }
 
-        $server = new Server($host, $port);
+            array_push($this->events, "open", "message");
+
+            $server = new WebsocketServer($host, $port);
+        } else {
+            $server = new HttpServer($host, $port);
+        }
 
         $server->set($options);
 
@@ -108,6 +143,17 @@ class ServerManager implements ServerContract
         }
 
         return $server;
+    }
+
+    /**
+     * Create swoole tables.
+     *
+     * @param array $tables
+     * @return \HuangYi\Http\TableManager
+     */
+    protected function createTables(array $tables)
+    {
+        return new TableManager($tables);
     }
 
     /**
@@ -125,7 +171,7 @@ class ServerManager implements ServerContract
             $server->on($event, [$this, $listener]);
         } else {
             $server->on($event, function () use ($event) {
-                $event = sprintf('http.%s', $event);
+                $event = sprintf('swoole.%s', $event);
 
                 $this->container['events']->fire($event, func_get_args());
             });
@@ -142,7 +188,7 @@ class ServerManager implements ServerContract
         $this->setProcessName('master process');
         $this->createPidFile();
 
-        $this->container['events']->fire('http.start', func_get_args());
+        $this->container['events']->fire('swoole.start', func_get_args());
     }
 
     /**
@@ -154,7 +200,7 @@ class ServerManager implements ServerContract
     {
         $this->setProcessName('manager process');
 
-        $this->container['events']->fire('http.managerStart', func_get_args());
+        $this->container['events']->fire('swoole.managerStart', func_get_args());
     }
 
     /**
@@ -167,24 +213,108 @@ class ServerManager implements ServerContract
         $this->clearCache();
         $this->setProcessName('worker process');
 
-        $this->container['events']->fire('http.workerStart', func_get_args());
+        if (! $this->runInLumen()) {
+            $this->laravelHttpKernel = $this->container->make(LaravelHttpKernel::class);
+            $this->laravelHttpKernel->bootstrap();
+        }
 
-        $this->bootstrapApplication();
+        if ($this->enableWebsocket()) {
+            $this->laravelWebsocketKernel = $this->container['swoole.websocket.kernel'];
+            $this->laravelWebsocketKernel->bootstrap();
+        }
+
+        $this->container->instance('swoole.server', $this);
+
+        $this->container['events']->fire('swoole.workerStart', func_get_args());
     }
 
     /**
      * The listener of "request" event.
      *
-     * @param \Swoole\Http\Request $swooleRequest
-     * @param \Swoole\Http\Response $swooleResponse
+     * @param \Swoole\Http\Request $request
+     * @param \Swoole\Http\Response $response
      * @return void
      */
-    public function onRequest($swooleRequest, $swooleResponse)
+    public function onRequest($request, $response)
     {
-        $illuminateRequest = HttpRequest::make($swooleRequest)->toIlluminate();
-        $illuminateResponse = $this->getApplication()->run($illuminateRequest);
+        $this->container->instance('swoole.http.request', $request);
 
-        HttpResponse::make($illuminateResponse, $swooleResponse)->send();
+        $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
+
+        if ($this->runInLumen()) {
+            $illuminateResponse = $this->container->handle($illuminateRequest);
+        } else {
+            $illuminateResponse = $this->laravelHttpKernel->handle($illuminateRequest);
+
+            $this->laravelHttpKernel->terminate($illuminateRequest, $illuminateResponse);
+        }
+
+        ResponseTransformer::make($illuminateResponse)->send($response);
+    }
+
+    /**
+     * The listener of "open" event.
+     *
+     * @param \Swoole\Websocket\Server $server
+     * @param \Swoole\Http\Request $request
+     * @return void
+     */
+    public function onOpen($server, $request)
+    {
+        $this->container->instance('swoole.http.request', $request);
+
+        $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
+
+        $illuminateResponse = $this->laravelWebsocketKernel->handle($illuminateRequest);
+
+        $this->laravelHttpKernel->terminate($illuminateRequest, $illuminateResponse);
+    }
+
+    /**
+     * The listener of "message" event.
+     *
+     * @param \Swoole\Websocket\Server $server
+     * @param \Swoole\Websocket\Frame $frame
+     * @return void
+     */
+    public function onMessage($server, $frame)
+    {
+        (new MessageKernel($this->container))->handle($frame);
+    }
+
+    /**
+     * The listener of "task" event.
+     *
+     * @param \Swoole\Server $server
+     * @param int $taskId
+     * @param int $srcWorkerId
+     * @param mixed $task
+     * @return void
+     */
+    public function onTask($server, $taskId, $srcWorkerId, $task)
+    {
+        if ($task instanceof TaskContract) {
+            $task->handle($server, $taskId, $srcWorkerId);
+        }
+
+        $this->container['events']->fire('websocket.task', func_get_args());
+    }
+
+    /**
+     * The listener of "close" event.
+     *
+     * @param \Swoole\Server $server
+     * @param int $fd
+     * @param int $reactorId
+     * @return void
+     */
+    public function onClose($server, $fd, $reactorId)
+    {
+        if ($this->isWebsocket($fd)) {
+            $this->container['swoole.websocket.namespace']->leave($fd);
+        }
+
+        $this->container['events']->fire('websocket.close', func_get_args());
     }
 
     /**
@@ -196,35 +326,7 @@ class ServerManager implements ServerContract
     {
         $this->removePidFile();
 
-        $this->container['events']->fire('http.showdown', func_get_args());
-    }
-
-    /**
-     * Bootstrap application.
-     *
-     * @return void
-     */
-    protected function bootstrapApplication()
-    {
-        if ($this->isLumen()) {
-            $this->application = new LumenApplication($this->container);
-        } else {
-            $this->application = new LaravelApplication($this->container);
-        }
-    }
-
-    /**
-     * Get application.
-     *
-     * @return \HuangYi\Swoole\Foundation\Contracts\ApplicationContract
-     */
-    public function getApplication()
-    {
-        if (! $this->application instanceof ApplicationContract) {
-            $this->bootstrapApplication();
-        }
-
-        return $this->application;
+        $this->container['events']->fire('swoole.showdown', func_get_args());
     }
 
     /**
@@ -240,6 +342,29 @@ class ServerManager implements ServerContract
     }
 
     /**
+     * Determine if enable websocket.
+     *
+     * @return bool
+     */
+    public function enableWebsocket()
+    {
+        return $this->getConfig('enable_websocket', false);
+    }
+
+    /**
+     * Determine if run in websocket.
+     *
+     * @param int $fd
+     * @return bool
+     */
+    protected function isWebsocket($fd)
+    {
+        $client = $this->server->getClientInfo($fd);
+
+        return array_key_exists('websocket_status', $client);
+    }
+
+    /**
      * Get server events.
      *
      * @return array
@@ -252,7 +377,7 @@ class ServerManager implements ServerContract
     /**
      * Get swoole websocket server.
      *
-     * @return \Swoole\Http\Server
+     * @return \Swoole\Server
      */
     public function getServer()
     {
@@ -340,28 +465,31 @@ class ServerManager implements ServerContract
     }
 
     /**
+     * Determine if run in the lumen framework.
+     *
      * @return bool
      */
-    protected function isLumen()
+    protected function runInLumen()
     {
-        return str_contains($this->container->version(), 'Lumen');
+        return $this->container instanceof LumenApplication;
     }
 
     /**
-     * Request macros.
-     *
-     * @return void
+     * @param string $name
+     * @return mixed
      */
-    protected function macros()
+    public function __get($name)
     {
-        IlluminateRequest::macro('setSwooleServer', function ($server) {
-            $this->swooleServer = $server;
+        return $this->getServer()->$name;
+    }
 
-            return $this;
-        });
-
-        IlluminateRequest::macro('getSwooleServer', function () {
-            return $this->swooleServer;
-        });
+    /**
+     * @param string $name
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($name, $arguments)
+    {
+        return call_user_func_array([$this->getServer(), $name], $arguments);
     }
 }
