@@ -5,7 +5,7 @@ namespace HuangYi\Http;
 use HuangYi\Http\Contracts\TaskContract;
 use HuangYi\Http\Transformers\RequestTransformer;
 use HuangYi\Http\Transformers\ResponseTransformer;
-use HuangYi\Swoole\Websocket\Message\Kernel as MessageKernel;
+use HuangYi\Http\Websocket\Message\Kernel as MessageKernel;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as LaravelHttpKernel;
 use Laravel\Lumen\Application as LumenApplication;
