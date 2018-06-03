@@ -27,14 +27,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Enable websocket.
+    | Websocket server.
     |--------------------------------------------------------------------------
     |
     | Websocket server is only supported in Laravel framework now.
     |
     */
 
-    'enable_websocket' => false,
+    'websocket' => [
+
+        'enable' => false,
+
+        'message_parser' => HuangYi\Http\Websocket\Message\JsonParser::class,
+
+    ],
 
     /*
     |--------------------------------------------------------------------------

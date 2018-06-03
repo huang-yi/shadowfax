@@ -52,7 +52,7 @@ class HttpServiceProvider extends ServiceProvider
      */
     protected function registerWebsocket()
     {
-        if (! $this->app['config']->get('http.enable_websocket', false)) {
+        if (! $this->app['config']->get('http.websocket.enable', false)) {
             return;
         }
 

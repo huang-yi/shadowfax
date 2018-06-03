@@ -348,7 +348,7 @@ class ServerManager
      */
     public function enableWebsocket()
     {
-        return $this->getConfig('enable_websocket', false);
+        return $this->getConfig('websocket.enable', false);
     }
 
     /**
