@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Swoole\Websocket\Message;
+namespace HuangYi\Http\Websocket\Message;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;

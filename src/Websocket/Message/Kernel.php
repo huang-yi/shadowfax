@@ -1,12 +1,11 @@
 <?php
 
-namespace HuangYi\Swoole\Websocket\Message;
+namespace HuangYi\Http\Websocket\Message;
 
 use Exception;
 use HuangYi\Http\Contracts\MessageContract;
 use HuangYi\Http\Contracts\ParserContract;
 use HuangYi\Http\Exceptions\EventNotFoundException;
-use HuangYi\Http\Websocket\Message\Route;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Pipeline\Pipeline;
@@ -73,7 +72,7 @@ class Kernel
      */
     protected function getParser()
     {
-        $parserClass = $this->container['config']->get('message.parser', JsonParser::class);
+        $parserClass = $this->container['config']->get('http.websocket.message_parser', JsonParser::class);
 
         return $this->container->make($parserClass);
     }
