@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Swoole\Server getServer()
  * @method static string getPath(int $socketId)
  * @method static array getClients(string $path)
- * @method static bool truncate(string $name)
+ * @method static void flush(string $path)
  *
  * @see \HuangYi\Http\Websocket\NamespaceManager
  */

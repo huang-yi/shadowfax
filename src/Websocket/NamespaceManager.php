@@ -95,11 +95,11 @@ class NamespaceManager
     }
 
     /**
-     * @return \HuangYi\Http\ServerManager
+     * @return \Swoole\Server
      */
     public function getServer()
     {
-        return $this->container['swoole.server'];
+        return $this->container['swoole.server']->getServer();
     }
 
     /**
@@ -146,6 +146,21 @@ class NamespaceManager
     public function getClientKey($socketId)
     {
         return sprintf('websocket:clients:%s', $socketId);
+    }
+
+    /**
+     * Flush namespace.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function flush($path)
+    {
+        $server = $this->getServer();
+
+        foreach ($this->getClients($path) as $socketId) {
+            $server->close($socketId);
+        }
     }
 
     /**
