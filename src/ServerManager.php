@@ -297,7 +297,7 @@ class ServerManager
             $task->handle($server, $taskId, $srcWorkerId);
         }
 
-        $this->container['events']->fire('websocket.task', func_get_args());
+        $this->container['events']->fire('swoole.task', func_get_args());
     }
 
     /**
@@ -314,7 +314,7 @@ class ServerManager
             $this->container['swoole.websocket.namespace']->leave($fd);
         }
 
-        $this->container['events']->fire('websocket.close', func_get_args());
+        $this->container['events']->fire('swoole.close', func_get_args());
     }
 
     /**
