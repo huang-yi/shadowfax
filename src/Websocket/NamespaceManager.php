@@ -70,7 +70,7 @@ class NamespaceManager
         $clients = $this->getClients($path);
 
         if (! is_null($excepts)) {
-            $clients = array_values(array_merge($clients, (array)$excepts));
+            $clients = array_values(array_diff($clients, (array)$excepts));
         }
 
         $this->getServer()->task(BroadcastTask::make([
