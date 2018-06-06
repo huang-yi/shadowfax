@@ -70,7 +70,11 @@ class NamespaceManager
         $clients = $this->getClients($path);
 
         if (! is_null($excepts)) {
-            $clients = array_values(array_diff($clients, (array)$excepts));
+            $excepts = array_map(function ($socketId) {
+                return (int) $socketId;
+            }, (array) $excepts);
+
+            $clients = array_values(array_diff($clients, (array) $excepts));
         }
 
         $this->getServer()->task(BroadcastTask::make([
@@ -95,6 +99,8 @@ class NamespaceManager
     }
 
     /**
+     * Get swoole server.
+     *
      * @return \Swoole\Server
      */
     public function getServer()
@@ -125,7 +131,11 @@ class NamespaceManager
     {
         $key = $this->getPathKey($path);
 
-        return $this->getStore()->smembers($key);
+        $clients = $this->getStore()->smembers($key);
+
+        return array_map(function ($socketId) {
+            return (int) $socketId;
+        }, $clients);
     }
 
     /**
