@@ -2,6 +2,7 @@
 
 namespace HuangYi\Http;
 
+use HuangYi\Http\Exceptions\TableUndefinedException;
 use Swoole\Table;
 
 class TableManager
@@ -95,10 +96,15 @@ class TableManager
      * Change table.
      *
      * @param string $name
-     * @return \Swoole\Table|null
+     * @return \Swoole\Table
+     * @throws \HuangYi\Http\Exceptions\TableUndefinedException
      */
     public function use($name)
     {
-        return $this->tables[$name] ?? null;
+        if (! isset($this->tables[$name])) {
+            throw new TableUndefinedException(sprintf('Table [%s] undefined.', $name));
+        }
+
+        return $this->tables[$name];
     }
 }
