@@ -14,10 +14,12 @@ class BroadcastTask extends TaskAbstract
      */
     public function handle($server, $taskId, $srcWorkerId)
     {
-        $clients = $this->data['clients'] ?? $server->connection;
+        $clients = $this->data['clients'] ?? $server->connections;
 
         foreach ($clients as $socketId) {
-            $server->push($socketId, $this->data['message']);
+            if ($server->exist($socketId)) {
+                $server->push($socketId, $this->data['message']);
+            }
         }
     }
 }

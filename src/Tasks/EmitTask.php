@@ -14,6 +14,8 @@ class EmitTask extends TaskAbstract
      */
     public function handle($server, $taskId, $srcWorkerId)
     {
-        $server->push($this->data['to'], $this->data['message']);
+        if ($server->exist($this->data['to'])) {
+            $server->push($this->data['to'], $this->data['message']);
+        }
     }
 }
