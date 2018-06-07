@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static array getClients(string $path)
  * @method static void flush(string $path)
  *
- * @see \HuangYi\Http\Websocket\NamespaceManager
+ * @see \HuangYi\Swoole\Websocket\NamespaceManager
  */
 class WebsocketNamespace extends Facade
 {

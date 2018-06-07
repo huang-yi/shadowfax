@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Facade;
 /**
  * Websocket Route Facade.
  *
- * @method static void on(string $event, array|string|\Closure $action)
- *
- * @see \HuangYi\Swoole\Websocket\Message\Router
+ * @see \Illuminate\Routing\Router
  */
 class WebsocketRoute extends Facade
 {

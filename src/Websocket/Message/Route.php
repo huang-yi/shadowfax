@@ -29,7 +29,7 @@ class Route
     protected $container;
 
     /**
-     * @var \HuangYi\Http\Websocket\Message\Router
+     * @var \HuangYi\Swoole\Websocket\Message\Router
      */
     protected $router;
 
@@ -48,7 +48,7 @@ class Route
     /**
      * Run the route action.
      *
-     * @param \HuangYi\Http\Contracts\MessageContract $message
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
      * @return mixed
      */
     public function run(MessageContract $message)
