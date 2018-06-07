@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Contracts;
+namespace HuangYi\Swoole\Contracts;
 
 interface TaskContract
 {

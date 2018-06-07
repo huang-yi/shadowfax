@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Facades;
+namespace HuangYi\Swoole\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static \Swoole\Table|null use(string $name)
  * @method static bool truncate(string $name)
  *
- * @see \HuangYi\Http\TableManager
+ * @see \HuangYi\Swoole\TableManager
  */
 class Table extends Facade
 {

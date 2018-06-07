@@ -1,26 +1,26 @@
 <?php
 
-namespace HuangYi\Http\Console;
+namespace HuangYi\Swoole\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Event;
 use Swoole\Process;
 
-class HttpServerCommand extends Command
+class ServerCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'swoole:http {action : start|stop|restart|reload|watch}';
+    protected $signature = 'swoole:server {action : start|stop|restart|reload|watch}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Swoole HTTP Server controller.';
+    protected $description = 'Swoole http/sebsocket server controller.';
 
     /**
      * The console command action.
@@ -155,7 +155,7 @@ class HttpServerCommand extends Command
             $this->removeWatchedFile();
         }
 
-        $this->laravel['config']->set('http.options.daemonize', 0);
+        $this->laravel['config']->set('swoole.server.options.daemonize', 0);
 
         Event::listen('http.workerStart', function () {
             if ($this->createWatchedFile()) {
@@ -262,7 +262,7 @@ class HttpServerCommand extends Command
      */
     protected function getPidPath()
     {
-        return $this->laravel['config']->get('http.options.pid_file');
+        return $this->laravel['config']->get('swoole.server.options.pid_file');
     }
 
     /**
@@ -294,7 +294,7 @@ class HttpServerCommand extends Command
      */
     protected function createWatcher()
     {
-        $config = $this->laravel['config']['http.watcher'];
+        $config = $this->laravel['config']['swoole.watcher'];
         $directories = $config['directories'];
         $excludedDirectories = $config['excluded_directories'];
         $suffixes = $config['suffixes'];

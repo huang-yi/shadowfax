@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Swoole\Http\Tests;
+namespace HuangYi\Swoole\Tests;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 

@@ -2,15 +2,15 @@
 
 namespace HuangYi\Http;
 
-use HuangYi\Http\Console\HttpServerCommand;
-use HuangYi\Http\Websocket\Middleware\JoinNamespace;
-use HuangYi\Http\Websocket\Message\Router as MessageRouter;
-use HuangYi\Http\Websocket\NamespaceManager;
+use HuangYi\Swoole\Console\ServerCommand;
+use HuangYi\Swoole\Websocket\Middleware\JoinNamespace;
+use HuangYi\Swoole\Websocket\Message\Router as MessageRouter;
+use HuangYi\Swoole\Websocket\NamespaceManager;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router as HttpRouter;
 use Illuminate\Support\ServiceProvider;
 
-class HttpServiceProvider extends ServiceProvider
+class SwooleServiceProvider extends ServiceProvider
 {
     /**
      * Register the service provider.
@@ -33,7 +33,7 @@ class HttpServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/../config/http.php' => base_path('config/http.php')
+            __DIR__ . '/../config/swoole.php' => base_path('config/swoole.php')
         ], 'config');
     }
 
@@ -42,7 +42,7 @@ class HttpServiceProvider extends ServiceProvider
      */
     protected function mergeConfig()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/http.php', 'http');
+        $this->mergeConfigFrom(__DIR__ . '/../config/swoole.php', 'swoole');
     }
 
     /**
@@ -52,7 +52,7 @@ class HttpServiceProvider extends ServiceProvider
      */
     protected function registerWebsocket()
     {
-        if (! $this->app['config']->get('http.websocket.enable', false)) {
+        if (! $this->app['config']->get('swoole.websocket.enable', false)) {
             return;
         }
 
@@ -97,7 +97,7 @@ class HttpServiceProvider extends ServiceProvider
     protected function registerCommands()
     {
         $this->commands([
-            HttpServerCommand::class,
+            ServerCommand::class,
         ]);
     }
 }

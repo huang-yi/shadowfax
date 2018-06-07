@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Tasks;
+namespace HuangYi\Swoole\Tasks;
 
 class EmitTask extends TaskAbstract
 {

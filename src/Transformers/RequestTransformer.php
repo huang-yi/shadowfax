@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Transformers;
+namespace HuangYi\Swoole\Transformers;
 
 use Illuminate\Http\Request as IlluminateRequest;
 use Swoole\Http\Request as SwooleRequest;

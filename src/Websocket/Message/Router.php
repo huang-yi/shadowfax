@@ -1,9 +1,9 @@
 <?php
 
-namespace HuangYi\Http\Websocket\Message;
+namespace HuangYi\Swoole\Websocket\Message;
 
 use Closure;
-use HuangYi\Http\Contracts\MessageContract;
+use HuangYi\Swoole\Contracts\MessageContract;
 use Illuminate\Contracts\Container\Container;
 
 class Router
@@ -65,7 +65,7 @@ class Router
      *
      * @param string $event
      * @param array $action
-     * @return \HuangYi\Http\Websocket\Message\Route
+     * @return \HuangYi\Swoole\Websocket\Message\Route
      */
     protected function createRoute($event, $action)
     {
@@ -107,7 +107,7 @@ class Router
     /**
      * Find route.
      *
-     * @param \HuangYi\Http\Contracts\MessageContract $message
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
      * @return mixed|null
      */
     public function findRoute(MessageContract $message)

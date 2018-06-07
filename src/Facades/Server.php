@@ -1,13 +1,13 @@
 <?php
 
-namespace HuangYi\Http\Facades;
+namespace HuangYi\Swoole\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
  * Swoole Server Facade.
  *
- * @see \HuangYi\Http\ServerManager
+ * @see \HuangYi\Swoole\ServerManager
  */
 class Server extends Facade
 {

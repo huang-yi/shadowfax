@@ -1,8 +1,8 @@
 <?php
 
-namespace HuangYi\Http\Tasks;
+namespace HuangYi\Swoole\Tasks;
 
-use HuangYi\Http\Contracts\TaskContract;
+use HuangYi\Swoole\Contracts\TaskContract;
 
 abstract class TaskAbstract implements TaskContract
 {

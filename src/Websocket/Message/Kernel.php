@@ -1,11 +1,11 @@
 <?php
 
-namespace HuangYi\Http\Websocket\Message;
+namespace HuangYi\Swoole\Websocket\Message;
 
 use Exception;
-use HuangYi\Http\Contracts\MessageContract;
-use HuangYi\Http\Contracts\ParserContract;
-use HuangYi\Http\Exceptions\EventNotFoundException;
+use HuangYi\Swoole\Contracts\MessageContract;
+use HuangYi\Swoole\Contracts\ParserContract;
+use HuangYi\Swoole\Exceptions\EventNotFoundException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Pipeline\Pipeline;
@@ -56,7 +56,7 @@ class Kernel
      * Parse.
      *
      * @param string $payload
-     * @return \HuangYi\Http\Contracts\MessageContract
+     * @return \HuangYi\Swoole\Contracts\MessageContract
      */
     protected function parse($payload)
     {
@@ -68,11 +68,11 @@ class Kernel
     /**
      * Get parser.
      *
-     * @return \HuangYi\Http\Contracts\ParserContract
+     * @return \HuangYi\Swoole\Contracts\ParserContract
      */
     protected function getParser()
     {
-        $parserClass = $this->container['config']->get('http.websocket.message_parser', JsonParser::class);
+        $parserClass = $this->container['config']->get('swoole.websocket.message_parser', JsonParser::class);
 
         return $this->container->make($parserClass);
     }
@@ -80,9 +80,9 @@ class Kernel
     /**
      * Parse payload to message.
      *
-     * @param \HuangYi\Http\Contracts\ParserContract $parser
+     * @param \HuangYi\Swoole\Contracts\ParserContract $parser
      * @param string $payload
-     * @return \HuangYi\Http\Contracts\MessageContract
+     * @return \HuangYi\Swoole\Contracts\MessageContract
      */
     protected function payloadToMessage(ParserContract $parser, $payload)
     {
@@ -92,9 +92,9 @@ class Kernel
     /**
      * Find route.
      *
-     * @param \HuangYi\Http\Contracts\MessageContract $message
-     * @return \HuangYi\Http\Websocket\Message\Route
-     * @throws \HuangYi\Http\Exceptions\EventNotFoundException
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
+     * @return \HuangYi\Swoole\Websocket\Message\Route
+     * @throws \HuangYi\Swoole\Exceptions\EventNotFoundException
      */
     protected function findRoute(MessageContract $message)
     {
@@ -110,8 +110,8 @@ class Kernel
     /**
      * Dispatch route.
      *
-     * @param \HuangYi\Http\Contracts\MessageContract $message
-     * @param \HuangYi\Http\Websocket\Message\Route $route
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
+     * @param \HuangYi\Swoole\Websocket\Message\Route $route
      * @return void
      */
     protected function dispatchRoute(MessageContract $message, Route $route)

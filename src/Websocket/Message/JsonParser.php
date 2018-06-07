@@ -1,9 +1,9 @@
 <?php
 
-namespace HuangYi\Http\Websocket\Message;
+namespace HuangYi\Swoole\Websocket\Message;
 
-use HuangYi\Http\Contracts\ParserContract;
-use HuangYi\Http\Exceptions\MessageParseException;
+use HuangYi\Swoole\Contracts\ParserContract;
+use HuangYi\Swoole\Exceptions\MessageParseException;
 
 class JsonParser implements ParserContract
 {
@@ -11,8 +11,8 @@ class JsonParser implements ParserContract
      * Parse message.
      *
      * @param string $payload
-     * @return \HuangYi\Http\Websocket\Message\Message
-     * @throws \HuangYi\Http\Exceptions\MessageParseException
+     * @return \HuangYi\Swoole\Websocket\Message\Message
+     * @throws \HuangYi\Swoole\Exceptions\MessageParseException
      */
     public function parse($payload)
     {

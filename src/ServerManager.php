@@ -1,11 +1,11 @@
 <?php
 
-namespace HuangYi\Http;
+namespace HuangYi\Swoole;
 
-use HuangYi\Http\Contracts\TaskContract;
-use HuangYi\Http\Transformers\RequestTransformer;
-use HuangYi\Http\Transformers\ResponseTransformer;
-use HuangYi\Http\Websocket\Message\Kernel as MessageKernel;
+use HuangYi\Swoole\Contracts\TaskContract;
+use HuangYi\Swoole\Transformers\RequestTransformer;
+use HuangYi\Swoole\Transformers\ResponseTransformer;
+use HuangYi\Swoole\Websocket\Message\Kernel as MessageKernel;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as LaravelHttpKernel;
 use Laravel\Lumen\Application as LumenApplication;
@@ -72,12 +72,13 @@ class ServerManager
      * Initialize.
      *
      * @return void
+     * @throws \RuntimeException
      */
     protected function init()
     {
-        $host = $this->getConfig('host', '127.0.0.1');
-        $port = $this->getConfig('port', '1215');
-        $options = $this->getConfig('options', []);
+        $host = $this->getConfig('server.host', '127.0.0.1');
+        $port = $this->getConfig('server.port', '1215');
+        $options = $this->getConfig('server.options', []);
         $tables = $this->getConfig('tables', []);
 
         $this->server = $this->createServer($host, $port, $options);
@@ -121,6 +122,7 @@ class ServerManager
      * @param string $port
      * @param array $options
      * @return \Swoole\Server
+     * @throws \RuntimeException
      */
     public function createServer($host, $port, $options)
     {
@@ -149,7 +151,7 @@ class ServerManager
      * Create swoole tables.
      *
      * @param array $tables
-     * @return \HuangYi\Http\TableManager
+     * @return \HuangYi\Swoole\TableManager
      */
     protected function createTables(array $tables)
     {
@@ -338,7 +340,7 @@ class ServerManager
      */
     public function getConfig($key, $default = null)
     {
-        return array_get($this->container['config']['http'], $key, $default);
+        return array_get($this->container['config']['swoole'], $key, $default);
     }
 
     /**
@@ -391,7 +393,7 @@ class ServerManager
      */
     protected function getPidFile()
     {
-        return $this->getConfig('options.pid_file');
+        return $this->getConfig('swoole.options.pid_file');
     }
 
     /**
@@ -448,8 +450,8 @@ class ServerManager
 
         $serverName = 'swoole-http-server';
         $appName = $this->container['config']->get('app.name', 'Laravel');
-        $host = $this->getConfig('host');
-        $port = $this->getConfig('port');
+        $host = $this->getConfig('server.host');
+        $port = $this->getConfig('server.port');
 
         $name = sprintf('%s: %s for %s, %s:%s', $serverName, $process, $appName, $host, $port);
 

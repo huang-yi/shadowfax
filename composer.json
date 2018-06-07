@@ -1,7 +1,7 @@
 {
     "name": "huang-yi/laravel-swoole-http",
-    "description": "High performance HTTP server based on Swoole. Speeds up your Laravel and Lumen applications.",
-    "keywords": ["swoole", "laravel", "lumen", "http", "server", "performance"],
+    "description": "A high performance HTTP/websocket server based on Swoole. Speeds up your Laravel and Lumen applications.",
+    "keywords": ["swoole", "laravel", "lumen", "http", "websocket", "server", "performance"],
     "license": "MIT",
     "authors": [
         {
@@ -23,25 +23,25 @@
     },
     "autoload": {
         "psr-4": {
-            "HuangYi\\Http\\": "src"
+            "HuangYi\\Swoole\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "HuangYi\\Http\\Tests\\": "tests"
+            "HuangYi\\Swoole\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "HuangYi\\Http\\HttpServiceProvider"
+                "HuangYi\\Swoole\\SwooleServiceProvider"
             ],
             "aliases": {
-                "SwooleServer": "HuangYi\\Http\\Facades\\Server",
-                "SwooleTable": "HuangYi\\Http\\Facades\\Table",
-                "WebsocketNamespace": "HuangYi\\Http\\Facades\\WebsocketNamespace",
-                "WebsocketRoute": "HuangYi\\Http\\Facades\\WebsocketRoute",
-                "MessageRoute": "HuangYi\\Http\\Facades\\MessageRoute"
+                "SwooleServer": "HuangYi\\Swoole\\Facades\\Server",
+                "SwooleTable": "HuangYi\\Swoole\\Facades\\Table",
+                "WebsocketNamespace": "HuangYi\\Swoole\\Facades\\WebsocketNamespace",
+                "WebsocketRoute": "HuangYi\\Swoole\\Facades\\WebsocketRoute",
+                "MessageRoute": "HuangYi\\Swoole\\Facades\\MessageRoute"
             }
         }
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Websocket\Middleware;
+namespace HuangYi\Swoole\Websocket\Middleware;
 
 use Illuminate\Contracts\Container\Container;
 

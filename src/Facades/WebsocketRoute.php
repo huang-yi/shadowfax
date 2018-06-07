@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Facades;
+namespace HuangYi\Swoole\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static void on(string $event, array|string|\Closure $action)
  *
- * @see \HuangYi\Http\Websocket\Message\Router
+ * @see \HuangYi\Swoole\Websocket\Message\Router
  */
 class WebsocketRoute extends Facade
 {

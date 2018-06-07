@@ -2,32 +2,32 @@
 
 return [
 
-    'host' => env('HTTP_HOST', '127.0.0.1'),
-
-    'port' => env('HTTP_PORT', '1215'),
-
     /*
     |--------------------------------------------------------------------------
-    | Swoole server configurations.
+    | Server configurations.
     |--------------------------------------------------------------------------
     |
-    | @see https://wiki.swoole.com/wiki/page/274.html
+    | @see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
     |
     */
 
-    'options' => [
+    'server' => [
+        'host' => env('SWOOLE_SERVER_HOST', '127.0.0.1'),
 
-        'pid_file' => env('HTTP_OPTIONS_PID_FILE', base_path('storage/logs/http.pid')),
+        'port' => env('SWOOLE_SERVER_PORT', '1215'),
 
-        'log_file' => env('HTTP_OPTIONS_LOG_FILE', base_path('storage/logs/http.log')),
+        'options' => [
+            'pid_file' => env('SWOOLE_SERVER_OPTIONS_PID_FILE', base_path('storage/logs/http.pid')),
 
-        'daemonize' => env('HTTP_OPTIONS_DAEMONIZE', 1),
+            'log_file' => env('SWOOLE_SERVER_OPTIONS_LOG_FILE', base_path('storage/logs/http.log')),
 
+            'daemonize' => env('SWOOLE_SERVER_OPTIONS_DAEMONIZE', 1),
+        ],
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Websocket server.
+    | Websocket configurations.
     |--------------------------------------------------------------------------
     |
     | Websocket server is only supported in Laravel framework now.
@@ -35,29 +35,23 @@ return [
     */
 
     'websocket' => [
-
         'enable' => false,
 
         'message_parser' => HuangYi\Http\Websocket\Message\JsonParser::class,
 
+        'redis' => env('SWOOLE_WEBSOCKET_REDIS', 'default'),
     ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Redis connection.
-    |--------------------------------------------------------------------------
-    |
-    | It's necessary to require "predis/predis" package or
-    | install "phpredis" extension.
-    |
-    */
-
-    'redis' => 'default',
 
     /*
     |--------------------------------------------------------------------------
     | Swoole tables.
     |--------------------------------------------------------------------------
+    |
+    | 'name'    - Define table name.
+    |
+    | 'columns' - Define table columns.
+    |             Format: [column_name, column_type, column_length]
+    |             Column types: int, integer, string, varchar, char, float.
     |
     */
 

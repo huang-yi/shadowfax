@@ -1,8 +1,8 @@
 <?php
 
-namespace HuangYi\Http\Websocket\Message;
+namespace HuangYi\Swoole\Websocket\Message;
 
-use HuangYi\Http\Contracts\MessageContract;
+use HuangYi\Swoole\Contracts\MessageContract;
 
 abstract class MessageAbstract implements MessageContract
 {

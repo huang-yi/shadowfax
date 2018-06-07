@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Contracts;
+namespace HuangYi\Swoole\Contracts;
 
 interface ParserContract
 {
@@ -8,7 +8,7 @@ interface ParserContract
      * Parse message.
      *
      * @param mixed $payload
-     * @return \HuangYi\Http\Contracts\MessageContract $message
+     * @return \HuangYi\Swoole\Contracts\MessageContract $message
      */
     public function parse($payload);
 }

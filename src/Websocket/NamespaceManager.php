@@ -1,10 +1,10 @@
 <?php
 
-namespace HuangYi\Http\Websocket;
+namespace HuangYi\Swoole\Websocket;
 
-use HuangYi\Http\Contracts\MessageContract;
-use HuangYi\Http\Tasks\BroadcastTask;
-use HuangYi\Http\Tasks\EmitTask;
+use HuangYi\Swoole\Contracts\MessageContract;
+use HuangYi\Swoole\Tasks\BroadcastTask;
+use HuangYi\Swoole\Tasks\EmitTask;
 use Illuminate\Contracts\Container\Container;
 
 class NamespaceManager
@@ -61,7 +61,7 @@ class NamespaceManager
      * Broadcast.
      *
      * @param string $path
-     * @param \HuangYi\Http\Contracts\MessageContract $message
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
      * @param array|int|null $excepts
      * @return void
      */
@@ -87,7 +87,7 @@ class NamespaceManager
      * Emit message.
      *
      * @param int $socketId
-     * @param \HuangYi\Http\Contracts\MessageContract $message
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
      * @return void
      */
     public function emit($socketId, MessageContract $message)
@@ -180,7 +180,7 @@ class NamespaceManager
      */
     protected function getStore()
     {
-        $connection = $this->container['config']->get('http.redis', 'default');
+        $connection = $this->container['config']->get('swoole.websocket.redis', 'default');
 
         return $this->container['redis']->connection($connection);
     }

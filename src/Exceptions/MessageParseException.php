@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http\Exceptions;
+namespace HuangYi\Swoole\Exceptions;
 
 class MessageParseException extends SwooleException
 {

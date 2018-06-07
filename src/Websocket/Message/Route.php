@@ -1,8 +1,8 @@
 <?php
 
-namespace HuangYi\Http\Websocket\Message;
+namespace HuangYi\Swoole\Websocket\Message;
 
-use HuangYi\Http\Contracts\MessageContract;
+use HuangYi\Swoole\Contracts\MessageContract;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Routing\MiddlewareNameResolver;
 use Illuminate\Support\Str;
@@ -73,7 +73,7 @@ class Route
     /**
      * Run the callable route action.
      *
-     * @param \HuangYi\Http\Contracts\MessageContract $message
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
      * @return mixed
      */
     protected function runCallable(MessageContract $message)
@@ -86,7 +86,7 @@ class Route
     /**
      * Run the controller.
      *
-     * @param \HuangYi\Http\Contracts\MessageContract $message
+     * @param \HuangYi\Swoole\Contracts\MessageContract $message
      * @return mixed
      */
     protected function runController(MessageContract $message)
@@ -144,7 +144,7 @@ class Route
     }
 
     /**
-     * @param \HuangYi\Http\Websocket\Message\Router $router
+     * @param \HuangYi\Swoole\Websocket\Message\Router $router
      * @return $this
      */
     public function setRouter(Router $router)

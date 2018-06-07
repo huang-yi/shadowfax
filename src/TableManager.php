@@ -1,8 +1,8 @@
 <?php
 
-namespace HuangYi\Http;
+namespace HuangYi\Swoole;
 
-use HuangYi\Http\Exceptions\TableUndefinedException;
+use HuangYi\Swoole\Exceptions\TableUndefinedException;
 use Swoole\Table;
 
 class TableManager
@@ -97,7 +97,7 @@ class TableManager
      *
      * @param string $name
      * @return \Swoole\Table
-     * @throws \HuangYi\Http\Exceptions\TableUndefinedException
+     * @throws \HuangYi\Swoole\Exceptions\TableUndefinedException
      */
     public function use($name)
     {
