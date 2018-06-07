@@ -393,7 +393,7 @@ class ServerManager
      */
     protected function getPidFile()
     {
-        return $this->getConfig('swoole.server.options.pid_file');
+        return $this->getConfig('server.options.pid_file');
     }
 
     /**
