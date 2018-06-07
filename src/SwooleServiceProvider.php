@@ -52,10 +52,6 @@ class SwooleServiceProvider extends ServiceProvider
      */
     protected function registerWebsocket()
     {
-        if (! $this->app['config']->get('swoole.websocket.enable', false)) {
-            return;
-        }
-
         $this->app->singleton('swoole.websocket.router', function ($app) {
             return new HttpRouter($app['events'], $app);
         });
