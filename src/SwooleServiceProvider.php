@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Http;
+namespace HuangYi\Swoole;
 
 use HuangYi\Swoole\Console\ServerCommand;
 use HuangYi\Swoole\Websocket\Middleware\JoinNamespace;
