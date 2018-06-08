@@ -239,6 +239,8 @@ class ServerManager
      */
     public function onRequest($request, $response)
     {
+        $this->container['events']->fire('swoole.requesting', func_get_args());
+
         $this->container->instance('swoole.http.request', $request);
 
         $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
@@ -252,6 +254,8 @@ class ServerManager
         }
 
         ResponseTransformer::make($illuminateResponse)->send($response);
+
+        $this->container['events']->fire('swoole.requested', func_get_args());
     }
 
     /**
@@ -263,6 +267,8 @@ class ServerManager
      */
     public function onOpen($server, $request)
     {
+        $this->container['events']->fire('swoole.opening', func_get_args());
+
         $this->container->instance('swoole.http.request', $request);
 
         $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
@@ -270,6 +276,8 @@ class ServerManager
         $illuminateResponse = $this->laravelWebsocketKernel->handle($illuminateRequest);
 
         $this->laravelHttpKernel->terminate($illuminateRequest, $illuminateResponse);
+
+        $this->container['events']->fire('swoole.opened', func_get_args());
     }
 
     /**
@@ -281,7 +289,11 @@ class ServerManager
      */
     public function onMessage($server, $frame)
     {
+        $this->container['events']->fire('swoole.messaging', func_get_args());
+
         (new MessageKernel($this->container))->handle($frame);
+
+        $this->container['events']->fire('swoole.messaged', func_get_args());
     }
 
     /**

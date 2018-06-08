@@ -175,14 +175,14 @@ class ServerCommand extends Command
 
         $this->laravel['config']->set('swoole.server.options.daemonize', 0);
 
-        Event::listen('swoole.workerStart', function () {
+        $this->laravel['events']->listen('swoole.workerStart', function () {
             if ($this->createWatchedFile()) {
                 $watcher = $this->createWatcher();
                 $watcher->watch();
             }
         });
 
-        Event::listen('swoole.workerStop', function () {
+        $this->laravel['events']->listen('swoole.workerStop', function () {
             $this->removeWatchedFile();
         });
 

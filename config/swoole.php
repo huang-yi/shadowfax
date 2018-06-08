@@ -23,6 +23,17 @@ return [
 
             'daemonize' => env('SWOOLE_SERVER_OPTIONS_DAEMONIZE', 1),
         ],
+
+        /*
+        |----------------------------------------------------------------------
+        | These providers will be re-registered after every request.
+        |----------------------------------------------------------------------
+        |
+        */
+
+        'reset_providers' => [
+            // Illuminate\Auth\AuthServiceProvider::class,
+        ],
     ],
 
     /*
