@@ -17,9 +17,9 @@ return [
         'port' => env('SWOOLE_SERVER_PORT', '1215'),
 
         'options' => [
-            'pid_file' => env('SWOOLE_SERVER_OPTIONS_PID_FILE', base_path('storage/logs/http.pid')),
+            'pid_file' => env('SWOOLE_SERVER_OPTIONS_PID_FILE', base_path('storage/logs/swoole.pid')),
 
-            'log_file' => env('SWOOLE_SERVER_OPTIONS_LOG_FILE', base_path('storage/logs/http.log')),
+            'log_file' => env('SWOOLE_SERVER_OPTIONS_LOG_FILE', base_path('storage/logs/swoole.log')),
 
             'daemonize' => env('SWOOLE_SERVER_OPTIONS_DAEMONIZE', 1),
         ],
