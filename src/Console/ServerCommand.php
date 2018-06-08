@@ -13,7 +13,7 @@ class ServerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'swoole:server {action : start|stop|restart|reload|watch}';
+    protected $signature = 'swoole:server {action=start : start|stop|restart|reload|watch}';
 
     /**
      * The console command description.
@@ -21,13 +21,6 @@ class ServerCommand extends Command
      * @var string
      */
     protected $description = 'Swoole http/sebsocket server controller.';
-
-    /**
-     * The console command action.
-     *
-     * @var string
-     */
-    protected $action;
 
     /**
      *
@@ -44,56 +37,73 @@ class ServerCommand extends Command
      */
     public function handle()
     {
-        $this->initAction();
-        $this->runAction();
-    }
-
-    /**
-     * Run action.
-     */
-    protected function runAction()
-    {
         $this->detectSwoole();
 
-        $this->{$this->action}();
+        $action = $this->getAction();
+
+        $this->$action();
     }
 
     /**
-     * Run swoole_http_server.
+     * Get command action.
+     *
+     * @return string
+     */
+    protected function getAction()
+    {
+        $action = $this->argument('action');
+
+        if (! in_array($action, ['start', 'stop', 'restart', 'reload', 'watch'])) {
+            $this->error("Invalid argument '$action'. ");
+
+            exit(1);
+        }
+
+        return $action;
+    }
+
+    /**
+     * Start server.
+     *
+     * @return void
      */
     protected function start()
     {
         if ($this->isRunning($this->getPid())) {
-            $this->error('Failed! swoole_http_server process is already running.');
+            $this->error('Failed! The swoole process is already running.');
+
             exit(1);
         }
 
-        $this->info('Starting swoole http server...');
-
+        $this->info('Starting server...');
         $this->info('> (You can run this command to ensure the ' .
-            'swoole_http_server process is running: ps aux|grep "swoole")');
+            'swoole process is running: ps -ef|grep "swoole")');
 
         $this->laravel->make('swoole.server')->start();
     }
 
     /**
-     * Stop swoole_http_server.
+     * Stop server.
+     *
+     * @return void
      */
     protected function stop()
     {
         $pid = $this->getPid();
 
         if (! $this->isRunning($pid)) {
-            $this->error("Failed! There is no swoole_http_server process running.");
+            $this->error("Failed! There is no server process running.");
+
             exit(1);
         }
 
-        $this->info('Stopping swoole_http_server...');
+        $this->info('Stopping server...');
 
         $isRunning = $this->killProcess($pid, SIGTERM, 15);
 
         if ($isRunning) {
-            $this->error('Unable to stop the swoole_http_server process.');
+            $this->error('Unable to stop the server process.');
+
             exit(1);
         }
 
@@ -105,7 +115,9 @@ class ServerCommand extends Command
     }
 
     /**
-     * Restart swoole http server.
+     * Restart server.
+     *
+     * @return void
      */
     protected function restart()
     {
@@ -119,23 +131,27 @@ class ServerCommand extends Command
     }
 
     /**
-     * Reload.
+     * Reload server.
+     *
+     * @return void
      */
     protected function reload()
     {
         $pid = $this->getPid();
 
         if (! $this->isRunning($pid)) {
-            $this->error("Failed! There is no swoole_http_server process running.");
+            $this->error("Failed! There is no server process running.");
+
             exit(1);
         }
 
-        $this->info('Reloading swoole_http_server...');
+        $this->info('Reloading server...');
 
         $isRunning = $this->killProcess($pid, SIGUSR1);
 
         if (! $isRunning) {
             $this->error('> failure');
+
             exit(1);
         }
 
@@ -143,7 +159,9 @@ class ServerCommand extends Command
     }
 
     /**
-     * Watch.
+     * Watch server.
+     *
+     * @return void
      */
     public function watch()
     {
@@ -157,14 +175,14 @@ class ServerCommand extends Command
 
         $this->laravel['config']->set('swoole.server.options.daemonize', 0);
 
-        Event::listen('http.workerStart', function () {
+        Event::listen('swoole.workerStart', function () {
             if ($this->createWatchedFile()) {
                 $watcher = $this->createWatcher();
                 $watcher->watch();
             }
         });
 
-        Event::listen('http.workerStop', function () {
+        Event::listen('swoole.workerStop', function () {
             $this->removeWatchedFile();
         });
 
@@ -172,20 +190,7 @@ class ServerCommand extends Command
     }
 
     /**
-     * Initialize command action.
-     */
-    protected function initAction()
-    {
-        $this->action = $this->argument('action');
-
-        if (! in_array($this->action, ['start', 'stop', 'restart', 'reload', 'watch'])) {
-            $this->error('Unexpected argument "' . $this->action . '".');
-            exit(1);
-        }
-    }
-
-    /**
-     * If Swoole process is running.
+     * If swoole process is running.
      *
      * @param int $pid
      * @return bool
@@ -267,6 +272,8 @@ class ServerCommand extends Command
 
     /**
      * Remove Pid file.
+     *
+     * @return void
      */
     protected function removePidFile()
     {
@@ -276,12 +283,14 @@ class ServerCommand extends Command
     }
 
     /**
-     * Extension swoole is required.
+     * Detect if ext-swoole exists.
+     *
+     * @return void
      */
     protected function detectSwoole()
     {
         if (! extension_loaded('swoole')) {
-            $this->error('Extension swoole is required!');
+            $this->error('The ext-swoole is required! (pecl install swoole)');
 
             exit(1);
         }
@@ -302,7 +311,7 @@ class ServerCommand extends Command
         $watcher = new Watcher($directories, $excludedDirectories, $suffixes);
 
         return $watcher->setHandler(function () {
-            $this->info('Reload swoole_http_server.');
+            $this->info('Reload server.');
 
             $this->laravel['swoole.server']->reload();
         });
