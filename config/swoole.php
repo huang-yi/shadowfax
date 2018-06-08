@@ -47,11 +47,11 @@ return [
     | Swoole tables.
     |--------------------------------------------------------------------------
     |
-    | 'name'    - Define table name.
+    | name    - Define table name.
     |
-    | 'columns' - Define table columns.
-    |             Format: [column_name, column_type, column_length]
-    |             Column types: int, integer, string, varchar, char, float.
+    | columns - Define table columns.
+    |           Format: [column_name, column_type, column_length]
+    |           Column types: int, integer, string, varchar, char, float.
     |
     */
 
@@ -64,5 +64,32 @@ return [
         //         ['score', 'float'],
         //     ],
         // ],
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | File watcher configurations.
+    |--------------------------------------------------------------------------
+    |
+    | directories          - The directories should be watched.
+    |
+    | excluded_directories - The directories should not be watched.
+    |
+    | suffixes             - The file suffix to be watched should be in this array.
+    |
+    */
+
+    'watcher' => [
+        'directories' => [
+            base_path(),
+        ],
+
+        'excluded_directories' => [
+            base_path('storage/'),
+        ],
+
+        'suffixes' => [
+            '.php', '.env',
+        ],
     ],
 ];
