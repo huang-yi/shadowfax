@@ -416,7 +416,9 @@ class ServerManager
      */
     protected function removePidFile()
     {
-        unlink($this->getPidFile());
+        if (file_exists($this->getPidFile())) {
+            unlink($this->getPidFile());
+        }
     }
 
     /**
