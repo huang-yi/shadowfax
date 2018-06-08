@@ -10,8 +10,10 @@
         }
     ],
     "require": {
+        "huang-yi/swoole-watcher": "0.0.*",
         "illuminate/console": "~5.2",
         "illuminate/contracts": "~5.2",
+        "illuminate/events": "~5.2",
         "illuminate/http": "~5.2",
         "illuminate/pipeline": "~5.2",
         "illuminate/redis": "~5.2",
