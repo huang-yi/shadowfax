@@ -448,12 +448,11 @@ class ServerManager
             return;
         }
 
-        $serverName = 'swoole-http-server';
-        $appName = $this->container['config']->get('app.name', 'Laravel');
+        $serverName = $this->enableWebsocket() ? 'swoole-websocket-server' : 'swoole-http-server';
         $host = $this->getConfig('server.host');
         $port = $this->getConfig('server.port');
 
-        $name = sprintf('%s: %s for %s, %s:%s', $serverName, $process, $appName, $host, $port);
+        $name = sprintf('%s: %s[%s:%s]', $serverName, $process, $host, $port);
 
         swoole_set_process_name($name);
     }
