@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method static void join(string $path, int $socketId)
  * @method static void leave(int $socketId)
- * @method static void broadcast(string $path, \HuangYi\Swoole\Contracts\MessageContract $message, array|int|null $excepts)
+ * @method static void broadcast(string $path, \HuangYi\Swoole\Contracts\MessageContract $message, array|int $excepts = null)
  * @method static void emit(int $socketId, \HuangYi\Swoole\Contracts\MessageContract $message)
  * @method static \Swoole\Server getServer()
  * @method static string getPath(int $socketId)
  * @method static array getClients(string $path)
+ * @method static void flushAll()
  * @method static void flush(string $path)
  *
  * @see \HuangYi\Swoole\Websocket\NamespaceManager
