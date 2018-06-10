@@ -34,9 +34,11 @@ class NamespaceManager
      */
     public function join($path, $socketId)
     {
+        $path = $this->formatPath($path);
         $pathKey = $this->getPathKey($path);
         $clientKey = $this->getClientKey($socketId);
 
+        $this->getStore()->sadd('websocket:paths', $path);
         $this->getStore()->sadd($pathKey, $socketId);
         $this->getStore()->hset($clientKey, 'path', $path);
     }
@@ -62,11 +64,12 @@ class NamespaceManager
      *
      * @param string $path
      * @param \HuangYi\Swoole\Contracts\MessageContract $message
-     * @param array|int|null $excepts
+     * @param array|int $excepts
      * @return void
      */
     public function broadcast($path, MessageContract $message, $excepts = null)
     {
+        $path = $this->formatPath($path);
         $clients = $this->getClients($path);
 
         if (! is_null($excepts)) {
@@ -99,13 +102,46 @@ class NamespaceManager
     }
 
     /**
+     * Flush all paths.
+     *
+     * @return void
+     */
+    public function flushAll()
+    {
+        $this->getStore()->multi();
+
+        foreach ($this->getPaths() as $path) {
+            $this->flush($path);
+        }
+
+        $this->getStore()->exec();
+    }
+
+    /**
+     * Flush path.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function flush($path)
+    {
+        $path = $this->formatPath($path);
+
+        foreach ($this->getClients($path) as $socketId) {
+            $this->leave($socketId);
+        }
+
+        $this->getStore()->srem($this->getPathsKey(), $path);
+    }
+
+    /**
      * Get swoole server.
      *
      * @return \Swoole\Server
      */
     public function getServer()
     {
-        return $this->container['swoole.server']->getServer();
+        return $this->container['swoole.server'];
     }
 
     /**
@@ -119,6 +155,16 @@ class NamespaceManager
         $key = $this->getClientKey($socketId);
 
         return $this->getStore()->hget($key, 'path');
+    }
+
+    /**
+     * Get paths.
+     *
+     * @return array
+     */
+    public function getPaths()
+    {
+        return $this->getStore()->smembers('websocket:paths');
     }
 
     /**
@@ -139,13 +185,30 @@ class NamespaceManager
     }
 
     /**
+     * Format path.
+     *
+     * @param string $path
+     * @return string
+     */
+    public function formatPath($path)
+    {
+        return '/' . trim($path, '/');
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathsKey()
+    {
+        return 'websocket:paths';
+    }
+
+    /**
      * @param string $path
      * @return string
      */
     public function getPathKey($path)
     {
-        $path = '/' . trim($path, '/');
-
         return sprintf('websocket:paths:%s', sha1($path));
     }
 
@@ -159,28 +222,15 @@ class NamespaceManager
     }
 
     /**
-     * Flush namespace.
-     *
-     * @param string $path
-     * @return void
-     */
-    public function flush($path)
-    {
-        $server = $this->getServer();
-
-        foreach ($this->getClients($path) as $socketId) {
-            $server->close($socketId);
-        }
-    }
-
-    /**
      * Get redis connection.
      *
      * @return \Illuminate\Redis\Connections\Connection
      */
     protected function getStore()
     {
-        $connection = $this->container['config']->get('swoole.websocket.redis', 'default');
+        $connection = $this->container['config']->get(
+            'swoole.namespace_redis', 'default'
+        );
 
         return $this->container['redis']->connection($connection);
     }
