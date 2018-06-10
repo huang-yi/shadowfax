@@ -16,12 +16,14 @@ class SwooleServiceProvider extends ServiceProvider
      * Register the service provider.
      *
      * @return void
+     * @throws \HuangYi\Swoole\Exceptions\TableCreationFailedException
      */
     public function register()
     {
         $this->mergeConfig();
+        $this->registerTable();
         $this->registerWebsocket();
-        $this->registerManager();
+        $this->registerServer();
         $this->registerCommands();
     }
 
@@ -39,10 +41,27 @@ class SwooleServiceProvider extends ServiceProvider
 
     /**
      * Merge configurations.
+     *
+     * @return void
      */
     protected function mergeConfig()
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/swoole.php', 'swoole');
+    }
+
+    /**
+     * Register table.
+     *
+     * @return void
+     * @throws \HuangYi\Swoole\Exceptions\TableCreationFailedException
+     */
+    protected function registerTable()
+    {
+        $tables = $this->app['config']['swoole.tables'];
+
+        $tableCollection = new TableCollection($tables);
+
+        $this->app->instance('swoole.tables', $tableCollection);
     }
 
     /**
@@ -53,7 +72,13 @@ class SwooleServiceProvider extends ServiceProvider
     protected function registerWebsocket()
     {
         $this->app->singleton('swoole.websocket.router', function ($app) {
-            return new HttpRouter($app['events'], $app);
+            HttpRouter::macro('path', function ($uri, $action = null) {
+                return $this->get($uri, $action);
+            });
+
+            $router = new HttpRouter($app['events'], $app);
+
+            return $router;
         });
 
         $this->app->singleton('swoole.websocket.kernel', function ($app) {
@@ -76,11 +101,11 @@ class SwooleServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register manager.
+     * Register server.
      *
      * @return void
      */
-    protected function registerManager()
+    protected function registerServer()
     {
         $this->app->singleton('swoole.server', function ($app) {
             return new ServerManager($app);
@@ -102,7 +127,7 @@ class SwooleServiceProvider extends ServiceProvider
      */
     protected function resetProviders()
     {
-        $resetProviders = $this->app['config']->get('swoole.server.reset_providers');
+        $resetProviders = $this->app['config']->get('swoole.reset_providers');
 
         foreach ($resetProviders as $provider) {
             if (is_subclass_of($provider, ServiceProvider::class)) {
