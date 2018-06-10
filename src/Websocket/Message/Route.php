@@ -105,7 +105,7 @@ class Route
      */
     public function gatherMiddleware()
     {
-        $middleware = (array) ($this->action['middleware'] ?? []);
+        $middleware = (array) (array_get($this->action, 'middleware', []));
 
         if (! empty($middleware)) {
             $middleware = collect($middleware)->map(function ($name) {

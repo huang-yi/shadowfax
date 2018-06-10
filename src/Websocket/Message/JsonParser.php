@@ -22,6 +22,10 @@ class JsonParser implements ParserContract
             throw new MessageParseException("[$payload] is not a valid json.");
         }
 
-        return new Message($message['event'], $message['data'] ?? null);
+        if (! isset($message['event'])) {
+            throw new MessageParseException("The message must have an 'event' attribute.");
+        }
+
+        return new Message($message['event'], array_get($message, 'data'));
     }
 }

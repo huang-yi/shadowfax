@@ -108,13 +108,13 @@ class Router
      * Find route.
      *
      * @param \HuangYi\Swoole\Contracts\MessageContract $message
-     * @return mixed|null
+     * @return \HuangYi\Swoole\Websocket\Message\Route|null
      */
     public function findRoute(MessageContract $message)
     {
         $event = $message->getEvent();
 
-        return $this->routes[$event] ?? null;
+        return array_get($this->routes, $event, null);
     }
 
     /**

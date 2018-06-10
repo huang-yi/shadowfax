@@ -14,7 +14,7 @@ class BroadcastTask extends TaskAbstract
      */
     public function handle($server, $taskId, $srcWorkerId)
     {
-        $clients = $this->data['clients'] ?? $server->connections;
+        $clients = array_get($this->data, 'clients', $server->connections);
 
         foreach ($clients as $socketId) {
             if ($server->exist($socketId)) {
