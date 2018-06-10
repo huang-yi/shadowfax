@@ -13,6 +13,6 @@ class Server extends Facade
 {
     protected static function getFacadeAccessor()
     {
-        return static::$app['swoole.server'];
+        return 'swoole.server';
     }
 }
