@@ -72,7 +72,7 @@ class Kernel
      */
     protected function getParser()
     {
-        $parserClass = $this->container['config']->get('swoole.websocket.message_parser', JsonParser::class);
+        $parserClass = $this->container['config']->get('swoole.message_parser', JsonParser::class);
 
         return $this->container->make($parserClass);
     }
