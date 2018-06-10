@@ -57,11 +57,11 @@ $app->register(HuangYi\Swoole\SwooleServiceProvider::class);
 $ php artisan vendor:publish  --provider="HuangYi\Swoole\SwooleServiceProvider"
 ```
 
-请参考[配置说明](#Configurations)，调整配置文件参数。
+请参考[配置说明](#configurations)，调整配置文件参数。
 
 **3、启动服务**
 
-可以使用`php artisan swoole:server`来管理服务，[这里](#Commands)可以获取更多关于该命令的说明。
+可以使用`php artisan swoole:server`来管理服务，[这里](#commands)可以获取更多关于该命令的说明。
 
 在这里，我们只需要简单执行`php artisan swoole:server`即可快速启动服务。
 
@@ -69,7 +69,7 @@ $ php artisan vendor:publish  --provider="HuangYi\Swoole\SwooleServiceProvider"
 
 默认地，我们可以使用浏览器访问地址`http://127.0.0.1:1215`，就可以成功看到Web界面了。
 
-如果你想为自己的网站配置域名，请参考[Nginx配置](#Nginx)
+如果你想为自己的网站配置域名，请参考[Nginx配置](#nginx)
 
 ## Configurations
 
@@ -109,7 +109,7 @@ Websocket消息的解析器。默认为`HuangYi\Swoole\Websocket\Message\JsonPar
 
 ### namespace_redis
 
-Websocket的namespace数据使用redis存储，你可以指定一个redis连接来专门管理你的namespace数据。[这里](#Namespaces)可以获取更多关于namespace的说明。
+Websocket的namespace数据使用redis存储，你可以指定一个redis连接来专门管理你的namespace数据。[这里](#namespaces)可以获取更多关于namespace的说明。
 
 ### tables
 
@@ -135,7 +135,7 @@ Websocket的namespace数据使用redis存储，你可以指定一个redis连接�
 
 其中`name`为表名；`size`为表格最大行数，其值必须为2的次方；`columns`为表的列，每个列需要定义三个属性：列名、类型、长度。其中类型可以为`int`、`integer`、`string`、`varchar`、`char`、`float`。
 
-[这里](#Tables)可以获取更多关于Tables的说明。
+[这里](#tables)可以获取更多关于Tables的说明。
 
 > 注意：`int`、`integer`都表示整型，`string`、`varchar`、`char`都表示字符串，没有什么区别。
 

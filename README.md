@@ -1,6 +1,6 @@
 # Laravel-Swoole-Http
 
-A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it also supports [websocket server](#Websocket). 
+A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it also supports [websocket server](#websocket). 
 
 ## Requirements
 
@@ -50,7 +50,7 @@ You need to publish the configuration file:
 $ php artisan vendor:publish --provider="HuangYi\Swoole\SwooleServiceProvider"
 ```
 
-Click here for more information about the [configurations](#Configurations).
+Click here for more information about the [configurations](#configurations).
 
 4. Start server
 
@@ -62,7 +62,7 @@ php artisan swoole:server
 
 And then, you can visit your website via http://127.0.0.1:1215.
 
-Click here for more information about the [commands](#Commands).
+Click here for more information about the [commands](#commands).
 
 ## Configurations
 
@@ -100,7 +100,7 @@ The websocket message parser. You can replace this option with a custom parser.
 
 This option controls the redis connection that store the namespaces of websocket.
 
-Click here for more information about the [namespaces](#Namespaces).
+Click here for more information about the [namespaces](#namespaces).
 
 ### tables
 
@@ -126,7 +126,7 @@ This option defines all the swoole tables. Such as:
 - `size`: Defines the maximum number of rows.
 - `columns`: Defines the table's columns. Format: [`column_name`, `column_type`, `column_length`]. The values of `column_type`: `int`, `integer`, `string`, `varchar`, `char`, `float`.
 
-Click here for more information about the [tables](#Tables).
+Click here for more information about the [tables](#tables).
 
 ### watcher
 
