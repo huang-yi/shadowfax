@@ -4,65 +4,107 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Server configurations.
+    | Server driver
+    |--------------------------------------------------------------------------
+    |
+    | Supported: "http", "websocket"
+    |
+    */
+
+    'driver' => 'http',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Server host
+    |--------------------------------------------------------------------------
+    |
+    | The ip address of the server.
+    |
+    */
+
+    'host' => env('SWOOLE_HOST', '127.0.0.1'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Server host
+    |--------------------------------------------------------------------------
+    |
+    | The port of the server.
+    |
+    */
+
+    'port' => env('SWOOLE_PORT', '1215'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Server configurations
     |--------------------------------------------------------------------------
     |
     | @see https://www.swoole.co.uk/docs/modules/swoole-server/configuration
     |
     */
 
-    'server' => [
-        'host' => env('SWOOLE_SERVER_HOST', '127.0.0.1'),
+    'options' => [
+        'pid_file' => env('SWOOLE_OPTIONS_PID_FILE', base_path('storage/logs/swoole.pid')),
 
-        'port' => env('SWOOLE_SERVER_PORT', '1215'),
+        'log_file' => env('SWOOLE_OPTIONS_LOG_FILE', base_path('storage/logs/swoole.log')),
 
-        'options' => [
-            'pid_file' => env('SWOOLE_SERVER_OPTIONS_PID_FILE', base_path('storage/logs/swoole.pid')),
+        'daemonize' => env('SWOOLE_OPTIONS_DAEMONIZE', 1),
 
-            'log_file' => env('SWOOLE_SERVER_OPTIONS_LOG_FILE', base_path('storage/logs/swoole.log')),
+        'worker_num' => env('SWOOLE_OPTIONS_WORKER_NUM', swoole_cpu_num()),
 
-            'daemonize' => env('SWOOLE_SERVER_OPTIONS_DAEMONIZE', 1),
-        ],
+        // This value must be greater than 0 if use websocket or task.
+        'task_worker_num' => env('SWOOLE_OPTIONS_TASK_WORKER_NUM', 0),
+    ],
 
-        /*
-        |----------------------------------------------------------------------
-        | These providers will be re-registered after every request.
-        |----------------------------------------------------------------------
-        |
-        */
-
-        'reset_providers' => [
-            // Illuminate\Auth\AuthServiceProvider::class,
-        ],
+    /*
+    |----------------------------------------------------------------------
+    | Reset providers
+    |----------------------------------------------------------------------
+    |
+    | These providers will be re-registered after every request.
+    |
+    */
+    'reset_providers' => [
+        // Illuminate\Auth\AuthServiceProvider::class,
     ],
 
     /*
     |--------------------------------------------------------------------------
-    | Websocket configurations.
+    | Websocket message parser class
     |--------------------------------------------------------------------------
     |
-    | Websocket server is only supported in Laravel framework now.
+    | This class allows you to customize the message format of websocket.
+    | And it must implement "HuangYi\Swoole\Contracts\ParserContract".
     |
     */
 
-    'websocket' => [
-        'enable' => false,
-
-        'message_parser' => HuangYi\Swoole\Websocket\Message\JsonParser::class,
-
-        'redis' => env('SWOOLE_WEBSOCKET_REDIS', 'default'),
-    ],
+    'message_parser' => HuangYi\Swoole\Websocket\Message\JsonParser::class,
 
     /*
     |--------------------------------------------------------------------------
-    | Swoole tables.
+    | Websocket namespace redis connection
     |--------------------------------------------------------------------------
     |
-    | name    - Define table name.
+    | You may specify a redis connection that should be used to manage the
+    | websocket namespaces.
     |
-    | columns - Define table columns.
-    |           Format: [column_name, column_type, column_length]
-    |           Column types: int, integer, string, varchar, char, float.
+    */
+
+    'namespace_redis' => env('SWOOLE_NAMESPACE_REDIS', 'default'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Swoole tables
+    |--------------------------------------------------------------------------
+    |
+    | "name": Table name.
+    | "columns": Table columns.
+    |
+    | Define a column:
+    |     [column_name, column_type, column_length]
+    | Supported column types:
+    |     "int", "integer", "string", "varchar", "char", "float"
     |
     */
 
@@ -79,14 +121,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | File watcher configurations.
+    | File watcher configurations
     |--------------------------------------------------------------------------
     |
-    | directories          - The directories should be watched.
-    |
-    | excluded_directories - The directories should not be watched.
-    |
-    | suffixes             - The file suffix to be watched should be in this array.
+    | "directories": The directories should be watched.
+    | "excluded_directories": The directories should not be watched.
+    | "suffixes": The file suffix to be watched should be in this array.
     |
     */
 
