@@ -3,7 +3,6 @@
 namespace HuangYi\Swoole\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Event;
 use Swoole\Process;
 
 class ServerCommand extends Command
@@ -20,7 +19,7 @@ class ServerCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Swoole http/sebsocket server controller.';
+    protected $description = 'Swoole http/websocket server controller.';
 
     /**
      *
@@ -76,10 +75,10 @@ class ServerCommand extends Command
         }
 
         $this->info('Starting server...');
-        $this->info('> (You can run this command to ensure the ' .
-            'swoole process is running: ps -ef|grep "swoole")');
+        $this->info('> (Run this command to ensure the swoole process is ' .
+            'running: ps -ef|grep "swoole")');
 
-        $this->laravel->make('swoole.server')->start();
+        $this->laravel['swoole.server']->start();
     }
 
     /**
@@ -107,8 +106,6 @@ class ServerCommand extends Command
             exit(1);
         }
 
-        // I don't known why Swoole didn't trigger "onShutdown" after sending SIGTERM.
-        // So we should manually remove the pid file.
         $this->removePidFile();
 
         $this->info('> success');
@@ -173,7 +170,7 @@ class ServerCommand extends Command
             $this->removeWatchedFile();
         }
 
-        $this->laravel['config']->set('swoole.server.options.daemonize', 0);
+        $this->laravel['config']->set('swoole.options.daemonize', 0);
 
         $this->laravel['events']->listen('swoole.workerStart', function () {
             if ($this->createWatchedFile()) {
@@ -267,7 +264,7 @@ class ServerCommand extends Command
      */
     protected function getPidPath()
     {
-        return $this->laravel['config']->get('swoole.server.options.pid_file');
+        return $this->laravel['config']['swoole.options.pid_file'];
     }
 
     /**
