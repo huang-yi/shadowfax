@@ -3,11 +3,24 @@ dist: trusty
 sudo: false
 
 matrix:
+  fast_finish: true
   include:
+    - php: 7.0
+      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
+    - php: 7.0
+      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
+    - php: 7.1
+      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
+    - php: 7.1
+      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
     - php: 7.2
-      env: FRAMEWORK_VERSION=laravel/framework:5.6.*
+      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
     - php: 7.2
-      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.6.*
+      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
+    - php: 7.3
+      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
+    - php: 7.3
+      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
 
 before_install:
   - pecl install swoole
