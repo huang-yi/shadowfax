@@ -119,7 +119,7 @@ class RequestTransformer
         }
 
         foreach ($header as $key => $value) {
-            $key = strtoupper(str_replace('-', '_', $key));
+            $key = 'HTTP_' . strtoupper(str_replace('-', '_', $key));
             $__SERVER[$key] = $value;
         }
 
