@@ -35,10 +35,11 @@ class NamespaceManager
     public function join($path, $socketId)
     {
         $path = $this->formatPath($path);
+        $pathsKey = $this->getPathsKey();
         $pathKey = $this->getPathKey($path);
         $clientKey = $this->getClientKey($socketId);
 
-        $this->getStore()->sadd('websocket:paths', $path);
+        $this->getStore()->sadd($pathsKey, $path);
         $this->getStore()->sadd($pathKey, $socketId);
         $this->getStore()->hset($clientKey, 'path', $path);
     }
@@ -57,6 +58,39 @@ class NamespaceManager
 
         $this->getStore()->srem($pathKey, $socketId);
         $this->getStore()->hdel($clientKey, 'path');
+    }
+
+    /**
+     * Flush all paths.
+     *
+     * @return void
+     */
+    public function flushAll()
+    {
+        $this->getStore()->multi();
+
+        foreach ($this->getPaths() as $path) {
+            $this->flush($path);
+        }
+
+        $this->getStore()->exec();
+    }
+
+    /**
+     * Flush path.
+     *
+     * @param string $path
+     * @return void
+     */
+    public function flush($path)
+    {
+        $path = $this->formatPath($path);
+
+        foreach ($this->getClients($path) as $socketId) {
+            $this->getServer()->close($socketId);
+        }
+
+        $this->getStore()->srem($this->getPathsKey(), $path);
     }
 
     /**
@@ -99,39 +133,6 @@ class NamespaceManager
             'message' => (string) $message,
             'to' => $socketId,
         ]));
-    }
-
-    /**
-     * Flush all paths.
-     *
-     * @return void
-     */
-    public function flushAll()
-    {
-        $this->getStore()->multi();
-
-        foreach ($this->getPaths() as $path) {
-            $this->flush($path);
-        }
-
-        $this->getStore()->exec();
-    }
-
-    /**
-     * Flush path.
-     *
-     * @param string $path
-     * @return void
-     */
-    public function flush($path)
-    {
-        $path = $this->formatPath($path);
-
-        foreach ($this->getClients($path) as $socketId) {
-            $this->leave($socketId);
-        }
-
-        $this->getStore()->srem($this->getPathsKey(), $path);
     }
 
     /**

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Facade;
  * Swoole Table Facade.
  *
  * @method static void join(string $path, int $socketId)
- * @method static void leave(int $socketId)
  * @method static void broadcast(string $path, \HuangYi\Swoole\Contracts\MessageContract $message, array|int $excepts = null)
  * @method static void emit(int $socketId, \HuangYi\Swoole\Contracts\MessageContract $message)
  * @method static \Swoole\Server getServer()
