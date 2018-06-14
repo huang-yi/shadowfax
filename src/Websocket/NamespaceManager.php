@@ -165,7 +165,7 @@ class NamespaceManager
      */
     public function getPaths()
     {
-        return $this->getStore()->smembers('websocket:paths');
+        return $this->getStore()->smembers($this->getPathsKey());
     }
 
     /**
