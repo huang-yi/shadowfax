@@ -130,9 +130,9 @@ class WebsocketServer extends HttpServer
      */
     public function onClose($server, $socketId, $reactorId)
     {
-        $this->container['swoole.websocket.namespace']->leave($socketId);
-
         $this->container['events']->fire('swoole.close', func_get_args());
+
+        $this->container['swoole.websocket.namespace']->leave($socketId);
     }
 
     /**
@@ -142,9 +142,9 @@ class WebsocketServer extends HttpServer
      */
     public function onShutdown()
     {
-        $this->container['swoole.websocket.namespace']->flushAll();
-
         $this->container['events']->fire('swoole.shutdown', func_get_args());
+
+        $this->container['swoole.websocket.namespace']->flushAll();
     }
 
     /**

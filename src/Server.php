@@ -126,9 +126,9 @@ abstract class Server
      */
     public function onStart()
     {
-        $this->setProcessName('master process');
-
         $this->container['events']->fire('swoole.start', func_get_args());
+
+        $this->setProcessName('master process');
     }
 
     /**
@@ -138,9 +138,9 @@ abstract class Server
      */
     public function onManagerStart()
     {
-        $this->setProcessName('manager process');
-
         $this->container['events']->fire('swoole.managerStart', func_get_args());
+
+        $this->setProcessName('manager process');
     }
 
     /**
@@ -150,9 +150,9 @@ abstract class Server
      */
     public function onWorkerStart()
     {
-        $this->setProcessName('worker process');
-
         $this->container['events']->fire('swoole.workerStart', func_get_args());
+
+        $this->setProcessName('worker process');
     }
 
     /**
@@ -166,11 +166,11 @@ abstract class Server
      */
     public function onTask($server, $taskId, $srcWorkerId, $task)
     {
+        $this->container['events']->fire('swoole.task', func_get_args());
+
         if ($task instanceof TaskContract) {
             $task->handle($server, $taskId, $srcWorkerId);
         }
-
-        $this->container['events']->fire('swoole.task', func_get_args());
     }
 
     /**
