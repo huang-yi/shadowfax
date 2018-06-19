@@ -110,30 +110,6 @@ class SwooleServiceProvider extends ServiceProvider
         $this->app->singleton('swoole.server', function ($app) {
             return new ServerManager($app);
         });
-
-        $this->app['events']->listen('swoole.requested', function () {
-            $this->resetProviders();
-        });
-
-        $this->app['events']->listen('swoole.opened', function () {
-            $this->resetProviders();
-        });
-    }
-
-    /**
-     * Reset providers.
-     *
-     * @return void
-     */
-    protected function resetProviders()
-    {
-        $resetProviders = $this->app['config']->get('swoole.reset_providers');
-
-        foreach ($resetProviders as $provider) {
-            if (is_subclass_of($provider, ServiceProvider::class)) {
-                $this->app->register($provider, [], true);
-            }
-        }
     }
 
     /**

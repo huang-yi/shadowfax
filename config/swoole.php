@@ -59,14 +59,16 @@ return [
 
     /*
     |----------------------------------------------------------------------
-    | Reset providers
+    | Resets
     |----------------------------------------------------------------------
     |
-    | These providers will be re-registered after every request.
+    | This option allows you to reset some service providers or some
+    | instances in IoC container.
     |
     */
-    'reset_providers' => [
-        // Illuminate\Auth\AuthServiceProvider::class,
+    'resets' => [
+        'auth',
+        'auth.driver',
     ],
 
     /*

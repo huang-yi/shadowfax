@@ -5,6 +5,7 @@ namespace HuangYi\Swoole;
 use HuangYi\Swoole\Transformers\RequestTransformer;
 use HuangYi\Swoole\Transformers\ResponseTransformer;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Swoole\Http\Server as SwooleHttpServer;
 
@@ -64,6 +65,20 @@ class HttpServer extends Server
 
         $this->container->instance('swoole.http.request', $request);
 
+        $this->handleHttpRequest($request, $request);
+
+        $this->container['events']->fire('swoole.requested', func_get_args());
+    }
+
+    /**
+     * Handle http request.
+     *
+     * @param \Swoole\Http\Request $request
+     * @param \Swoole\Http\Response $response
+     * @return void
+     */
+    protected function handleHttpRequest($request, $response)
+    {
         $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
 
         if ($this->isLumen()) {
@@ -78,7 +93,9 @@ class HttpServer extends Server
             $this->httpKernel->terminate($illuminateRequest, $illuminateResponse);
         }
 
-        $this->container['events']->fire('swoole.requested', func_get_args());
+        $this->flushSession();
+
+        $this->reset();
     }
 
     /**
@@ -89,6 +106,40 @@ class HttpServer extends Server
     protected function isLumen()
     {
         return $this->container instanceof LumenApplication;
+    }
+
+    /**
+     * Flush session.
+     *
+     * @return void
+     */
+    protected function flushSession()
+    {
+        if ($this->container->has('session') &&
+            method_exists($this->container['session'], 'flush')
+        ) {
+            $this->container['session']->flush();
+        }
+    }
+
+    /**
+     * Reset instances and service providers.
+     *
+     * @return void
+     */
+    protected function reset()
+    {
+        $resets = $this->container['config']->get('swoole.resets', []);
+
+        foreach ($resets as $abstract) {
+            if ($abstract instanceof ServiceProvider) {
+                $this->container->register($abstract, [], true);
+            } else {
+                $abstract = $this->container->getAlias($abstract);
+
+                $this->container->forgetInstance($abstract);
+            }
+        }
     }
 
     /**

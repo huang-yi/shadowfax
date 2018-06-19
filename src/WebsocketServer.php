@@ -95,11 +95,7 @@ class WebsocketServer extends HttpServer
 
         $this->container->instance('swoole.http.request', $request);
 
-        $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
-
-        $illuminateResponse = $this->websocketKernel->handle($illuminateRequest);
-
-        $this->websocketKernel->terminate($illuminateRequest, $illuminateResponse);
+        $this->handleOpenRequest($request);
 
         $this->container['events']->fire('swoole.opened', func_get_args());
     }
@@ -145,6 +141,25 @@ class WebsocketServer extends HttpServer
         $this->container['events']->fire('swoole.shutdown', func_get_args());
 
         $this->container['swoole.websocket.namespace']->flushAll();
+    }
+
+    /**
+     * Handle open request.
+     *
+     * @param $request
+     * @return void
+     */
+    protected function handleOpenRequest($request)
+    {
+        $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
+
+        $illuminateResponse = $this->websocketKernel->handle($illuminateRequest);
+
+        $this->websocketKernel->terminate($illuminateRequest, $illuminateResponse);
+
+        $this->flushSession();
+
+        $this->reset();
     }
 
     /**
