@@ -1,6 +1,10 @@
 # Laravel-Swoole-Http
 
-A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it also supports [websocket server](#websocket). 
+A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it supports [websocket server](#Websocket). 
+
+## Translations
+
+- [中文文档](README-cn.md)
 
 ## Requirements
 
@@ -86,9 +90,9 @@ The options of the server. Get more information from the [official documents](ht
 
 > Notice: The value of `task_worker_num` must be greater than 0 if you are using websocket server or task process.
 
-### reset_providers
+### resets
 
-These service providers will be reset after every request. This option can help developers avoid pollution problems caused by singleton. Such as `auth`.
+This option allows you to reset some service providers or some instances in IoC container after every request. This option can help developers avoid pollution problems caused by singleton. Such as `auth`.
 
 ### message_parser
 
@@ -236,13 +240,133 @@ class ChattingRoom
 
 ### Websocket Route
 
+You can define namespace using websocket route facade. The websocket router is inherited from the `Illuminate\Routing\Router`.
+
+```php
+<?php
+
+use HuangYi\Swoole\Facades\WebsocketNamespace;
+use HuangYi\Swoole\Facades\WebsocketRoute;
+use HuangYi\Swoole\Websocket\Message\Message;
+use Illuminate\Http\Request;
+
+WebsocketRoute::path('/chatting_room', function (Request $request) {
+    $socketId = app('swoole.http.request')->fd;
+    $path = $request->path();
+    $message = Message::make('user join', "User [{$socketId}] joined.");
+
+    WebsocketNamespace::broadcast($path, $message, $socketId);
+});
+
+```
+
 ### Message Route
+
+The message route is used to specify a handler for a websocket event.
+
+```php
+<?php
+use HuangYi\Swoole\Facades\MessageRoute;
+use HuangYi\Swoole\Websocket\Message\Message;
+
+// Using closure.
+MessageRoute::on('send private message', function (Message $message) {
+    // Do something.
+});
+
+// Using controller.
+MessageRoute::on('send group message', 'ChattingRoom@sendGroupMessage');
+
+```
+
+The handler method will be injected a message entity: `HuangYi\Swoole\Websocket\Message\Message`.
 
 ## Tables
 
+The Swoole Table can help developers to share data between worker processes. You can define the structure of a Swoole Table in the configuration file.
+
+```php
+<?php
+use HuangYi\Swoole\Facades\Table;
+
+// Insert a record.
+Table::use('users')->set(1, ['id' => 1, 'nickname' => 'Bob', 'score' => 9.5]);
+
+// Query a record.
+$bob = Table::use('users')->get(1);
+$nickname = Table::use('users')->get(1, 'nickname');
+
+// Truncate a table.
+Table::truncate('users');
+
+```
+
+Click here for more information about the [Swoole Tables](#https://www.swoole.co.uk/docs/modules/swoole-table).
+
 ## Task
 
+Define a task:
+
+```php
+<?php
+
+use HuangYi\Swoole\Contracts\TaskContract;
+use Illuminate\Support\Facades\Mail;
+
+class SendMailTask implements TaskContract
+{
+    /**
+     * @var array $mail
+     */
+    protected $mail;
+
+    /**
+     * Mail task
+     * 
+     * @var array $mail
+     * @return void
+     */
+    public function __construct(array $mail)
+    {
+        $this->mail = $mail;
+    }
+
+    /**
+     * Task handler.
+     *
+     * @param \Swoole\Server $server
+     * @param int $taskId
+     * @param int $srcWorkerId
+     * @return void
+     */
+    public function handle($server, $taskId, $srcWorkerId)
+    {
+        Mail::to($this->mail['to'])->send($this->mail['view'], $this->mail['data']);
+    }
+}
+
+```
+
+Send the task to the task worker processes:
+
+```php
+<?php
+
+$task = new SendMailTask([
+    'to' => 'bob@mail.com',
+    'view' => 'mail',
+    'data' => [],
+]);
+
+app('swoole.server')->task($task);
+
+```
+
+> Notice: To start the task worker processes, the value of `task_worker_num` must be set to greater than 0.
+
 ## Nginx
+
+Http configurations:
 
 ```nginx
 server {
@@ -279,7 +403,7 @@ server {
 }
 ```
 
-Websocket:
+Websocket configurations:
 
 ```nginx
 map $http_upgrade $connection_upgrade {
@@ -324,3 +448,6 @@ server {
 ```
 
 ## Tips
+
+- Never use these functions: `sleep()`、`exit()`、`die()`.
+- Be careful of the singletons.

@@ -91,12 +91,12 @@ $ php artisan vendor:publish  --provider="HuangYi\Swoole\SwooleServiceProvider"
 
 > 注意：如果你想启用Websocket Server或者Task进程，那么必须将`task_worker_num`配置为大于0的数值。
 
-### reset_providers
+### resets
 
-需要重置的Service Provider列表。凡是配在该数组里的Service Provider都会在每个request结束后被重置。
+这项配置允许你配置一些需要被重置的Service Provider或者对象实例。重置时间为每个request后。
 
-> 为什么需要这个配置呢？基于swoole的应用与传统的PHP应用不同，swoole会使你的应用常驻内存，每次request后并不会像PHP-FPM那样销毁所有变量，有些单例仍会被保留下来。
-  例如Laravel的`auth`组件就是一个典型的单例，在swoole环境下，如果不重置`auth`组件，会导致后续request的用户身份都变成了第一个request的用户身份。（注意：并非所有的单例都会带来污染问题，请分析具体的使用场景）。
+> 为什么需要这个配置呢？基于swoole的应用与传统的PHP应用不同，swoole会使你的应用常驻内存，每次request后并不会像PHP-FPM那样销毁所有变量，所以Laravel IoC容器中的instances都会被保存下来。
+  例如`auth`组件就是一个典型的单例，在swoole环境下，如果不重置`auth`组件，会导致后续request的用户身份一直为第一个request的用户身份。（注意：并非所有的单例都会带来污染问题，请分析具体的使用场景）。
   因此为了避免单例带来的污染问题，你可以通过该配置项来解决。
 
 ### message_parser
@@ -460,5 +460,5 @@ server {
 
 ## 编程须知
 
-- 如果会造成变量污染的`Service Provider`，请将其写入`swoole.reset_providers`中；
 - 这些函数不应该出现在程序中（Artisan Command除外）：`sleep()`、`exit()`、`die()`。
+- 谨慎使用单例。
