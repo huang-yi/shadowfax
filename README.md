@@ -304,7 +304,7 @@ Table::truncate('users');
 
 ```
 
-Click here for more information about the [Swoole Tables](#https://www.swoole.co.uk/docs/modules/swoole-table).
+Click here for more information about the [Swoole Tables](https://www.swoole.co.uk/docs/modules/swoole-table).
 
 ## Task
 
