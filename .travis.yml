@@ -1,32 +1,16 @@
-language: php
 dist: trusty
 sudo: false
 
-matrix:
-  fast_finish: true
-  include:
-    - php: 7.0
-      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
-    - php: 7.0
-      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
-    - php: 7.1
-      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
-    - php: 7.1
-      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
-    - php: 7.2
-      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
-    - php: 7.2
-      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
-    - php: 7.3
-      env: FRAMEWORK_VERSION=laravel/framework:5.2.*
-    - php: 7.3
-      env: FRAMEWORK_VERSION=laravel/lumen-framework:5.2.*
+language: php
+
+php:
+  - '7.1'
+  - '7.2'
 
 before_install:
-  - pecl install swoole
+  - printf "\n" | pecl install swoole
 
 install:
-  - composer require "${FRAMEWORK_VERSION}" --no-update -n
   - travis_retry composer install --no-suggest --prefer-dist -n -o
 
 script: vendor/bin/phpunit
