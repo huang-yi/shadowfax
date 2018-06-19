@@ -65,7 +65,7 @@ class HttpServer extends Server
 
         $this->container->instance('swoole.http.request', $request);
 
-        $this->handleHttpRequest($request, $request);
+        $this->handleHttpRequest($request, $response);
 
         $this->container['events']->fire('swoole.requested', func_get_args());
     }
