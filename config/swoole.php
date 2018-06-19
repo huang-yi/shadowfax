@@ -66,6 +66,7 @@ return [
     | instances in IoC container.
     |
     */
+
     'resets' => [
         'auth',
         'auth.driver',
