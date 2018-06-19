@@ -1,5 +1,8 @@
 # Laravel-Swoole-Http
 
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
+[![Build Status](https://api.travis-ci.org/huang-yi/laravel-swoole-http.svg)](https://travis-ci.org/huang-yi/laravel-swoole-http)
+
 A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it supports [websocket server](#Websocket). 
 
 ## Translations
