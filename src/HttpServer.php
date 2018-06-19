@@ -70,11 +70,13 @@ class HttpServer extends Server
             $illuminateResponse = $this->container->handle($illuminateRequest);
         } else {
             $illuminateResponse = $this->httpKernel->handle($illuminateRequest);
-
-            $this->httpKernel->terminate($illuminateRequest, $illuminateResponse);
         }
 
         ResponseTransformer::make($illuminateResponse)->send($response);
+
+        if (! $this->isLumen()) {
+            $this->httpKernel->terminate($illuminateRequest, $illuminateResponse);
+        }
 
         $this->container['events']->fire('swoole.requested', func_get_args());
     }
