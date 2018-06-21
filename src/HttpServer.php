@@ -115,10 +115,10 @@ class HttpServer extends Server
      */
     protected function flushSession()
     {
-        if ($this->container->has('session') &&
-            method_exists($this->container['session'], 'flush')
+        if ($this->container->has('session.driver') &&
+            method_exists($this->container['session.driver'], 'flush')
         ) {
-            $this->container['session']->flush();
+            $this->container['session.driver']->flush();
         }
     }
 
