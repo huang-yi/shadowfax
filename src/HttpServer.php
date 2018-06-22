@@ -5,6 +5,7 @@ namespace HuangYi\Swoole;
 use HuangYi\Swoole\Transformers\RequestTransformer;
 use HuangYi\Swoole\Transformers\ResponseTransformer;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Swoole\Http\Server as SwooleHttpServer;
@@ -118,6 +119,8 @@ class HttpServer extends Server
         if ($this->container->resolved('session.store')) {
             $this->container['session.store']->flush();
             $this->container['session.store']->regenerate();
+
+            $this->rebindAbstract(StartSession::class);
         }
     }
 
