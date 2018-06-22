@@ -401,13 +401,9 @@ server {
         if ($uri = /index.php) {
             set $suffix "/";
         }
-    
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-        # IF https
-        # proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
 
         proxy_pass http://127.0.0.1:1215$suffix;
     }
@@ -443,15 +439,11 @@ server {
         if ($uri = /index.php) {
             set $suffix "/";
         }
-    
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
+
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection $connection_upgrade;
-
-        # IF https
-        # proxy_set_header X-Forwarded-Proto https;
 
         proxy_pass http://127.0.0.1:1215$suffix;
     }
