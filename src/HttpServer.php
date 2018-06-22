@@ -135,10 +135,26 @@ class HttpServer extends Server
             if ($abstract instanceof ServiceProvider) {
                 $this->container->register($abstract, [], true);
             } else {
-                $abstract = $this->container->getAlias($abstract);
-
-                $this->container->forgetInstance($abstract);
+                $this->rebindAbstract($abstract);
             }
+        }
+    }
+
+    /**
+     * Rebind abstract.
+     *
+     * @param string $abstract
+     * @return void
+     */
+    protected function rebindAbstract($abstract)
+    {
+        $abstract = $this->container->getAlias($abstract);
+        $binding = $this->container->getBindings()[$abstract] ?: null;
+
+        unset($this->container[$abstract]);
+
+        if ($binding) {
+            $this->container->bind($abstract, $binding['concrete'], $binding['shared']);
         }
     }
 
