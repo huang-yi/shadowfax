@@ -146,13 +146,19 @@ abstract class Server
     /**
      * The listener of "workerStart" event.
      *
+     * @param \Swoole\Server $server
+     * @param int $workerId
      * @return void
      */
-    public function onWorkerStart()
+    public function onWorkerStart($server, $workerId)
     {
         $this->container['events']->fire('swoole.workerStart', func_get_args());
 
-        $this->setProcessName('worker process');
+        if ($this->isTaskWorker($workerId)) {
+            $this->setProcessName('task process');
+        } else {
+            $this->setProcessName('worker process');
+        }
     }
 
     /**
@@ -193,6 +199,17 @@ abstract class Server
             $this->host,
             $this->port
         ));
+    }
+
+    /**
+     * Determine whether the process is task process.
+     *
+     * @param int $workerId
+     * @return bool
+     */
+    protected function isTaskWorker($workerId)
+    {
+        return $workerId >= $this->server['worker_num'];
     }
 
     /**
