@@ -25,7 +25,7 @@ $ composer require huang-yi/laravel-swoole-http
 
 2. Register service provider(Optional)
 
-You need to register the service provider manually, if the Laravel/Lumen version is less than 5.5:
+You need to register the service provider manually, if your Laravel/Lumen version is less than 5.5:
 
 ```php
 <?php
@@ -166,7 +166,7 @@ This command has an "action" argument and the default value is "start".
 
 ## Tables
 
-The Swoole Table can help developers to share data between worker processes. You can define the structure of a Swoole Table in the configuration file.
+The Swoole Table can help developers to share data across worker processes. You can define the table structures in the configuration file.
 
 ```php
 <?php
