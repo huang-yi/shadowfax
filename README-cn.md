@@ -175,7 +175,7 @@ File watcher配置。当使用`php artisan swoole:server watch`运行服务时�
 
 与[socket.io](https://socket.io/docs/rooms-and-namespaces/#namespaces)的namespace类似，这是一个十分有用的特性，开发者可以利用path来建立不同的namespace，从而达到分隔信道和应用的效果。
 
-客户端可以通过path加入指定的namespace，服务器会在完成握手协议后自动将客户端的socketId加入namespace，开发者不需要关系其处理细节。
+客户端可以通过path加入指定的namespace，服务器会在完成握手协议后自动将客户端的socketId加入namespace，开发者不需要关心其处理细节。
 其中socketId和namespace的关系通过redis存储，开发者可以通过配置文件的`namespace_redis`选项指定一个专门的redis连接来管理你的namespace数据。
 
 该Package还提供了一个Facade用于namespace操作：`HuangYi\Swoole\Facades\WebsocketNamespace`。
@@ -452,7 +452,7 @@ server {
 }
 ```
 
-> 注意：请将swoole-server的IP（默认是127.0.0.1）添加到`App\Http\Middleware\TrustProxies`中间件。
+> 注意：请将swoole-server的IP（默认是127.0.0.1）添加到`App\Http\Middleware\TrustProxies`中间件，这样`Request::ip()`和`Request::url()`才能获取到正确的值。
 
 ## 编程须知
 
