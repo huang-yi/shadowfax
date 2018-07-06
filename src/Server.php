@@ -209,7 +209,7 @@ abstract class Server
      */
     protected function isTaskWorker($workerId)
     {
-        return $workerId >= $this->server['worker_num'];
+        return $workerId >= $this->server->setting['worker_num'];
     }
 
     /**
