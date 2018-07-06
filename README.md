@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://api.travis-ci.org/huang-yi/laravel-swoole-http.svg)](https://travis-ci.org/huang-yi/laravel-swoole-http)
 
-A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it supports [websocket server](#Websocket). 
+A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it also supports [websocket server](websocket.md). 
 
 ## Translations
 
@@ -25,7 +25,7 @@ $ composer require huang-yi/laravel-swoole-http
 
 2. Register service provider(Optional)
 
-If your Laravel/Lumen version is less than 5.5, you need to register the service provider manually:
+You need to register the service provider manually, if the Laravel/Lumen is less than 5.5:
 
 ```php
 <?php
@@ -47,11 +47,9 @@ If your Laravel/Lumen version is less than 5.5, you need to register the service
 $app->register(HuangYi\Swoole\SwooleServiceProvider::class);
 ```
 
-Otherwise, the package will automatically register the service provider.
-
 3. Configurations
 
-You need to publish the configuration file:
+Run this command to publish the configuration file:
 
 ```
 $ php artisan vendor:publish --provider="HuangYi\Swoole\SwooleServiceProvider"
@@ -89,31 +87,31 @@ The port of the server.
 
 ### options
 
-The options of the server. Get more information from the [official documents](https://www.swoole.co.uk/docs/modules/swoole-server/configuration).
+The swoole server configurations. Get more information from the [official documents](https://www.swoole.co.uk/docs/modules/swoole-server/configuration).
 
-> Notice: The value of `task_worker_num` must be greater than 0 if you are using websocket server or task process.
+> Notice: The value of `task_worker_num` must be greater than 0 if you use [task](#task).
 
 ### resets
 
-This option allows you to reset some service providers or some instances in IoC container after every request. This option can help developers avoid pollution problems caused by singleton. Such as `auth`.
+This option controls the instances that need to be reset after each request. It helps developers avoid problems caused by singleton, such as `auth`.
 
 ### message_parser
 
 The websocket message parser. You can replace this option with a custom parser.
 
-> Notice: The custom parser must implement the `HuangYi\Swoole\Contracts\ParserContract`. And the `parse` method must return an object that implements the `HuangYi\Swoole\Contracts\MessageContract`.
+> Notice: The custom parser must implement the `HuangYi\Swoole\Contracts\ParserContract`.
 
-### namespace_redis
+### redis_connection
 
-This option controls the redis connection that store the namespaces of websocket.
-
-Click here for more information about the [namespaces](#namespaces).
+Specify a redis connection to store websocket namespaces and clients.
 
 ### tables
 
-This option defines all the swoole tables. Such as:
+Define swoole table structures:
 
 ```php
+<?php
+
 [
     'tables' => [
         [
@@ -126,22 +124,19 @@ This option defines all the swoole tables. Such as:
             ],
         ],
     ],
-]
+];
+
 ```
 
-- `name`: Defines the table name.
+- `name`: Specifies a table name.
 - `size`: Defines the maximum number of rows.
-- `columns`: Defines the table's columns. Format: [`column_name`, `column_type`, `column_length`]. The values of `column_type`: `int`, `integer`, `string`, `varchar`, `char`, `float`.
+- `columns`: Defines the table's columns. Format: [`column_name`, `column_type`, `column_length`]. Column types: `int`, `integer`, `string`, `varchar`, `char`, `float`.
 
 Click here for more information about the [tables](#tables).
 
 ### watcher
 
-This option is used for file watcher. You can use this command to enter watch mode.
-
-```sh
-php artisan swoole:server watch
-```
+The file watcher configurations.
 
 `directories`：Defines the list of directories being watched;
 
@@ -151,7 +146,7 @@ php artisan swoole:server watch
 
 ## Commands
 
-The package provides an artisan command to manage the swoole server.
+This package provides an artisan command to manage the swoole server.
 
 ```sh
 php artisan swoole:server
@@ -168,121 +163,6 @@ This command has an "action" argument and the default value is "start".
 | watch | Enter the watch mode. The swoole server will reload automatically when the watched files changed. |
 
 > Notice: The swoole server can only run in cli environment.
-
-## Websocket
-
-To create a websocket server, you only need to change the `driver` option to "websocket". And the websocket server can also act as a HTTP server.
-
-> Notice: The websocket can only run in Laravel framework. And you must ensure the value of the `task_worker_num` is greater than 0.
-
-### Namespaces
-
-It's like the [Socket.IO](https://socket.io/docs/rooms-and-namespaces/#namespaces). This package allows you to "namespace" your sockets.
-
-This is a useful feature to minimize the number of resources (TCP connections) and at the same time separate concerns within your application by introducing separation between communication channels.
-
-You can use the `HuangYi\Swoole\Facades\WebsocketNamespace` to control the namespaces:
-
-- `void WebsocketNamespace::getPath(int $socketId)`: Get the path of namespace by socketId.
-- `array WebsocketNamespace::getClients(string $path)`: Get all clients in the namespace by path.
-- `void WebsocketNamespace::broadcast(string $path, \HuangYi\Swoole\Contracts\MessageContract $message, array|int $excepts = null)`: Broadcast a message by path.
-- `void WebsocketNamespace::emit(int $socketId, \HuangYi\Swoole\Contracts\MessageContract $message)`: Emit a message to client.
-- `void WebsocketNamespace::flush(string $path)`: Flush namespace by path.
-- `void WebsocketNamespace::flushAll()`: Flush all namespaces.
-
-This is an example of namespace:
-
-```php
-<?php
-
-use HuangYi\Swoole\Facades\WebsocketNamespace;
-use HuangYi\Swoole\Websocket\Message\Message;
-
-class ChattingRoom
-{
-    /**
-     * Send a group message.
-     * 
-     * @param \HuangYi\Swoole\Websocket\Message\Message $message
-     * @return void
-     */
-    public function sendGroupMessage(Message $message)
-    {
-        $socketId = $message->getSocketId();
-
-        // You can get the path of namespace by socketId.
-        $path = WebsocketNamespace::getPath($socketId);
-
-        $broadcastMessage = Message::make('send group message', $message->getData('content'));
-
-        // You can broadcast a message to all clients in the namespace by path.
-        WebsocketNamespace::broadcast($path, $broadcastMessage, $socketId);
-    }
-
-    /**
-     * Send a private message.
-     * 
-     * @param \HuangYi\Swoole\Websocket\Message\Message $message
-     * @return void
-     */
-    public function sendPrivateMessage(Message $message)
-    {
-        $to = $message->getData('to');
-
-        $privateMessage = Message::make('send private message', [
-            'from' => $message->getSocketId(),
-            'content' => $message->getData('content'),
-        ]);
-
-        // You can emit a message by socketId.
-        WebsocketNamespace::emit($to, $privateMessage);
-    }
-}
-
-```
-
-### Websocket Route
-
-You can define namespace using websocket route facade. The websocket router is inherited from the `Illuminate\Routing\Router`.
-
-```php
-<?php
-
-use HuangYi\Swoole\Facades\WebsocketNamespace;
-use HuangYi\Swoole\Facades\WebsocketRoute;
-use HuangYi\Swoole\Websocket\Message\Message;
-use Illuminate\Http\Request;
-
-WebsocketRoute::path('/chatting_room', function (Request $request) {
-    $socketId = app('swoole.http.request')->fd;
-    $path = $request->path();
-    $message = Message::make('user join', "User [{$socketId}] joined.");
-
-    WebsocketNamespace::broadcast($path, $message, $socketId);
-});
-
-```
-
-### Message Route
-
-The message route is used to specify a handler for a websocket event.
-
-```php
-<?php
-use HuangYi\Swoole\Facades\MessageRoute;
-use HuangYi\Swoole\Websocket\Message\Message;
-
-// Using closure.
-MessageRoute::on('send private message', function (Message $message) {
-    // Do something.
-});
-
-// Using controller.
-MessageRoute::on('send group message', 'ChattingRoom@sendGroupMessage');
-
-```
-
-The handler method will be injected a message entity: `HuangYi\Swoole\Websocket\Message\Message`.
 
 ## Tables
 
@@ -369,8 +249,6 @@ app('swoole.server')->task($task);
 
 ## Nginx
 
-Http configurations:
-
 ```nginx
 server {
     listen 80;
@@ -397,47 +275,6 @@ server {
         proxy_set_header X-Forwarded-Host $host;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-
-        proxy_pass http://127.0.0.1:1215$suffix;
-    }
-}
-```
-
-Websocket configurations:
-
-```nginx
-map $http_upgrade $connection_upgrade {
-    default upgrade;
-    '' close;
-}
-
-server {
-    listen 80;
-    server_name your.domain;
-    root /path/to/laravel/public;
-    index index.php;
-
-    location = /index.php {
-        # Ensure that there is no such file named "not_exists" in your "public" directory.
-        try_files /not_exists @swoole;
-    }
-
-    location / {
-        try_files $uri $uri/ @swoole;
-    }
-
-    location @swoole {
-        set $suffix "";
-        
-        if ($uri = /index.php) {
-            set $suffix "/";
-        }
-
-        proxy_set_header X-Forwarded-Host $host;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
 
         proxy_pass http://127.0.0.1:1215$suffix;
     }
