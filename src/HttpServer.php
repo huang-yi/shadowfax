@@ -39,11 +39,13 @@ class HttpServer extends Server
     /**
      * The listener of "workerStart" event.
      *
+     * @param \Swoole\Server $server
+     * @param int $workerId
      * @return void
      */
-    public function onWorkerStart()
+    public function onWorkerStart($server, $workerId)
     {
-        parent::onWorkerStart();
+        parent::onWorkerStart($server, $workerId);
 
         $this->clearCache();
 
