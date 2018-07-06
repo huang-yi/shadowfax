@@ -377,7 +377,7 @@ app('swoole.server')->task($task);
 
 ## Nginx
 
-由于Swoole对HTTP协议的支持并不完整，建议仅作为应用服务器，开发者需要使用Nginx反向代理。
+由于Swoole对HTTP协议的支持并不完整，建议仅作为应用服务器，开发者需要使用Nginx做反向代理。
 
 ```nginx
 server {
@@ -451,6 +451,8 @@ server {
     }
 }
 ```
+
+> 注意：请将swoole-server的IP（默认是127.0.0.1）添加到`App\Http\Middleware\TrustProxies`中间件。
 
 ## 编程须知
 

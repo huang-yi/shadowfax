@@ -444,6 +444,8 @@ server {
 }
 ```
 
+> Notice: Add the ip of swoole server (the default is 127.0.0.1) to the middleware `App\Http\Middleware\TrustProxies`.
+
 ## Tips
 
 - Never use these functions: `sleep()`、`exit()`、`die()`.
