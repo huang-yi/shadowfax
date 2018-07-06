@@ -19,12 +19,12 @@ class TableCollection
      * @var array
      */
     protected $types = [
-        'int' => Table::TYPE_INT,
+        'int'     => Table::TYPE_INT,
         'integer' => Table::TYPE_INT,
-        'string' => Table::TYPE_STRING,
-        'char' => Table::TYPE_STRING,
+        'string'  => Table::TYPE_STRING,
+        'char'    => Table::TYPE_STRING,
         'varchar' => Table::TYPE_STRING,
-        'float' => Table::TYPE_FLOAT,
+        'float'   => Table::TYPE_FLOAT,
     ];
 
     /**
