@@ -230,7 +230,7 @@ class NamespaceManager
     protected function getStore()
     {
         $connection = $this->container['config']->get(
-            'swoole.namespace_redis', 'default'
+            'swoole.redis_connection', 'default'
         );
 
         return $this->container['redis']->connection($connection);

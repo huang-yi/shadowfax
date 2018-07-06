@@ -62,8 +62,8 @@ return [
     | Resets
     |----------------------------------------------------------------------
     |
-    | This option allows you to reset some service providers or some
-    | instances in IoC container.
+    | This option controls the instances that need to be reset
+    | after each request.
     |
     */
 
@@ -89,17 +89,18 @@ return [
     | Websocket namespace redis connection
     |--------------------------------------------------------------------------
     |
-    | You may specify a redis connection that should be used to manage the
-    | websocket namespaces.
+    | Specify a redis connection to store websocket namespaces and clients.
     |
     */
 
-    'namespace_redis' => env('SWOOLE_NAMESPACE_REDIS', 'default'),
+    'redis_connection' => env('SWOOLE_NAMESPACE_REDIS', 'default'),
 
     /*
     |--------------------------------------------------------------------------
     | Swoole tables
     |--------------------------------------------------------------------------
+    |
+    | Define swoole table structures:
     |
     | "name": Table name.
     | "columns": Table columns.
