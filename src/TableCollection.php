@@ -131,7 +131,7 @@ class TableCollection
     public function use($name)
     {
         if (! isset($this->tables[$name])) {
-            throw new TableUndefinedException(sprintf('Table [%s] undefined.', $name));
+            throw new TableUndefinedException(sprintf('Undefined Table [%s].', $name));
         }
 
         return $this->tables[$name];
