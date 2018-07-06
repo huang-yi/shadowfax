@@ -86,14 +86,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Websocket namespace redis connection
+    | Redis Connection
     |--------------------------------------------------------------------------
     |
     | Specify a redis connection to store websocket namespaces and clients.
     |
     */
 
-    'redis_connection' => env('SWOOLE_NAMESPACE_REDIS', 'default'),
+    'redis_connection' => env('SWOOLE_REDIS_CONNECTION', 'default'),
 
     /*
     |--------------------------------------------------------------------------
