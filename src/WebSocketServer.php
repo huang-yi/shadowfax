@@ -2,12 +2,15 @@
 
 namespace HuangYi\Swoole;
 
+use Exception;
 use HuangYi\Swoole\Exceptions\FrameworkUnsupportedException;
 use HuangYi\Swoole\Transformers\RequestTransformer;
-use HuangYi\Swoole\Websocket\Message\Kernel as MessageKernel;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Swoole\Websocket\Server as SwooleWebsocketServer;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
+use Throwable;
 
-class WebsocketServer extends HttpServer
+class WebSocketServer extends HttpServer
 {
     /**
      * The websocket kernel.
@@ -97,7 +100,7 @@ class WebsocketServer extends HttpServer
 
         $this->container->instance('swoole.http.request', $request);
 
-        $this->handleOpenRequest($request);
+        $this->handleOpen($request);
 
         $this->container['events']->fire('swoole.opened', func_get_args());
     }
@@ -113,7 +116,7 @@ class WebsocketServer extends HttpServer
     {
         $this->container['events']->fire('swoole.messaging', func_get_args());
 
-        (new MessageKernel($this->container))->handle($frame);
+        $this->handleMessage($frame);
 
         $this->container['events']->fire('swoole.messaged', func_get_args());
     }
@@ -151,7 +154,7 @@ class WebsocketServer extends HttpServer
      * @param $request
      * @return void
      */
-    protected function handleOpenRequest($request)
+    protected function handleOpen($request)
     {
         $illuminateRequest = RequestTransformer::make($request)->toIlluminateRequest();
 
@@ -162,6 +165,28 @@ class WebsocketServer extends HttpServer
         $this->flushSession();
 
         $this->reset();
+    }
+
+    /**
+     * Handle message.
+     *
+     * @param \Swoole\Websocket\Frame $frame
+     * @return void
+     */
+    protected function handleMessage($frame)
+    {
+        try {
+            $message = $this->container['swoole.websocket.parser']->parse($frame);
+            $room = $this->container['swoole.websocket']->getClientRoom($frame->fd);
+
+            $event = $room->getRoute()->getEvent($message->getEvent());
+
+            $event->fire($message);
+        } catch (Exception $e) {
+            $this->container[ExceptionHandler::class]->report($e);
+        } catch (Throwable $e) {
+            $this->container[ExceptionHandler::class]->report(new FatalThrowableError($e));
+        }
     }
 
     /**

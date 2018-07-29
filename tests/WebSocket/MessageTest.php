@@ -1,14 +1,14 @@
 <?php
 
-namespace HuangYi\Swoole\Tests\Websocket\Message;
+namespace HuangYi\Swoole\Tests\WebSocket;
 
-use HuangYi\Swoole\Websocket\Message\Message;
+use HuangYi\Swoole\WebSocket\Message;
 use PHPUnit\Framework\TestCase;
 
 class MessageTest extends TestCase
 {
     /**
-     * @var \HuangYi\Swoole\Websocket\Message\Message
+     * @var \HuangYi\Swoole\WebSocket\Message
      */
     protected $message;
 

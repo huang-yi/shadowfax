@@ -22,14 +22,14 @@ class ServerManager extends Manager
     /**
      * Create websocket driver.
      *
-     * @return \HuangYi\Swoole\WebsocketServer
+     * @return \HuangYi\Swoole\WebSocketServer
      * @throws \HuangYi\Swoole\Exceptions\FrameworkUnsupportedException
      */
     protected function createWebsocketDriver()
     {
         list($host, $port, $options) = $this->getServerConfig();
 
-        return (new WebsocketServer($host, $port, $options))
+        return (new WebSocketServer($host, $port, $options))
             ->setContainer($this->app);
     }
 

@@ -2,13 +2,15 @@
 
 namespace HuangYi\Swoole\Contracts;
 
+use Swoole\Websocket\Frame;
+
 interface ParserContract
 {
     /**
      * Parse message.
      *
-     * @param mixed $payload
+     * @param \Swoole\Websocket\Frame $frame
      * @return \HuangYi\Swoole\Contracts\MessageContract $message
      */
-    public function parse($payload);
+    public function parse(Frame $frame);
 }

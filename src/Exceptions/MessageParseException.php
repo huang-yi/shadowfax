@@ -2,7 +2,7 @@
 
 namespace HuangYi\Swoole\Exceptions;
 
-class MessageParseException extends SwooleException
+class MessageParseException extends WebSocketException
 {
 
 }

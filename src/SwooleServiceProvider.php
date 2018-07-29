@@ -3,11 +3,11 @@
 namespace HuangYi\Swoole;
 
 use HuangYi\Swoole\Console\ServerCommand;
-use HuangYi\Swoole\Websocket\Middleware\JoinNamespace;
-use HuangYi\Swoole\Websocket\Message\Router as MessageRouter;
-use HuangYi\Swoole\Websocket\NamespaceManager;
+use HuangYi\Swoole\WebSocket\JoinRoom;
+use HuangYi\Swoole\WebSocket\JsonParser;
+use HuangYi\Swoole\WebSocket\Router;
+use HuangYi\Swoole\WebSocket\WebSocket;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Routing\Router as HttpRouter;
 use Illuminate\Support\ServiceProvider;
 
 class SwooleServiceProvider extends ServiceProvider
@@ -22,7 +22,7 @@ class SwooleServiceProvider extends ServiceProvider
     {
         $this->mergeConfig();
         $this->registerTable();
-        $this->registerWebsocket();
+        $this->registerWebSocket();
         $this->registerServer();
         $this->registerCommands();
     }
@@ -65,20 +65,14 @@ class SwooleServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register websocket.
+     * Register WebSocket.
      *
      * @return void
      */
-    protected function registerWebsocket()
+    protected function registerWebSocket()
     {
         $this->app->singleton('swoole.websocket.router', function ($app) {
-            HttpRouter::macro('path', function ($uri, $action = null) {
-                return $this->get($uri, $action);
-            });
-
-            $router = new HttpRouter($app['events'], $app);
-
-            return $router;
+            return new Router($app['events'], $app);
         });
 
         $this->app->singleton('swoole.websocket.kernel', function ($app) {
@@ -86,17 +80,22 @@ class SwooleServiceProvider extends ServiceProvider
 
             $kernel = new $class($app, $app['swoole.websocket.router']);
 
-            $kernel->pushMiddleware(JoinNamespace::class);
+            $kernel->pushMiddleware(JoinRoom::class);
 
             return $kernel;
         });
 
-        $this->app->singleton('swoole.websocket.namespace', function ($app) {
-            return new NamespaceManager($app);
+        $this->app->singleton('swoole.websocket.parser', function ($app) {
+            $parserClass = $app['config']->get('swoole.message_parser', JsonParser::class);
+
+            return $app->make($parserClass);
         });
 
-        $this->app->singleton('swoole.websocket.message.router', function ($app) {
-            return new MessageRouter($app);
+        $this->app->singleton('swoole.websocket', function ($app) {
+            $connection = $app['config']->get('swoole.redis_connection', 'default');
+            $redis = $app['redis']->connection($connection);
+
+            return (new WebSocket($app))->setRedis($redis);
         });
     }
 

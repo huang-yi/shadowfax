@@ -1,20 +1,22 @@
 <?php
 
-namespace HuangYi\Swoole\Websocket\Middleware;
+namespace HuangYi\Swoole\WebSocket;
 
 use Illuminate\Contracts\Container\Container;
 
-class JoinNamespace
+class JoinRoom
 {
     /**
+     * Container.
+     *
      * @var \Illuminate\Contracts\Container\Container
      */
     protected $container;
 
     /**
-     * Join namespace.
+     * Join WebSocket Room.
      *
-     * @param Container $container
+     * @param \Illuminate\Contracts\Container\Container $container
      * @return void
      */
     public function __construct(Container $container)
@@ -23,16 +25,15 @@ class JoinNamespace
     }
 
     /**
+     * Handler.
+     *
      * @param \Illuminate\Http\Request $request
      * @param \Closure $next
      * @return mixed
      */
     public function handle($request, $next)
     {
-        $path = $request->path();
-        $socketId = $this->container['swoole.http.request']->fd;
-
-        $this->container['swoole.websocket.namespace']->join($path, $socketId);
+        $this->container->make('swoole.websocket')->joinRoom($request);
 
         return $next($request);
     }

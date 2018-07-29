@@ -1,10 +1,12 @@
 <?php
 
-namespace HuangYi\Swoole\Websocket\Message;
+namespace HuangYi\Swoole\WebSocket;
 
 use HuangYi\Swoole\Contracts\MessageContract;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Contracts\Support\Jsonable;
 
-abstract class MessageAbstract implements MessageContract
+class Message implements Arrayable, MessageContract, Jsonable
 {
     /**
      * Event name.
@@ -94,5 +96,46 @@ abstract class MessageAbstract implements MessageContract
         $this->socketId = $socketId;
 
         return $this;
+    }
+
+    /**
+     * Convert message to array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $message = [
+            'event' => $this->event,
+        ];
+
+        if (! is_null($this->data)) {
+            $message['data'] = $this->data;
+        }
+
+        return $message;
+    }
+
+    /**
+     * Convert message to json.
+     *
+     * @param int $options
+     * @return string
+     */
+    public function toJson($options = 0)
+    {
+        $message = $this->toArray();
+
+        return json_encode($message, $options);
+    }
+
+    /**
+     * Convert message to string.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->toJson();
     }
 }

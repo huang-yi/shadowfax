@@ -19,15 +19,6 @@ interface MessageContract
     public function getData();
 
     /**
-     *
-     * Set socket id.
-     *
-     * @param int $socketId
-     * @return void
-     */
-    public function setSocketId($socketId);
-
-    /**
      * Get socket id.
      *
      * @return int

@@ -16,10 +16,22 @@ class BroadcastTask extends TaskAbstract
     {
         $clients = array_get($this->data, 'clients', $server->connections);
 
+        $excepts = null;
+
+        if (isset($this->data['excepts'])) {
+            $excepts = array_map('intval', (array) $this->data['excepts']);
+        }
+
         foreach ($clients as $socketId) {
-            if ($server->exist($socketId)) {
-                $server->push($socketId, $this->data['message']);
+            if (! $server->exist($socketId)) {
+                continue;
             }
+
+            if ($excepts && in_array($socketId, $excepts, true)) {
+                continue;
+            }
+
+            $server->push($socketId, $this->data['message']);
         }
     }
 }

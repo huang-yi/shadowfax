@@ -41,9 +41,7 @@
             "aliases": {
                 "SwooleServer": "HuangYi\\Swoole\\Facades\\Server",
                 "SwooleTable": "HuangYi\\Swoole\\Facades\\Table",
-                "WebsocketNamespace": "HuangYi\\Swoole\\Facades\\WebsocketNamespace",
-                "WebsocketRoute": "HuangYi\\Swoole\\Facades\\WebsocketRoute",
-                "MessageRoute": "HuangYi\\Swoole\\Facades\\MessageRoute"
+                "Websocket": "HuangYi\\Swoole\\Facades\\WebSocket"
             }
         }
     }
