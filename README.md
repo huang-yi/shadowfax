@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
 [![Build Status](https://api.travis-ci.org/huang-yi/laravel-swoole-http.svg)](https://travis-ci.org/huang-yi/laravel-swoole-http)
 
-A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it also supports [websocket server](websocket.md). 
+A high performance HTTP server based on [Swoole](http://www.swoole.com/). And now, it also supports [WebSocket server](websocket.md). 
 
 ## Translations
 
@@ -97,13 +97,13 @@ This option controls the instances that need to be reset after each request. It 
 
 ### message_parser
 
-The websocket message parser. You can replace this option with a custom parser.
+The WebSocket message parser. You can replace this option with a custom parser.
 
 > Notice: The custom parser must implement the `HuangYi\Swoole\Contracts\ParserContract`.
 
 ### redis_connection
 
-Specify a redis connection to store websocket namespaces and clients.
+Specify a redis connection to store WebSocket rooms and clients.
 
 ### tables
 

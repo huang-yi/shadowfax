@@ -2,7 +2,7 @@
 
 一个基于[Swoole](http://www.swoole.com/)的高性能HTTP Server，帮助你大幅度地提高网站的并发能力。
 
-当然，现在它也支持[Websocket Server](websocket-cn.md)。
+当然，现在它也支持[WebSocket Server](websocket-cn.md)。
 
 ## 安装
 
