@@ -151,6 +151,12 @@ class Room
             }
         }
 
+        if (! $this->route) {
+            $this->route = $this->container
+                ->make('swoole.websocket.router')
+                ->room($this->path, function () {/** Empty handler. **/});
+        }
+
         return $this->route;
     }
 
