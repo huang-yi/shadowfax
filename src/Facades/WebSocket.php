@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @see \HuangYi\Swoole\WebSocket\WebSocket
  */
-class Websocket extends Facade
+class WebSocket extends Facade
 {
     protected static function getFacadeAccessor()
     {
