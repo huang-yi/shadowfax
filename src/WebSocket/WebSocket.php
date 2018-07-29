@@ -8,9 +8,19 @@ use HuangYi\Swoole\Tasks\EmitTask;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \HuangYi\Swoole\WebSocket\Route
+ */
 class WebSocket
 {
     use HasRedis;
+
+    /**
+     * Default room.
+     *
+     * @var string
+     */
+    protected $defaultRoom = '/';
 
     /**
      * Rooms.
@@ -129,5 +139,32 @@ class WebSocket
                 'message' => (string) $message,
                 'excepts' => $excepts, 
             ]));
+    }
+
+    /**
+     * Set default room.
+     *
+     * @param string $uri
+     * @return $this
+     */
+    public function setDefaultRoom($uri)
+    {
+        $this->defaultRoom = $uri;
+
+        return $this;
+    }
+
+    /**
+     * Call default room.
+     *
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
+    public function __call($method, $arguments)
+    {
+        $defaultRoomRoute = $this->getRoom($this->defaultRoom)->getRoute();
+
+        return call_user_func_array([$defaultRoomRoute, $method], $arguments);
     }
 }
