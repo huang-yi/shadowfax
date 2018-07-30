@@ -101,7 +101,7 @@ class Room
             ->task(BroadcastTask::make([
                 'message' => (string) $message,
                 'clients' => $this->getClients(),
-                'excepts' => $excepts, 
+                'excepts' => $excepts,
             ]));
     }
 
