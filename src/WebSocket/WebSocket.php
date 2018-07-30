@@ -144,6 +144,18 @@ class WebSocket
     }
 
     /**
+     * Flush rooms.
+     *
+     * @return void
+     */
+    public function flush()
+    {
+        foreach ($this->rooms as $room) {
+            $room->flush();
+        }
+    }
+
+    /**
      * Set default room.
      *
      * @param string $uri
