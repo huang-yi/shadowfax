@@ -133,7 +133,7 @@ class WebSocketServer extends HttpServer
     {
         $this->container['events']->fire('swoole.close', func_get_args());
 
-        $this->container['swoole.websocket.namespace']->leave($socketId);
+        $this->container['swoole.websocket']->getClientRoom($socketId)->leave();
     }
 
     /**
@@ -145,7 +145,7 @@ class WebSocketServer extends HttpServer
     {
         $this->container['events']->fire('swoole.shutdown', func_get_args());
 
-        $this->container['swoole.websocket.namespace']->flushAll();
+        $this->container['swoole.websocket']->flush();
     }
 
     /**
