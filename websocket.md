@@ -4,126 +4,141 @@ To create a websocket server, you only need to change the `driver` option to "we
 
 > Notice: The websocket can only run in Laravel framework. And ensure the value of the `task_worker_num` is greater than 0.
 
-## Namespaces
+## Events
 
-It's like the [Socket.IO](https://socket.io/docs/rooms-and-namespaces/#namespaces). This package allows you to "namespace" your sockets.
+The main idea behind this package is that you can send and receive any events you want, with any data you want.
+
+```php
+<?php
+
+use HuangYi\Swoole\Facades\WebSocket;
+use HuangYi\Swoole\WebSocket\Message;
+
+WebSocket::on('new message', function (Message $message) {
+    $to = $message->getData('to');
+
+    WebSocket::emit($to, Message::make('new message', [
+        'content' => $message->getData('content'),
+    ]));
+});
+
+```
+
+- `WebSocket::on()`: Receive event from client.
+- `WebSocket::emit()`: Send event to client.
+
+## Rooms
 
 This is a useful feature to minimize the number of resources (TCP connections) and at the same time separate concerns within your application by introducing separation between communication channels.
 
-You can use the `HuangYi\Swoole\Facades\WebsocketNamespace` facade to control the namespaces:
+This package separates rooms through the path of URL. We call the default room '/' and it’s the one WebSocket clients connect to by default, and the one the server listens to by default.
 
-- `void WebsocketNamespace::getPath(int $socketId)`: Get the path of namespace by socketId.
-- `array WebsocketNamespace::getClients(string $path)`: Get all clients in the namespace by path.
-- `void WebsocketNamespace::broadcast(string $path, \HuangYi\Swoole\Contracts\MessageContract $message, array|int $excepts = null)`: Broadcast a message by path.
-- `void WebsocketNamespace::emit(int $socketId, \HuangYi\Swoole\Contracts\MessageContract $message)`: Emit a message to client.
-- `void WebsocketNamespace::flush(string $path)`: Flush namespace by path.
-- `void WebsocketNamespace::flushAll()`: Flush all namespaces.
+Define rooms using the method `WebSocket::room()`:
 
 ```php
 <?php
 
-use HuangYi\Swoole\Facades\WebsocketNamespace;
-use HuangYi\Swoole\Websocket\Message\Message;
+use HuangYi\Swoole\Facades\WebSocket;
 
-class ChattingRoom
-{
-    /**
-     * Send a group message.
-     * 
-     * @param \HuangYi\Swoole\Websocket\Message\Message $message
-     * @return void
-     */
-    public function sendGroupMessage(Message $message)
-    {
-        $socketId = $message->getSocketId();
+// Define a game room.
+WebSocket::room('game-room', 'App\WebSocket\GameController@connected')
+    ->on('play', 'App\WebSocket\GameController@play')
+    ->on('pause', 'App\WebSocket\GameController@pause');
 
-        // You can get the path of namespace by socketId.
-        $path = WebsocketNamespace::getPath($socketId);
-
-        $broadcastMessage = Message::make('send group message', $message->getData('content'));
-
-        // You can broadcast a message to all clients in the namespace by path.
-        WebsocketNamespace::broadcast($path, $broadcastMessage, $socketId);
-    }
-
-    /**
-     * Send a private message.
-     * 
-     * @param \HuangYi\Swoole\Websocket\Message\Message $message
-     * @return void
-     */
-    public function sendPrivateMessage(Message $message)
-    {
-        $to = $message->getData('to');
-
-        $privateMessage = Message::make('send private message', [
-            'from' => $message->getSocketId(),
-            'content' => $message->getData('content'),
-        ]);
-
-        // You can emit a message by socketId.
-        WebsocketNamespace::emit($to, $privateMessage);
-    }
-}
+// Define a kind of chat room.
+WebSocket::room('chat-rooms/{id}')
+    ->on('new message', 'App\WebSocket\ChatController@newMessage');
 
 ```
 
-## Websocket Route
+> `HuangYi\Swoole\Facades\WebSocket::room()` is equivalent to `Illuminate\Support\Facades\Route::get()`.
 
-You can define a namespace using websocket route facade. The websocket router is inherited from the `Illuminate\Routing\Router`.
+## Broadcasting
 
 ```php
 <?php
 
-use HuangYi\Swoole\Facades\WebsocketNamespace;
-use HuangYi\Swoole\Facades\WebsocketRoute;
-use HuangYi\Swoole\Websocket\Message\Message;
-use Illuminate\Http\Request;
+use HuangYi\Swoole\Facades\WebSocket;
+use HuangYi\Swoole\WebSocket\Message;
 
-WebsocketRoute::path('/chatting-room', function (Request $request) {
-    $socketId = app('swoole.http.request')->fd;
-    $path = $request->path();
-    $message = Message::make('user join', "User [{$socketId}] joined.");
+WebSocket::on('user joined', function (Message $message) {
+    $user = $message->getSocketId();
 
-    WebsocketNamespace::broadcast($path, $message, $socketId);
+    $broadcastMessage = Message::make('user joined', [
+        'content' => 'User ['.$user.'] joined.',
+    ]);
+
+    WebSocket::broadcast($broadcastMessage, $user);
 });
 
 ```
 
-## Message Route
-
-The message route is used to specify a handler for a websocket message.
+However, if you only want to broadcast messages to a room, you need to use the method `HuangYi\Swoole\WebSocket\Room::broadcast()`.
 
 ```php
 <?php
 
-use HuangYi\Swoole\Facades\MessageRoute;
-use HuangYi\Swoole\Websocket\Message\Message;
+use HuangYi\Swoole\Facades\WebSocket;
+use HuangYi\Swoole\WebSocket\Message;
 
-// Using closure.
-MessageRoute::on('send private message', function (Message $message) {
-    // Do something.
-});
+$message = Message::make('notification', ['content' => 'This is a notification']);
 
-// Using controller.
-MessageRoute::on('send group message', 'ChattingRoom@sendGroupMessage');
+// Get room by path.
+$room = WebSocket::getRoom('/chat-rooms/1');
+
+$room->broadcast($message);
+
+// Get room by socket id.
+$room = WebSocket::getRoom(1);
+
+$room->broadcast($message);
 
 ```
 
-All the action method will be injected a message entity: `HuangYi\Swoole\Websocket\Message\Message`.
+## Message
 
-The default message format is:
+The class `HuangYi\Swoole\WebSocket\Message` has 3 properties:
+
+- `event`: The event name;
+- `data`: The event data;
+- `socketId`: The socket id of client.
+
+The default format for WebSocket messages is:
 
 ```json
 {
     "event": "event name",
     "data": {
-        "foo": "bar"
+        "key": "value"
     }
 }
 ```
 
-## Nginx configurations
+> Of course, you can create a message parser to customize the message format. The custom parser must implement the contract `HuangYi\Swoole\Contracts\ParserContract`.
+
+## Client code
+
+```javascript
+let ws = new WebSocket('ws://127.0.0.1:1215/chat-room');
+
+// Receive message.
+ws.onmessage = function (event) {
+    console.log(event.data);
+};
+
+// Send message.
+let message = JSON.stringify({
+    event: 'new message',
+    data: {
+        content: 'This is a new message.'
+    }
+});
+
+ws.send(message);
+
+```
+
+## Nginx
 
 ```nginx
 map $http_upgrade $connection_upgrade {
