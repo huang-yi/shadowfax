@@ -33,10 +33,10 @@ class Message implements Arrayable, MessageContract, Jsonable
      * Make a new message.
      *
      * @param string $event
-     * @param array|null $data
+     * @param mixed $data
      * @return static
      */
-    public static function make($event, array $data = null)
+    public static function make($event, $data = null)
     {
         return new static($event, $data);
     }
@@ -45,9 +45,9 @@ class Message implements Arrayable, MessageContract, Jsonable
      * Message.
      *
      * @param string $event
-     * @param array|null $data
+     * @param mixed $data
      */
-    public function __construct($event, array $data = null)
+    public function __construct($event, $data = null)
     {
         $this->event = $event;
         $this->data = $data;
