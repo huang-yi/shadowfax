@@ -112,20 +112,11 @@ class Room
      */
     public function flush()
     {
-        $roomsKey = $this->roomsKey();
-        $server = $this->container->make('swoole.server');
-
         foreach ($this->getClients() as $socketId) {
-            $socketId = intval($socketId);
-
-            if ($server->exist($socketId)) {
-                $server->close($socketId);
-            } else {
-                $this->leave($socketId);
-            }
+            $this->leave($socketId);
         }
 
-        $this->redis->srem($roomsKey, $this->path);
+        $this->redis->srem($this->roomsKey(), $this->path);
     }
 
     /**
