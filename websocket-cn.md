@@ -6,7 +6,8 @@
 
 ## 事件（Events）
 
-WebSocket最主要就是帮助你发送或接收各种事件。比如聊天室客户端发送一条消息，服务端推送一个系统通知等等。这里我们主要讨论如监听应客户端的事件，以及如何给客户端发送事件。
+WebSocket最主要就是帮助开发者发送或接收各种事件。比如聊天室客户端发送一条消息，服务端推送一个系统通知等等。
+这里我们主要讨论如何监听应客户端的事件，以及如何给客户端发送事件。
 
 看一段演示代码：
 
@@ -27,7 +28,72 @@ WebSocket::on('new message', function (Message $message) {
 ```
 
 上述代码中，`WebSocket::on()`表示监听客户端的事件，`WebSocket::emit()`表示给客户端发送事件。
-所以上述代码就表示，当服务器监听到事件`new message`后，就给客户端`$to`发送一个`new message`事件，这样就完成了一个聊天室发送新消息的功能了。
+当服务器监听到客户端的`new message`事件后，就给客户端`$to`发送一个`new message`事件，这样就完成了一个聊天室发送新消息的功能了。
+
+`WebSocket::on()`方法的第二个参数既可以是一个闭包，也可以是这种形式：`ChatController@newMessage`，指定一个类的方法作为事件回调，与Laravel的路由风格类似。
+
+事件回调方法会被注入一个[`HuangYi\Swoole\WebSocket\Message`](#message)实例，即客户端发送的消息实体，可以通过该对象获取客户端的传参。
+
+## 房间（Rooms）
+
+房间的意义在于将客户端分割到不同的区块。比方说你的应用需要一个聊天室和一个游戏室，或者你的应用需要多个聊天室，都可以用房间来实现。
+
+我们通过URL的path部分来划分房间。**默认地，系统会将客户端放入path为`/`的房间。**
+
+比如下面两个URL一个代表聊天室，一个代表游戏室：
+
+```
+wss://example.com/chat-room
+```
+
+```
+wss://example.com/game-room
+```
+
+也可以利用URL参数定义一类房间：
+
+```
+wss://example.com/chat-rooms/1
+```
+
+```
+wss://example.com/chat-rooms/2
+```
+
+我们可以使用`WebSocket::room()`方法创建房间：
+
+```php
+<?php
+
+use HuangYi\Swoole\Facades\WebSocket;
+
+// 创建一个房间
+WebSocket::room('game-room');
+
+// 创建一类房间
+WebSocket::room('chat-rooms/{id}');
+
+```
+
+当然，只创建房间没有意义，我们还需要为房间指定监听事件：
+
+```php
+<?php
+
+use HuangYi\Swoole\Facades\WebSocket;
+
+WebSocket::room('game-room', 'App\WebSocket\GameController@connected')
+    ->on('play', 'App\WebSocket\GameController@play')
+    ->on('pause', 'App\WebSocket\GameController@pause');
+
+WebSocket::room('chat-rooms/{id}')
+    ->on('new message', 'App\WebSocket\ChatController@newMessage');
+
+```
+
+`WebSocket::room()`方法第二个参数指定的回调方法会在客户端成功连接服务器后触发，开发者可以利用这个回调做身份认证，存储用户信息等逻辑。
+
+> `WebSocket::room()`的本质就是定义一个HTTP路由。
 
 ## 广播（Broadcasting）
 
@@ -41,62 +107,68 @@ use HuangYi\Swoole\WebSocket\Message;
 
 WebSocket::on('user joined', function (Message $message) {
     $user = $message->getSocketId();
-    
+
     $broadcastMessage = Message::make('user joined', [
         'content' => 'User ['.$user.'] joined.',
     ]);
-    
+
     WebSocket::broadcast($broadcastMessage, $user);
 });
 
 ```
 
-上述代码表示，当服务器监听到`user joined`事件后，就广播一条`user joined`消息，告诉所有客户端，有新用户加入了。
+上述代码表示，当服务器监听到`user joined`事件后，就广播一个`user joined`事件，告诉所有客户端有新用户加入了。
 
-`WebSocket::broadcast()`方法接收两个参数，第一个为消息实体，第二参数接收一个或一组客户端的socket_id，这部分客户端将不会收到这条消息。一般来说，发消息的客户端肯定知道自己所发的消息，所以服务器可以不通知它。当然我们也可以利用第二个参数来屏蔽不需要接收这条消息的客户端。
+`WebSocket::broadcast()`方法接收两个参数，第一个为需要广播的消息实体，第二参数接收一个或一组客户端的socket_id，这部分客户端将不会收到这条消息，所以我们也可以利用第二个参数来屏蔽不需要接收这条消息的客户端。
 
-## 房间（Rooms）
-
-房间的意义，在于将客户端划分到不同的区块。比方说你的应用需要一个聊天室和一个游戏室，或者你的应用需要多个聊天室。
-
-我们通过URL的path部分来划分房间，比如下面两个URL一个代表聊天室，一个代表游戏室：
-
-```
-wss://example.com/chat-room
-```
-
-```
-wss://example.com/game-room
-```
-
-下列URL通过ID代表不同的聊天室：
-
-```
-wss://example.com/chat-rooms/1
-```
-
-```
-wss://example.com/chat-rooms/2
-```
-
-在服务端，我们通过`WebSocket::room()`方法定义房间：
+需要注意的是，`WebSocket::broadcast()`方法会给所有的客户端广播消息，如果我们只想给某个房间的客户端广播消息，需要使用`Room::broadcast()`方法：
 
 ```php
 <?php
 
 use HuangYi\Swoole\Facades\WebSocket;
+use HuangYi\Swoole\WebSocket\Message;
 
-// 定义一个房间
-WebSocket::room('chat-room');
+$message = Message::make('notification', ['content' => 'This is a notification']);
 
-// 定义一类房间
-WebSocket::room('chat-rooms/{id}');
+// 已知path，可以通过WebSocket::getRoom()方法获取Room对象
+$path = '/chat-rooms/1';
+
+WebSocket::getRoom($path)->broadcast($message);
+
+// 已知socket_id，可以通过WebSocket::getClientRoom()方法获取Room对象
+$socketId = 1;
+
+WebSocket::getClientRoom($socketId)->broadcast($message);
 
 ```
 
-> 系统默认将客户端加入path为`/`的房间。
+## Message
+
+不论是接收还是发送事件，都是由`HuangYi\Swoole\WebSocket\Message`对象传递的。该类有3个成员属性：
+
+- `event`，表示接收或发送的事件名；
+- `data`，表示接收或发送的事件参数；
+- `socketId`，表示接收到事件的客户端socket_id（服务端发送事件时该参数无意义）；
+
+默认地，WebSocket的消息格式为：
+
+```json
+{
+    "event": "event name",
+    "data": {
+        "key": "value"
+    }
+}
+```
+
+其中`data`项可选，如果不需要传参，则可不传`data`项。
+
+> 当然，如果开发者想自定义消息格式，只需要自行实现一个Parser即可，自定义Parser必须实现`HuangYi\Swoole\Contracts\ParserContract`合约，并在配置文件`config/swoole.php`中修改`message_parser`选项。
 
 ## Nginx配置
+
+如果开发者想为自己的WebSocket服务配置域名，可以使用nginx的方向代理：
 
 ```nginx
 map $http_upgrade $connection_upgrade {
