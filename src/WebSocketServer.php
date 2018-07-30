@@ -133,7 +133,9 @@ class WebSocketServer extends HttpServer
     {
         $this->container['events']->fire('swoole.close', func_get_args());
 
-        $this->container['swoole.websocket']->getClientRoom($socketId)->leave($socketId);
+        if ($room = $this->container['swoole.websocket']->getClientRoom($socketId)) {
+            $room->leave($socketId);
+        }
     }
 
     /**
