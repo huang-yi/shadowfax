@@ -15,6 +15,10 @@ class Router extends HttpRouter
      */
     public function room($uri, $action)
     {
+        if (! $action) {
+            $action = function () {/** Empty action. **/};
+        }
+
         return $this->get($uri, $action);
     }
 

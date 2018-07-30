@@ -52,9 +52,9 @@ class WebSocket
      *
      * @param string $uri
      * @param mixed $action
-     * @return \HuangYi\Swoole\WebSocket\Router
+     * @return \HuangYi\Swoole\WebSocket\Route
      */
-    public function room($uri, $action)
+    public function room($uri, $action = null)
     {
         return $this->container
             ->make('swoole.websocket.router')
@@ -80,7 +80,7 @@ class WebSocket
      * Get client room.
      *
      * @param int $socketId
-     * @return \HuangYi\Swoole\WebSocket\Room|null
+     * @return \HuangYi\Swoole\WebSocket\Room
      */
     public function getClientRoom($socketId)
     {
