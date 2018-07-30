@@ -12,6 +12,5 @@ before_install:
 
 install:
   - travis_retry composer install --no-suggest --prefer-dist -n -o
-  - travis_retry composer require illuminate/routing --no-suggest --prefer-dist -n -o
 
 script: vendor/bin/phpunit
