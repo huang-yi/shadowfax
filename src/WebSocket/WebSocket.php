@@ -98,6 +98,8 @@ class WebSocket
      */
     public function getRoom($path)
     {
+        $path = '/' . ltrim($path, '/');
+
         if (isset($this->rooms[$path])) {
             return $this->rooms[$path];
         }
