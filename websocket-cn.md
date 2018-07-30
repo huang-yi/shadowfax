@@ -31,8 +31,7 @@ WebSocket::on('new message', function (Message $message) {
 当服务器监听到客户端的`new message`事件后，就给客户端`$to`发送一个`new message`事件，这样就完成了一个聊天室发送新消息的功能了。
 
 `WebSocket::on()`方法的第二个参数既可以是一个闭包，也可以是这种形式：`ChatController@newMessage`，指定一个类的方法作为事件回调，与Laravel的路由风格类似。
-
-事件回调方法会被注入一个[`HuangYi\Swoole\WebSocket\Message`](#message)实例，即客户端发送的消息实体，可以通过该对象获取客户端的传参。
+该回调方法被注入了一个[`HuangYi\Swoole\WebSocket\Message`](#message)实例，即客户端发送的消息实体，开发者可以通过这个对象获取客户端传参。
 
 ## 房间（Rooms）
 
@@ -60,7 +59,7 @@ wss://example.com/chat-rooms/1
 wss://example.com/chat-rooms/2
 ```
 
-我们可以使用`WebSocket::room()`方法创建房间：
+开发者可以使用`WebSocket::room()`方法创建房间：
 
 ```php
 <?php
@@ -75,7 +74,7 @@ WebSocket::room('chat-rooms/{id}');
 
 ```
 
-当然，只创建房间没有意义，我们还需要为房间指定监听事件：
+当然，只创建房间没有意义，我们还需要为房间绑定事件监听：
 
 ```php
 <?php
@@ -91,13 +90,13 @@ WebSocket::room('chat-rooms/{id}')
 
 ```
 
-`WebSocket::room()`方法第二个参数指定的回调方法会在客户端成功连接服务器后触发，开发者可以利用这个回调做身份认证，存储用户信息等逻辑。
+`WebSocket::room()`方法的第二个参数可指定一个回调方法，该方法会在客户端成功连接服务器后触发，开发者可以利用这个回调做身份认证、存储用户数据等逻辑。
 
 > `WebSocket::room()`的本质就是定义一个HTTP路由。
 
 ## 广播（Broadcasting）
 
-我们可以使用`WebSocket::broadcast()`方法给所有客户端广播消息。
+开发者可以使用`WebSocket::broadcast()`方法给所有客户端广播消息。
 
 ```php
 <?php
@@ -119,9 +118,9 @@ WebSocket::on('user joined', function (Message $message) {
 
 上述代码表示，当服务器监听到`user joined`事件后，就广播一个`user joined`事件，告诉所有客户端有新用户加入了。
 
-`WebSocket::broadcast()`方法接收两个参数，第一个为需要广播的消息实体，第二参数接收一个或一组客户端的socket_id，这部分客户端将不会收到这条消息，所以我们也可以利用第二个参数来屏蔽不需要接收这条消息的客户端。
+`WebSocket::broadcast()`方法接收两个参数，第一个参数为消息对象；第二参数表示需要屏蔽的客户端socket_id，如需屏蔽多个可传数组，被指定的这部分客户端将收不到这条广播消息。
 
-需要注意的是，`WebSocket::broadcast()`方法会给所有的客户端广播消息，如果我们只想给某个房间的客户端广播消息，需要使用`Room::broadcast()`方法：
+需要注意的是，`WebSocket::broadcast()`方法会给所有的客户端广播消息，如果只想给某个房间里的客户端广播消息，需要使用`Room::broadcast()`方法：
 
 ```php
 <?php
@@ -145,7 +144,7 @@ WebSocket::getClientRoom($socketId)->broadcast($message);
 
 ## Message
 
-不论是接收还是发送事件，都是由`HuangYi\Swoole\WebSocket\Message`对象传递的。该类有3个成员属性：
+不论是接收还是发送事件，消息都是由`HuangYi\Swoole\WebSocket\Message`对象传递的。该类有3个成员属性：
 
 - `event`，表示接收或发送的事件名；
 - `data`，表示接收或发送的事件参数；
@@ -165,6 +164,28 @@ WebSocket::getClientRoom($socketId)->broadcast($message);
 其中`data`项可选，如果不需要传参，则可不传`data`项。
 
 > 当然，如果开发者想自定义消息格式，只需要自行实现一个Parser即可，自定义Parser必须实现`HuangYi\Swoole\Contracts\ParserContract`合约，并在配置文件`config/swoole.php`中修改`message_parser`选项。
+
+## 浏览器端示例代码
+
+```javascript
+let ws = new WebSocket('ws://127.0.0.1:1215/chat-room');
+
+// 接收消息
+ws.onmessage = function (event) {
+    console.log(event.data);
+};
+
+// 发送消息
+let message = JSON.stringify({
+    event: 'new message',
+    data: {
+        content: 'This is a new message.'
+    }
+});
+
+ws.send(message);
+
+```
 
 ## Nginx配置
 
