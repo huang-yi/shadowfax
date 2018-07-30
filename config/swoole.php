@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'message_parser' => HuangYi\Swoole\Websocket\Message\JsonParser::class,
+    'message_parser' => HuangYi\Swoole\Websocket\JsonParser::class,
 
     /*
     |--------------------------------------------------------------------------
