@@ -123,7 +123,7 @@ class WebSocket
         $this->container->make('swoole.server')
             ->task(EmitTask::make([
                 'message' => (string) $message,
-                'to' => $socketId, 
+                'to' => $socketId,
             ]));
     }
 
@@ -139,7 +139,7 @@ class WebSocket
         $this->container->make('swoole.server')
             ->task(BroadcastTask::make([
                 'message' => (string) $message,
-                'excepts' => $excepts, 
+                'excepts' => $excepts,
             ]));
     }
 
