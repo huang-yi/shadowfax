@@ -18,6 +18,17 @@ class Route extends HttpRoute
     protected $events = [];
 
     /**
+     * Set connected callback.
+     *
+     * @param mixed $action
+     * @return $this
+     */
+    public function connected($action)
+    {
+        return $this->uses($action);
+    }
+
+    /**
      * Register event.
      *
      * @param string $event

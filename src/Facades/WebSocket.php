@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static void emit(int $socketId, \HuangYi\Swoole\Contracts\MessageContract $message)
  * @method static void broadcast(\HuangYi\Swoole\Contracts\MessageContract $message, mixed $excepts = null)
  * @method static \HuangYi\Swoole\WebSocket\WebSocket setDefaultRoom(string $uri)
+ * @method static \HuangYi\Swoole\WebSocket\Route connected(mixed $action)
  * @method static \HuangYi\Swoole\WebSocket\Route on(string $event, mixed $callback)
  *
  * @see \HuangYi\Swoole\WebSocket\WebSocket
