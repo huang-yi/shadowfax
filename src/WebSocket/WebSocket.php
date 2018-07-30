@@ -80,12 +80,16 @@ class WebSocket
      * Get client room.
      *
      * @param int $socketId
-     * @return \HuangYi\Swoole\WebSocket\Room
+     * @return \HuangYi\Swoole\WebSocket\Room|null
      */
     public function getClientRoom($socketId)
     {
         $clientKey = $this->clientKey($socketId);
         $path = $this->redis->hget($clientKey, 'path');
+
+        if (! $path) {
+            return null;
+        }
 
         return $this->getRoom($path);
     }
