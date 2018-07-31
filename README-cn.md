@@ -109,7 +109,8 @@ Websocket消息的解析器。默认为`HuangYi\Swoole\Websocket\Message\JsonPar
 
 ### redis_connection
 
-Websocket的namespace数据使用redis存储，你可以指定一个redis连接来专门管理你的namespace数据。
+- `connection`：Websocket的房间数据使用redis存储，你可以指定一个专有的redis连接来存储相关数据
+- `prefix`：设置redis键前缀
 
 ### tables
 

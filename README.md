@@ -101,9 +101,10 @@ The WebSocket message parser. You can replace this option with a custom parser.
 
 > Notice: The custom parser must implement the `HuangYi\Swoole\Contracts\ParserContract`.
 
-### redis_connection
+### redis
 
-Specify a redis connection to store WebSocket rooms and clients.
+- `connection`: Specify a redis connection to store websocket rooms and clients.
+- `prefix`: Set the prefix of redis key.
 
 ### tables
 
