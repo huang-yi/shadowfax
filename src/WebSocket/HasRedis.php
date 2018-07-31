@@ -2,6 +2,7 @@
 
 namespace HuangYi\Swoole\WebSocket;
 
+use Closure;
 use Illuminate\Redis\Connections\Connection;
 
 trait HasRedis
@@ -14,16 +15,38 @@ trait HasRedis
     protected $redis;
 
     /**
+     * Redis prefix.
+     *
+     * @var string
+     */
+    protected $redisPrefix;
+
+    /**
      * Set redis.
      *
      * @param \Illuminate\Redis\Connections\Connection $redis
+     * @param string $prefix
      * @return $this
      */
-    public function setRedis(Connection $redis)
+    public function setRedis(Connection $redis, $prefix)
     {
         $this->redis = $redis;
+        $this->redisPrefix = $prefix;
 
-        return  $this;
+        return $this;
+    }
+
+    /**
+     * @param \Closure $callback
+     * @return void
+     */
+    public function redisMulti(Closure $callback)
+    {
+        $this->redis->multi();
+
+        $callback($this->redis);
+
+        $this->redis->exec();
     }
 
     /**
@@ -32,7 +55,7 @@ trait HasRedis
      */
     public function clientKey($socketId)
     {
-        return sprintf('websocket:clients:%s', $socketId);
+        return sprintf('%s:clients:%s', $this->redisPrefix, $socketId);
     }
 
     /**
@@ -41,7 +64,7 @@ trait HasRedis
      */
     public function roomKey($path)
     {
-        return sprintf('websocket:rooms:%s', sha1($path));
+        return sprintf('%s:%s', $this->roomsKey(), sha1($path));
     }
 
     /**
@@ -49,6 +72,6 @@ trait HasRedis
      */
     public function roomsKey()
     {
-        return 'websocket:rooms';
+        return $this->redisPrefix.':rooms';
     }
 }

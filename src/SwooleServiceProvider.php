@@ -92,10 +92,11 @@ class SwooleServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('swoole.websocket', function ($app) {
-            $connection = $app['config']->get('swoole.redis_connection', 'default');
+            $connection = $app['config']->get('swoole.redis.connection', 'default');
+            $prefix = $app['config']->get('swoole.redis.prefix', 'websocket');
             $redis = $app['redis']->connection($connection);
 
-            return (new WebSocket($app))->setRedis($redis);
+            return (new WebSocket($app))->setRedis($redis, $prefix);
         });
     }
 
