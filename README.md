@@ -25,7 +25,7 @@ $ composer require huang-yi/laravel-swoole-http
 
 2. Register service provider(Optional)
 
-You need to register the service provider manually, if your Laravel/Lumen version is less than 5.5:
+You need to register the service provider manually, if your Laravel version is less than 5.5 or you are using Lumen:
 
 ```php
 <?php

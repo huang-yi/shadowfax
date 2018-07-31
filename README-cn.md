@@ -41,7 +41,7 @@ $ composer require huang-yi/laravel-swoole-http
 ]
 ```
 
-如果你正在使用低版本的Lumen框架（小于5.5），将下面这行代码添加到`bootstrap/app.php`文件：
+如果你正在使用Lumen框架，将下面这行代码添加到`bootstrap/app.php`文件：
 
 ```php
 $app->register(HuangYi\Swoole\SwooleServiceProvider::class);
@@ -54,7 +54,7 @@ $app->register(HuangYi\Swoole\SwooleServiceProvider::class);
 请运行以下命令快速发布配置文件，它将生成一个`swoole.php`在`config/`文件夹下：
 
 ```
-$ php artisan vendor:publish  --provider="HuangYi\Swoole\SwooleServiceProvider"
+$ php artisan vendor:publish --provider="HuangYi\Swoole\SwooleServiceProvider"
 ```
 
 请参考[配置说明](#configurations)，调整配置文件参数。
