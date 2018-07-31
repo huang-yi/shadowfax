@@ -156,9 +156,7 @@ class WebSocket
      */
     public function flush()
     {
-        $this->redisMulti(function (Connection $redis) {
-            $redis->del($redis->keys($this->redisPrefix));
-        });
+        $this->redis->del($this->redis->keys($this->redisPrefix));
     }
 
     /**
