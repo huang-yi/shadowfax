@@ -48,7 +48,7 @@ abstract class Server
      * @var array
      */
     protected $baseEvents = [
-        'start', 'shutDown', 'workerStart', 'workerStop', 'packet', 'close',
+        'start', 'shutdown', 'workerStart', 'workerStop', 'packet', 'close',
         'bufferFull', 'bufferEmpty', 'task', 'finish', 'pipeMessage',
         'workerError', 'managerStart', 'managerStop',
     ];

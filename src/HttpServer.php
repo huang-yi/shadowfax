@@ -138,7 +138,7 @@ class HttpServer extends Server
         foreach ($resets as $abstract) {
             if ($abstract instanceof ServiceProvider) {
                 $this->container->register($abstract, [], true);
-            } else {
+            } elseif ($this->container->has($abstract)) {
                 $this->rebindAbstract($abstract);
             }
         }
@@ -153,7 +153,7 @@ class HttpServer extends Server
     protected function rebindAbstract($abstract)
     {
         $abstract = $this->container->getAlias($abstract);
-        $binding = $this->container->getBindings()[$abstract] ?: null;
+        $binding = array_get($this->container->getBindings(), $abstract);
 
         unset($this->container[$abstract]);
 
