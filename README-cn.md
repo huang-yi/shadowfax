@@ -47,8 +47,6 @@ $ composer require huang-yi/laravel-swoole-http
 $app->register(HuangYi\Swoole\SwooleServiceProvider::class);
 ```
 
-5.5及其以后的版本不需要执行上述步骤。
-
 **2、 修改配置**
 
 请运行以下命令快速发布配置文件，它将生成一个`swoole.php`在`config/`文件夹下：
@@ -107,7 +105,7 @@ Websocket消息的解析器。默认为`HuangYi\Swoole\Websocket\Message\JsonPar
 
 > 注意：消息解析器必须实现`HuangYi\Swoole\Contracts\ParserContract`合约。
 
-### redis_connection
+### redis
 
 - `connection`：Websocket的房间数据使用redis存储，你可以指定一个专有的redis连接来存储相关数据
 - `prefix`：设置redis键前缀
