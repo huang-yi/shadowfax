@@ -112,11 +112,13 @@ class Room
      */
     public function flush()
     {
-        foreach ($this->getClients() as $socketId) {
-            $this->leave($socketId);
-        }
+        $this->redisMulti(function () {
+            foreach ($this->getClients() as $socketId) {
+                $this->leave($socketId);
+            }
 
-        $this->redis->srem($this->roomsKey(), $this->path);
+            $this->redis->srem($this->roomsKey(), $this->path);
+        });
     }
 
     /**

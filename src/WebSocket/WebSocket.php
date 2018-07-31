@@ -7,6 +7,7 @@ use HuangYi\Swoole\Tasks\BroadcastTask;
 use HuangYi\Swoole\Tasks\EmitTask;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
+use Illuminate\Redis\Connections\Connection;
 
 /**
  * @mixin \HuangYi\Swoole\WebSocket\Route
@@ -110,7 +111,8 @@ class WebSocket
 
         $room = new Room($path);
 
-        $room->setContainer($this->container)->setRedis($this->redis);
+        $room->setContainer($this->container)
+            ->setRedis($this->redis, $this->redisPrefix);
 
         return $this->rooms[$room->getPath()] = $room;
     }
@@ -154,9 +156,9 @@ class WebSocket
      */
     public function flush()
     {
-        foreach ($this->rooms as $room) {
-            $room->flush();
-        }
+        $this->redisMulti(function (Connection $redis) {
+            $redis->del($redis->keys($this->redisPrefix));
+        });
     }
 
     /**
