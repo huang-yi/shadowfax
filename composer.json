@@ -1,6 +1,6 @@
 {
     "name": "huang-yi/laravel-swoole-http",
-    "description": "A high performance HTTP/websocket server based on Swoole. Speeds up your Laravel and Lumen applications.",
+    "description": "A high performance HTTP/WebSocket server based on Swoole. Speeds up your Laravel and Lumen applications.",
     "keywords": ["swoole", "laravel", "lumen", "http", "websocket", "server", "performance"],
     "license": "MIT",
     "authors": [
