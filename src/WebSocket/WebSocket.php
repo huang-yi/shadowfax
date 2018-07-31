@@ -156,7 +156,7 @@ class WebSocket
      */
     public function flush()
     {
-        $keys = $this->redis->keys($this->redisPrefix);
+        $keys = $this->redis->keys($this->redisPrefix.'*');
 
         $this->redisMulti(function ($redis) use ($keys) {
             foreach ($keys as $key) {
