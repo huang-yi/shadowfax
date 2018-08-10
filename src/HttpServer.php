@@ -5,7 +5,6 @@ namespace HuangYi\Swoole;
 use HuangYi\Swoole\Transformers\RequestTransformer;
 use HuangYi\Swoole\Transformers\ResponseTransformer;
 use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Swoole\Http\Server as SwooleHttpServer;
