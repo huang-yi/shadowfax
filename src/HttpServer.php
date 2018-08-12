@@ -5,6 +5,7 @@ namespace HuangYi\Swoole;
 use HuangYi\Swoole\Transformers\RequestTransformer;
 use HuangYi\Swoole\Transformers\ResponseTransformer;
 use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
 use Swoole\Http\Server as SwooleHttpServer;
@@ -139,6 +140,8 @@ class HttpServer extends Server
                 $this->container->register($abstract, [], true);
             } elseif ($this->container->has($abstract)) {
                 $this->rebindAbstract($abstract);
+
+                Facade::clearResolvedInstance($abstract);
             }
         }
     }
