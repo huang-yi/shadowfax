@@ -95,15 +95,13 @@ class ResponseTransformer
      */
     protected function sendContent(SwooleResponse $swooleResponse)
     {
-        $illuminateResponse = $this->illuminateResponse;
+        ob_start();
 
-        if ($illuminateResponse instanceof StreamedResponse) {
-            $illuminateResponse->sendContent();
-        } elseif ($illuminateResponse instanceof BinaryFileResponse) {
-            $swooleResponse->sendfile($illuminateResponse->getFile()->getPathname());
-        } else {
-            $swooleResponse->end($illuminateResponse->getContent());
-        }
+        $this->illuminateResponse->sendContent();
+
+        $swooleResponse->end(ob_get_contents());
+
+        ob_end_clean();
     }
 
     /**
