@@ -4,9 +4,7 @@ namespace HuangYi\Swoole\Transformers;
 
 use Illuminate\Http\Response as IlluminateResponse;
 use Swoole\Http\Response as SwooleResponse;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ResponseTransformer
 {
