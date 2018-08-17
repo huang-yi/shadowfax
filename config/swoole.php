@@ -74,7 +74,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Websocket message parser class
+    | WebSocket message parser class
     |--------------------------------------------------------------------------
     |
     | This class allows you to customize the message format of websocket.
@@ -82,7 +82,7 @@ return [
     |
     */
 
-    'message_parser' => HuangYi\Swoole\Websocket\JsonParser::class,
+    'message_parser' => HuangYi\Swoole\WebSocket\JsonParser::class,
 
     /*
     |--------------------------------------------------------------------------
