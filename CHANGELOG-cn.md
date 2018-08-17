@@ -28,4 +28,4 @@
 ### Change
 
 - 重构WebSocket服务器
-- 支出WebSocket房间
+- 支持WebSocket房间
