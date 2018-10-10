@@ -49,7 +49,7 @@ class HttpServer extends Server
 
         $this->clearCache();
 
-        if (! $this->isLumen()) {
+        if (!$this->isLumen()) {
             $this->httpKernel = $this->container->make(Kernel::class);
             $this->httpKernel->bootstrap();
         }
@@ -92,7 +92,7 @@ class HttpServer extends Server
 
         ResponseTransformer::make($illuminateResponse)->send($response);
 
-        if (! $this->isLumen()) {
+        if (!$this->isLumen()) {
             $this->httpKernel->terminate($illuminateRequest, $illuminateResponse);
         }
 
@@ -136,13 +136,62 @@ class HttpServer extends Server
         $resets = $this->container['config']->get('swoole.resets', []);
 
         foreach ($resets as $abstract) {
-            if ($abstract instanceof ServiceProvider) {
-                $this->container->register($abstract, [], true);
+            if (is_subclass_of($abstract, ServiceProvider::class)) {
+                $this->registerServiceProvider($abstract);
             } elseif ($this->container->has($abstract)) {
                 $this->rebindAbstract($abstract);
 
                 Facade::clearResolvedInstance($abstract);
             }
+        }
+    }
+
+    /**
+     * Register service provider.
+     *
+     * @param string $provider
+     * @return void
+     */
+    protected function registerServiceProvider($provider)
+    {
+        if ($this->isLumen()) {
+            $this->registerLumenServiceProvider($provider);
+        } else {
+            $this->registerLaravelServiceProvider($provider);
+        }
+    }
+
+    /**
+     * Register Lumen service provider.
+     *
+     * @param string $provider
+     * @return void
+     */
+    protected function registerLumenServiceProvider($provider)
+    {
+        $provider = new $provider($this->container);
+
+        if (method_exists($provider, 'register')) {
+            $provider->register();
+        }
+
+        if (method_exists($provider, 'boot')) {
+            $this->container->call([$provider, 'boot']);
+        }
+    }
+
+    /**
+     * Register Laravel service provider.
+     *
+     * @param string $provider
+     * @return void
+     */
+    protected function registerLaravelServiceProvider($provider)
+    {
+        if (version_compare($this->container->version(), '5.7.0') >= 0) {
+            $this->container->register($provider, true);
+        } else {
+            $this->container->register($provider, [], true);
         }
     }
 
