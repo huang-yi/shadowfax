@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v3.1.4
+
+### Fixed
+
+- Fixed register service provider
+
 ## v3.1.3
 
 ### Fixed
