@@ -98,4 +98,16 @@ class Route extends HttpRoute
 
         return [$controller, $method];
     }
+
+    /**
+     * Get the compiled version of the route.
+     *
+     * @return \Symfony\Component\Routing\CompiledRoute
+     */
+    public function getCompiled()
+    {
+        $this->compileRoute();
+
+        return $this->compiled;
+    }
 }
