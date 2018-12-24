@@ -8,6 +8,7 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Lumen\Application as LumenApplication;
+use League\Flysystem\Util;
 use Swoole\Http\Server as SwooleHttpServer;
 
 class HttpServer extends Server
@@ -68,9 +69,53 @@ class HttpServer extends Server
 
         $this->container->instance('swoole.http.request', $request);
 
-        $this->handleHttpRequest($request, $response);
+        if ($file = $this->isStaticFile($request)) {
+            $this->handleStaticFile($file, $response);
+        } else {
+            $this->handleHttpRequest($request, $response);
+        }
 
         $this->container['events']->fire('swoole.requested', func_get_args());
+    }
+
+    /**
+     * Determine if requesting a static file.
+     *
+     * @param \Swoole\Http\Request $request
+     * @return string|bool
+     */
+    protected function isStaticFile($request)
+    {
+        $uri = urldecode(
+            parse_url($request->server['request_uri'], PHP_URL_PATH)
+        );
+
+        if ($uri === '/') {
+            return false;
+        }
+
+        $file = base_path('/public' . $uri);
+
+        if (! file_exists($file)) {
+            return false;
+        }
+
+        return $file;
+    }
+
+    /**
+     * Handle static file.
+     *
+     * @param string $file
+     * @param \Swoole\Http\Response $response
+     * @return void
+     */
+    protected function handleStaticFile($file, $response)
+    {
+        $mineType = Util::guessMimeType($file, null);
+
+        $response->header('Content-Type', $mineType);
+        $response->sendfile($file);
     }
 
     /**
