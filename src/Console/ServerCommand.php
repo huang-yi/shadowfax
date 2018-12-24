@@ -12,7 +12,10 @@ class ServerCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'swoole:server {action=start : start|stop|restart|reload|watch}';
+    protected $signature = 'swoole:server
+                            {action=start : start|stop|restart|reload|watch}
+                            {--host=default : The server host}
+                            {--port=default : The server port}';
 
     /**
      * The console command description.
@@ -37,6 +40,8 @@ class ServerCommand extends Command
     public function handle()
     {
         $this->detectSwoole();
+
+        $this->setConfig();
 
         $action = $this->getAction();
 
@@ -290,6 +295,25 @@ class ServerCommand extends Command
             $this->error('The ext-swoole is required! (pecl install swoole)');
 
             exit(1);
+        }
+    }
+
+    /**
+     * Set configurations.
+     *
+     * @return void
+     */
+    protected function setConfig()
+    {
+        $host = $this->option('host');
+        $port = $this->option('port');
+
+        if ($host !== 'default') {
+            $this->laravel['config']->set('swoole.host', $host);
+        }
+
+        if ($port !== 'default') {
+            $this->laravel['config']->set('swoole.port', $port);
         }
     }
 
