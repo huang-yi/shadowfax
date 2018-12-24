@@ -18,7 +18,8 @@
         "illuminate/http": "~5.2",
         "illuminate/pipeline": "~5.2",
         "illuminate/redis": "~5.2",
-        "illuminate/support": "~5.2"
+        "illuminate/support": "~5.2",
+        "league/flysystem": "^1.0"
     },
     "require-dev": {
         "illuminate/routing": "~5.2",
