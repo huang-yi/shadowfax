@@ -128,7 +128,7 @@ abstract class Server
     {
         $this->container['events']->fire('swoole.start', func_get_args());
 
-        $this->setProcessName('master process');
+        $this->setProcessName('master', true);
     }
 
     /**
@@ -140,7 +140,7 @@ abstract class Server
     {
         $this->container['events']->fire('swoole.managerStart', func_get_args());
 
-        $this->setProcessName('manager process');
+        $this->setProcessName('manager');
     }
 
     /**
@@ -155,9 +155,9 @@ abstract class Server
         $this->container['events']->fire('swoole.workerStart', func_get_args());
 
         if ($this->isTaskWorker($workerId)) {
-            $this->setProcessName('task process');
+            $this->setProcessName('task');
         } else {
-            $this->setProcessName('worker process');
+            $this->setProcessName('worker');
         }
     }
 
@@ -183,21 +183,29 @@ abstract class Server
      * Sets process name.
      *
      * @param string $process
+     * @param bool $withHost
      * @return void
      */
-    protected function setProcessName($process)
+    protected function setProcessName($process, $withHost = false)
     {
         // MacOS doesn't support modifying process name.
         if ($this->isMacOS()) {
             return;
         }
 
+        if ($withHost) {
+            $host = sprintf(
+                '[%s:%s]',
+                $this->server->host,
+                $this->server->port
+            );
+        }
+
         swoole_set_process_name(sprintf(
-            '%s: %s[%s:%s]',
+            '%s: %s process%s',
             $this->getServerName(),
             $process,
-            $this->host,
-            $this->port
+            $host ?? ''
         ));
     }
 
@@ -229,7 +237,7 @@ abstract class Server
      */
     protected function getServerName()
     {
-        return 'swoole-server';
+        return $this->container['config']['app.name'] ?: 'swoole-server';
     }
 
     /**

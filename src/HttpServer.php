@@ -265,6 +265,6 @@ class HttpServer extends Server
      */
     protected function getServerName()
     {
-        return 'swoole-http-server';
+        return $this->container['config']['app.name'] ?: 'swoole-http-server';
     }
 }

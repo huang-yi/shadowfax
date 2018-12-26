@@ -198,6 +198,6 @@ class WebSocketServer extends HttpServer
      */
     protected function getServerName()
     {
-        return 'swoole-websocket-server';
+        return $this->container['config']['app.name'] ?: 'swoole-websocket-server';
     }
 }
