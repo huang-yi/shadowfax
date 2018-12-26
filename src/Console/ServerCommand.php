@@ -80,8 +80,8 @@ class ServerCommand extends Command
         }
 
         $this->info('Starting server...');
-        $this->info('> (Run this command to ensure the swoole process is ' .
-            'running: ps -ef|grep "swoole")');
+        $this->info('> (Run this command to ensure the server process is ' .
+            'running: ps -ef|grep "{app.name}")');
 
         $this->laravel['swoole.server']->start();
     }
@@ -139,25 +139,7 @@ class ServerCommand extends Command
      */
     protected function reload()
     {
-        $pid = $this->getPid();
-
-        if (! $this->isRunning($pid)) {
-            $this->error("Failed! There is no server process running.");
-
-            exit(1);
-        }
-
-        $this->info('Reloading server...');
-
-        $isRunning = $this->killProcess($pid, SIGUSR1);
-
-        if (! $isRunning) {
-            $this->error('> failure');
-
-            exit(1);
-        }
-
-        $this->info('> success');
+        $this->restart();
     }
 
     /**
