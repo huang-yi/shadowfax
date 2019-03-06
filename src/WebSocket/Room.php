@@ -52,8 +52,8 @@ class Room
         $roomKey = $this->roomKey($this->path);
         $clientKey = $this->clientKey($socketId);
 
-        $this->redis->sadd($roomsKey, [$this->path]);
-        $this->redis->sadd($roomKey, [$socketId]);
+        $this->redis->sadd($roomsKey, $this->path);
+        $this->redis->sadd($roomKey, $socketId);
         $this->redis->hset($clientKey, 'path', $this->path);
 
         return $this;
@@ -71,7 +71,7 @@ class Room
         $clientKey = $this->clientKey($socketId);
 
         $this->redis->srem($roomKey, $socketId);
-        $this->redis->hdel($clientKey, ['path']);
+        $this->redis->hdel($clientKey, 'path');
 
         return $this;
     }
