@@ -85,7 +85,7 @@ class Room
     {
         $roomKey = $this->roomKey($this->path);
 
-        return array_map('intval', $this->redis->smembers($roomKey));
+        return array_map('intval', $this->redis->smembers($roomKey) ?: []);
     }
 
     /**
