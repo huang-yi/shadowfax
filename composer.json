@@ -1,7 +1,7 @@
 {
-    "name": "huang-yi/laravel-swoole-http",
-    "description": "A high performance HTTP/WebSocket server based on Swoole. Speeds up your Laravel and Lumen applications.",
-    "keywords": ["swoole", "laravel", "lumen", "http", "websocket", "server", "performance"],
+    "name": "huang-yi/shadowfax",
+    "description": "Run Laravel on Swoole.",
+    "keywords": ["laravel", "swoole", "http-server"],
     "license": "MIT",
     "authors": [
         {
@@ -10,41 +10,39 @@
         }
     ],
     "require": {
-        "ext-swoole": ">=1.9.5",
-        "huang-yi/swoole-watcher": "0.0.*",
-        "illuminate/console": "~5.2",
-        "illuminate/contracts": "~5.2",
-        "illuminate/events": "~5.2",
-        "illuminate/http": "~5.2",
-        "illuminate/pipeline": "~5.2",
-        "illuminate/redis": "~5.2",
-        "illuminate/support": "~5.2",
-        "league/flysystem": "^1.0"
+        "php": "^7.2",
+        "illuminate/container": "^6.0",
+        "illuminate/http": "^6.0",
+        "illuminate/support": "^6.0",
+        "psr/container": "^1.0",
+        "symfony/console": "^4.3.4"
     },
     "require-dev": {
-        "illuminate/routing": "~5.2",
-        "phpunit/phpunit": "~6.0"
+        "phpunit/phpunit": "^8"
     },
     "autoload": {
         "psr-4": {
-            "HuangYi\\Swoole\\": "src"
-        }
+            "HuangYi\\Shadowfax\\": "src"
+        },
+        "files": [
+            "src/Support/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "HuangYi\\Swoole\\Tests\\": "tests"
+            "HuangYi\\Shadowfax\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "HuangYi\\Swoole\\SwooleServiceProvider"
-            ],
-            "aliases": {
-                "SwooleServer": "HuangYi\\Swoole\\Facades\\Server",
-                "SwooleTable": "HuangYi\\Swoole\\Facades\\Table",
-                "WebSocket": "HuangYi\\Swoole\\Facades\\WebSocket"
-            }
+                "HuangYi\\Shadowfax\\ShadowfaxServiceProvider"
+            ]
         }
-    }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
