@@ -18,8 +18,8 @@
         "symfony/console": "^4.3.4"
     },
     "require-dev": {
-        "laravel/laravel": "^6.0",
-        "laravel/lumen": "^6.0",
+        "laravel/framework": "^6.0",
+        "laravel/lumen-framework": "^6.0",
         "phpunit/phpunit": "^8.5"
     },
     "autoload": {
