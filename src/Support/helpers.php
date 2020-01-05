@@ -1,6 +1,8 @@
 <?php
 
 use HuangYi\Shadowfax\Shadowfax;
+use Illuminate\Contracts\Container\Container as ContainerContract;
+use Illuminate\Support\Facades\Facade;
 
 if (! function_exists('shadowfax')) {
     /**
@@ -16,5 +18,60 @@ if (! function_exists('shadowfax')) {
         }
 
         return Shadowfax::make($id);
+    }
+}
+
+if (! function_exists('shadowfax_correct_app')) {
+    /**
+     * Correct the Laravel Application.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $current
+     * @return void
+     */
+    function shadowfax_correct_app(ContainerContract $current)
+    {
+        $instance = shadowfax_get_coroutine_app();
+
+        if ($instance && $current !== $instance) {
+            Container::setInstance($instance);
+            Facade::setFacadeApplication($instance);
+            Facade::clearResolvedInstances();
+        }
+    }
+}
+
+if (! function_exists('shadowfax_get_coroutine_app')) {
+    /**
+     * Get the Laravel application in coroutine environment.
+     *
+     * @param  int  $cid
+     * @return \Illuminate\Contracts\Container\Container|null
+     */
+    function shadowfax_get_coroutine_app($cid = null)
+    {
+        if (in_array($cid, [-1, false], true)) {
+            return null;
+        }
+
+        if (! $app = Swoole\Coroutine::getContext($cid)->laravel ?? null) {
+            return shadowfax_get_coroutine_app(Swoole\Coroutine::getPcid($cid));
+        }
+
+        return $app;
+    }
+}
+
+if (! function_exists('shadowfax_set_process_name')) {
+    /**
+     * Set the process name.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    function shadowfax_set_process_name($name)
+    {
+        if (PHP_OS != 'Darwin') {
+            swoole_set_process_name($name);
+        }
     }
 }

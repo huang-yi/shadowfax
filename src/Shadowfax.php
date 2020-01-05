@@ -78,11 +78,12 @@ class Shadowfax implements ContainerInterface
     /**
      * Get the base path.
      *
+     * @param  string  $path
      * @return string
      */
-    public function getBasePath()
+    public function basePath($path = null)
     {
-        return $this->basePath;
+        return $this->basePath.'/'.ltrim($path, '/');
     }
 
     /**
@@ -116,16 +117,6 @@ class Shadowfax implements ContainerInterface
     public static function make($id)
     {
         return static::getInstance()->get($id);
-    }
-
-    /**
-     * Get the base path.
-     *
-     * @return string
-     */
-    public static function basePath()
-    {
-        return static::getInstance()->getBasePath();
     }
 
     /**
