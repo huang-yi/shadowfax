@@ -1,8 +1,8 @@
 <?php
 
-namespace HuangYi\Shadowfax\Tests\Support;
+namespace HuangYi\Shadowfax\Tests;
 
-use HuangYi\Shadowfax\Support\Config;
+use HuangYi\Shadowfax\Config;
 use PHPUnit\Framework\TestCase;
 
 class ConfigTest extends TestCase

@@ -16,13 +16,6 @@ class Kernel
     protected $app;
 
     /**
-     * Determine if the framework is Lumen.
-     *
-     * @var bool
-     */
-    protected $isLumen;
-
-    /**
      * The Swoole Http Kernel.
      *
      * @param  \Illuminate\Contracts\Container\Container  $app
@@ -31,7 +24,6 @@ class Kernel
     public function __construct(Container $app)
     {
         $this->app = $app;
-        $this->isLumen = $this->isLumen($app);
     }
 
     /**
@@ -42,7 +34,7 @@ class Kernel
      */
     public function handle(Request $request)
     {
-        if ($this->isLumen) {
+        if ($this->isLumen()) {
             return $this->runLumen($request);
         }
 
@@ -90,11 +82,10 @@ class Kernel
     /**
      * Determine if the framework is Lumen.
      *
-     * @param  \Illuminate\Contracts\Container\Container  $app
      * @return bool
      */
-    public function isLumen(Container $app)
+    public function isLumen()
     {
-        return $app instanceof Lumen;
+        return $this->app instanceof Lumen;
     }
 }

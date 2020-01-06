@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Shadowfax\Laravel;
+namespace HuangYi\Shadowfax;
 
 class ContainerRewriter
 {
@@ -9,7 +9,7 @@ class ContainerRewriter
      *
      * @var string
      */
-    protected $path = __DIR__.'/../../container.php';
+    protected $path = __DIR__.'/../container.php';
 
     /**
      * Rewrite the container.
@@ -64,18 +64,18 @@ REPLACE;
      */
     public function getSourcePath()
     {
-        $path = __DIR__.'/../../../../laravel/framework/src/Illuminate/Container/Container.php';
+        $path = __DIR__.'/../../../laravel/framework/src/Illuminate/Container/Container.php';
 
         if (! file_exists($path)) {
-            $path = __DIR__.'/../../../../illuminate/container/Container.php';
+            $path = __DIR__.'/../../../illuminate/container/Container.php';
         }
 
         if (! file_exists($path)) {
-            $path = __DIR__.'/../../vendor/laravel/framework/src/Illuminate/Container/Container.php';
+            $path = __DIR__.'/../vendor/laravel/framework/src/Illuminate/Container/Container.php';
         }
 
         if (! file_exists($path)) {
-            $path = __DIR__.'/../../vendor/illuminate/container/Container.php';
+            $path = __DIR__.'/../vendor/illuminate/container/Container.php';
         }
 
         return $path;

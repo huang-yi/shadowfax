@@ -3,7 +3,7 @@
 namespace HuangYi\Shadowfax\Tests\Laravel;
 
 use PHPUnit\Framework\TestCase;
-use HuangYi\Shadowfax\Laravel\ContainerRewriter;
+use HuangYi\Shadowfax\ContainerRewriter;
 
 class ContainerRewriterTest extends TestCase
 {

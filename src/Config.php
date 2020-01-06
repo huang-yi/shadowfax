@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Shadowfax\Support;
+namespace HuangYi\Shadowfax;
 
 class Config
 {
@@ -16,7 +16,7 @@ class Config
      *
      * @var string
      */
-    protected $defaultPath = __DIR__.'/../../shadowfax.ini';
+    protected $defaultPath = __DIR__.'/../shadowfax.ini';
 
     /**
      * Config constructor.

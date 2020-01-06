@@ -27,7 +27,7 @@
             "HuangYi\\Shadowfax\\": "src"
         },
         "files": [
-            "src/Support/helpers.php"
+            "src/helpers.php"
         ]
     },
     "autoload-dev": {
@@ -46,5 +46,8 @@
         "sort-packages": true
     },
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "test": "phpunit"
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Shadowfax\Laravel;
+namespace HuangYi\Shadowfax;
 
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;

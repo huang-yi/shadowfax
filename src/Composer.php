@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Shadowfax\Support;
+namespace HuangYi\Shadowfax;
 
 use ReflectionClass;
 

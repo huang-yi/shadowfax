@@ -1,8 +1,8 @@
 <?php
 
-namespace HuangYi\Shadowfax\Tests\Laravel;
+namespace HuangYi\Shadowfax\Tests;
 
-use HuangYi\Shadowfax\Laravel\Bootstrapper;
+use HuangYi\Shadowfax\Bootstrapper;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Application as Laravel;
@@ -13,9 +13,8 @@ class BootstrapperTest extends TestCase
 {
     public function test_boot_http_kernel_laravel()
     {
-        $bootstrapper = new Bootstrapper(__DIR__.'/../frameworks/laravel/bootstrap/app.php');
+        $bootstrapper = new Bootstrapper(__DIR__.'/frameworks/laravel/bootstrap/app.php');
 
-        /** @var Laravel $app */
         $app = $bootstrapper->http();
 
         $this->assertInstanceOf(Laravel::class, $app);
@@ -26,9 +25,8 @@ class BootstrapperTest extends TestCase
 
     public function test_boot_console_kernel_laravel()
     {
-        $bootstrapper = new Bootstrapper(__DIR__.'/../frameworks/laravel/bootstrap/app.php');
+        $bootstrapper = new Bootstrapper(__DIR__.'/frameworks/laravel/bootstrap/app.php');
 
-        /** @var Laravel $app */
         $app = $bootstrapper->console();
 
         $this->assertInstanceOf(Laravel::class, $app);
@@ -39,9 +37,8 @@ class BootstrapperTest extends TestCase
 
     public function test_boot_http_kernel_lumen()
     {
-        $bootstrapper = new Bootstrapper(__DIR__.'/../frameworks/lumen/bootstrap/app.php');
+        $bootstrapper = new Bootstrapper(__DIR__.'/frameworks/lumen/bootstrap/app.php');
 
-        /** @var Lumen $app */
         $app = $bootstrapper->http();
 
         $this->assertInstanceOf(Lumen::class, $app);
@@ -50,9 +47,8 @@ class BootstrapperTest extends TestCase
 
     public function test_boot_console_kernel_lumen()
     {
-        $bootstrapper = new Bootstrapper(__DIR__.'/../frameworks/lumen/bootstrap/app.php');
+        $bootstrapper = new Bootstrapper(__DIR__.'/frameworks/lumen/bootstrap/app.php');
 
-        /** @var Lumen $app */
         $app = $bootstrapper->console();
 
         $this->assertInstanceOf(Lumen::class, $app);
