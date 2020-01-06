@@ -36,6 +36,8 @@ class Composer
     public function __construct(string $path)
     {
         $this->path = $path;
+
+        $this->register();
     }
 
     /**
@@ -43,7 +45,7 @@ class Composer
      *
      * @return void
      */
-    public function register()
+    protected function register()
     {
         $this->loader = require $this->path;
 
