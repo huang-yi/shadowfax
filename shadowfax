@@ -1,21 +1,23 @@
 #!/usr/bin/env php
 <?php
 
-require __DIR__.'/src/Composer.php';
+foreach ([__DIR__.'/../autoload.php', __DIR__.'/../../autoload.php', __DIR__.'/vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        $autoload = $file;
 
-if (! file_exists($autoload = __DIR__.'/../../autoload.php')) {
-    $autoload = __DIR__.'/vendor/autoload.php';
+        break;
+    }
 }
 
-if (! file_exists($autoload)) {
+if (! isset($autoload) || ! file_exists($autoload)) {
     fwrite(STDERR, 'Autoload not found'.PHP_EOL);
 
     die(1);
 }
 
-$composer = new HuangYi\Shadowfax\Composer($autoload);
+require $autoload;
 
-$composer->register();
+$composer = new HuangYi\Shadowfax\Composer($autoload);
 
 $shadowfax = new HuangYi\Shadowfax\Shadowfax(
     $_ENV['APP_BASE_PATH'] ?? __DIR__.'/../../..'
