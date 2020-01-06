@@ -2,7 +2,7 @@
 
 namespace HuangYi\Shadowfax\Tests;
 
-use HuangYi\Shadowfax\Exceptions\EntryNotFoundException;
+use HuangYi\Shadowfax\Exceptions\InstanceNotFoundException;
 use HuangYi\Shadowfax\Shadowfax;
 use PHPUnit\Framework\TestCase;
 
@@ -10,49 +10,52 @@ class ShadowfaxTest extends TestCase
 {
     protected $shadowfax;
 
-    protected $foo;
-
     public function setUp(): void
     {
         parent::setUp();
 
         $this->shadowfax = new Shadowfax;
-
-        $this->foo = new \stdClass;
-
-        $this->shadowfax->set('foo', $this->foo);
     }
 
 
-    public function test_set()
+    public function test_instance()
     {
+        $foo = new \stdClass;
+        $this->shadowfax->instance('foo', $foo);
+
         $this->assertArrayHasKey('foo', $this->shadowfax->getInstances());
-        $this->assertEquals($this->foo, $this->shadowfax->getInstances()['foo']);
+        $this->assertEquals($foo, $this->shadowfax->getInstances()['foo']);
     }
 
 
-    public function test_get()
+    public function test_make()
     {
-        $this->assertEquals($this->foo, $this->shadowfax->get('foo'));
+        $foo = new \stdClass;
+        $this->shadowfax->instance('foo', $foo);
+
+        $this->assertEquals($foo, $this->shadowfax->make('foo'));
     }
 
 
-    public function test_get_nonexistent_entry()
+    public function test_make_nonexistent_instance()
     {
-        $this->expectException(EntryNotFoundException::class);
+        $this->expectException(InstanceNotFoundException::class);
 
-        $this->shadowfax->get('nonexistence');
+        $this->shadowfax->make('nonexistence');
     }
 
 
-    public function test_has()
+    public function test_has_instance()
     {
-        $this->assertTrue($this->shadowfax->has('foo'));
+        $foo = new \stdClass;
+        $this->shadowfax->instance('foo', $foo);
+
+        $this->assertTrue($this->shadowfax->hasInstance('foo'));
     }
 
 
-    public function test_has_not()
+    public function test_has_not_instance()
     {
-        $this->assertFalse($this->shadowfax->has('nonexistence'));
+        $this->assertFalse($this->shadowfax->hasInstance('nonexistence'));
     }
 }

@@ -2,11 +2,10 @@
 
 namespace HuangYi\Shadowfax;
 
-use HuangYi\Shadowfax\Exceptions\EntryNotFoundException;
-use Psr\Container\ContainerInterface;
+use HuangYi\Shadowfax\Exceptions\InstanceNotFoundException;
 use Symfony\Component\Console\Application;
 
-class Shadowfax extends Application implements ContainerInterface
+class Shadowfax extends Application
 {
     /**
      * The current version.
@@ -44,7 +43,7 @@ class Shadowfax extends Application implements ContainerInterface
     {
         parent::__construct('Shadowfax', static::VERSION);
 
-        $this->basePath = $basePath;
+        $this->basePath = rtrim($basePath, '/');
 
         static::$instance = $this;
 
@@ -54,35 +53,41 @@ class Shadowfax extends Application implements ContainerInterface
     /**
      * Register an existing instance in the container.
      *
-     * @param  string  $id
+     * @param  string  $abstract
      * @param  mixed  $instance
      * @return $this
      */
-    public function set($id, $instance)
+    public function instance($abstract, $instance)
     {
-        $this->instances[$id] = $instance;
+        $this->instances[$abstract] = $instance;
 
         return $this;
     }
 
     /**
-     * @inheritDoc
+     * Resolve the given type from the container.
+     *
+     * @param  string  $abstract
+     * @return mixed
      */
-    public function get($id)
+    public function make($abstract)
     {
-        if (! $this->has($id)) {
-            throw new EntryNotFoundException($id);
+        if (! $this->hasInstance($abstract)) {
+            throw new InstanceNotFoundException($abstract);
         }
 
-        return $this->instances[$id];
+        return $this->instances[$abstract];
     }
 
     /**
-     * @inheritDoc
+     * Determine if the given abstract type has been bound.
+     *
+     * @param  string  $abstract
+     * @return bool
      */
-    public function has($id)
+    public function hasInstance($abstract)
     {
-        return array_key_exists($id, $this->instances);
+        return isset($this->instances[$abstract]);
     }
 
     /**
@@ -93,7 +98,9 @@ class Shadowfax extends Application implements ContainerInterface
      */
     public function basePath($path = null)
     {
-        return $this->basePath.'/'.ltrim($path, '/');
+        $path = ltrim($path, '/');
+
+        return $path ? $this->basePath.'/'.$path : $this->basePath;
     }
 
     /**
@@ -104,29 +111,6 @@ class Shadowfax extends Application implements ContainerInterface
     public function getInstances()
     {
         return $this->instances;
-    }
-
-    /**
-     * Register an existing instance in the container.
-     *
-     * @param  string  $id
-     * @param  mixed  $instance
-     * @return void
-     */
-    public static function instance($id, $instance)
-    {
-        static::getInstance()->set($id, $instance);
-    }
-
-    /**
-     * Get entry from the container.
-     *
-     * @param  string  $id
-     * @return mixed
-     */
-    public static function make($id)
-    {
-        return static::getInstance()->get($id);
     }
 
     /**
