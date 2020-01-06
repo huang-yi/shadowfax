@@ -4,9 +4,15 @@ namespace HuangYi\Shadowfax;
 
 use HuangYi\Shadowfax\Exceptions\EntryNotFoundException;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Console\Application;
 
-class Shadowfax implements ContainerInterface
+class Shadowfax extends Application implements ContainerInterface
 {
+    /**
+     * The current version.
+     */
+    const VERSION = '1.0.0';
+
     /**
      * The Shadowfax instance.
      *
@@ -36,9 +42,13 @@ class Shadowfax implements ContainerInterface
      */
     public function __construct($basePath = null)
     {
+        parent::__construct('Shadowfax', static::VERSION);
+
         $this->basePath = $basePath;
 
         static::$instance = $this;
+
+        $this->setDefaultCommand('start');
     }
 
     /**
