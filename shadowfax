@@ -1,0 +1,34 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/src/Composer.php';
+
+if (! file_exists($autoload = __DIR__.'/../../autoload.php')) {
+    $autoload = __DIR__.'/vendor/autoload.php';
+}
+
+if (! file_exists($autoload)) {
+    fwrite(STDERR, 'Autoload not found'.PHP_EOL);
+
+    die(1);
+}
+
+$composer = new HuangYi\Shadowfax\Composer($autoload);
+
+$composer->register();
+
+$shadowfax = new HuangYi\Shadowfax\Shadowfax(
+    $_ENV['APP_BASE_PATH'] ?? __DIR__.'/../../..'
+);
+
+$config = new HuangYi\Shadowfax\Config(
+    $_ENV['SHADOWFAX_CONFIG_PATH'] ?? __DIR__.'/../../../shadowfax.ini',
+    $shadowfax
+);
+
+$shadowfax->instance(HuangYi\Shadowfax\Composer::class, $composer);
+$shadowfax->instance(HuangYi\Shadowfax\Config::class, $config);
+
+unset($autoload, $composer, $config);
+
+$shadowfax->run();
