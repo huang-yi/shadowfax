@@ -5,6 +5,13 @@ namespace HuangYi\Shadowfax;
 class Config
 {
     /**
+     * The container.
+     *
+     * @var \HuangYi\Shadowfax\Shadowfax
+     */
+    protected $shadowfax;
+
+    /**
      * The configuration items.
      *
      * @var array
@@ -22,10 +29,13 @@ class Config
      * Config constructor.
      *
      * @param  string  $userPath
+     * @param  \HuangYi\Shadowfax\Shadowfax  $shadowfax
      * @return void
      */
-    public function __construct(string $userPath = null)
+    public function __construct(string $userPath = null, Shadowfax $shadowfax = null)
     {
+        $this->shadowfax = $shadowfax ?: new Shadowfax;
+
         $this->init($userPath);
     }
 
@@ -39,13 +49,36 @@ class Config
     {
         $items = parse_ini_file($this->defaultPath, true);
 
-        if ($userPath) {
+        if ($userPath && file_exists($userPath)) {
             $userItems = parse_ini_file($userPath, true);
 
             $items = array_merge($items, $userItems);
         }
 
-        $this->items = $items;
+        $this->items = $this->formatPaths($items);
+    }
+
+    /**
+     * Format configuration's paths.
+     *
+     * @param  array  $items
+     * @return array
+     */
+    protected function formatPaths($items)
+    {
+        $pathKeys = ['bootstrap', 'document_root', 'server' => ['log_file', 'pid_file']];
+
+        foreach ($pathKeys as $section => $key) {
+            if (is_array($key)) {
+                foreach ($key as $item) {
+                    $items[$section][$item] = $this->shadowfax->basePath($items[$section][$item]);
+                }
+            } else {
+                $items[$key] = $this->shadowfax->basePath($items[$key]);
+            }
+        }
+
+        return $items;
     }
 
     /**

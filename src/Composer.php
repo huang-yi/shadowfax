@@ -7,7 +7,7 @@ use ReflectionClass;
 class Composer
 {
     /**
-     * The path of "autoload.php"
+     * The path of autoload.
      *
      * @var string
      */
@@ -28,7 +28,7 @@ class Composer
     protected $real;
 
     /**
-     * The composer controller.
+     * Composer construct.
      *
      * @param  string  $path
      * @return void
@@ -36,8 +36,6 @@ class Composer
     public function __construct(string $path)
     {
         $this->path = $path;
-
-        $this->register();
     }
 
     /**
@@ -45,7 +43,7 @@ class Composer
      *
      * @return void
      */
-    protected function register()
+    public function register()
     {
         $this->loader = require $this->path;
 
