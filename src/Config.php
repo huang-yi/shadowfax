@@ -55,26 +55,22 @@ class Config
             $items = array_merge($items, $userItems);
         }
 
-        $this->items = $this->formatPaths($items);
+        $this->items = $this->convertEmptyStringsToNull($items);
     }
 
     /**
-     * Format configuration's paths.
+     * Convert empty strings to null.
      *
      * @param  array  $items
      * @return array
      */
-    protected function formatPaths($items)
+    protected function convertEmptyStringsToNull(array $items)
     {
-        $pathKeys = ['bootstrap', 'document_root', 'server' => ['log_file', 'pid_file']];
-
-        foreach ($pathKeys as $section => $key) {
-            if (is_array($key)) {
-                foreach ($key as $item) {
-                    $items[$section][$item] = $this->shadowfax->basePath($items[$section][$item]);
-                }
-            } else {
-                $items[$key] = $this->shadowfax->basePath($items[$key]);
+        foreach ($items as $key => $value) {
+            if (is_array($value)) {
+                $items[$key] = $this->convertEmptyStringsToNull($value);
+            } elseif (empty($value)) {
+                $items[$key] = null;
             }
         }
 
