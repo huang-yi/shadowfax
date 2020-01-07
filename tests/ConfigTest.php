@@ -25,8 +25,8 @@ class ConfigTest extends TestCase
 
     public function test_get_user_config()
     {
-        $config = new Config(__DIR__.'/shadowfax.ini');
+        $config = new Config(__DIR__.'/frameworks/laravel/shadowfax.ini');
 
-        $this->assertEquals('test-shadowfax', $config->get('name'));
+        $this->assertEquals('laravel-shadowfax', $config->get('name'));
     }
 }
