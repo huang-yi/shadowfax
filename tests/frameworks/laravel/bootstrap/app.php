@@ -41,6 +41,10 @@ $app->singleton(
     Illuminate\Foundation\Exceptions\Handler::class
 );
 
+$app->booted(function () {
+    require __DIR__.'/../routes/web.php';
+});
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
