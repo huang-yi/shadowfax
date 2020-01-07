@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
+         backupGlobals="false"
          backupStaticAttributes="false"
-         beStrictAboutTestsThatDoNotTestAnything="true"
-         beStrictAboutOutputDuringTests="true"
          bootstrap="vendor/autoload.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         failOnRisky="true"
-         failOnWarning="true"
          processIsolation="false"
-         stopOnError="false"
-         stopOnFailure="false"
-         verbose="true"
->
+         stopOnFailure="false">
     <testsuites>
         <testsuite name="Shadowfax Test Suite">
             <directory suffix="Test.php">./tests</directory>
         </testsuite>
     </testsuites>
+    <php>
+        <server name="APP_BASE_PATH" value="/home/travis/build/shadowfax-php/shadowfax/tests/frameworks/laravel" />
+        <server name="APP_ENV" value="testing"/>
+        <server name="CACHE_DRIVER" value="array" />
+    </php>
 </phpunit>
