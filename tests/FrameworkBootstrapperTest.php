@@ -14,8 +14,8 @@ class FrameworkBootstrapperTest extends TestCase
     public function test_boot_laravel_http_application()
     {
         $bootstrapper = new FrameworkBootstrapper(
-            __DIR__.'/frameworks/laravel/bootstrap/app.php',
-            FrameworkBootstrapper::TYPE_HTTP
+            FrameworkBootstrapper::TYPE_HTTP,
+            __DIR__.'/frameworks/laravel/bootstrap/app.php'
         );
 
         $app = $bootstrapper->boot();
@@ -29,8 +29,8 @@ class FrameworkBootstrapperTest extends TestCase
     public function test_boot_laravel_console_application()
     {
         $bootstrapper = new FrameworkBootstrapper(
-            __DIR__.'/frameworks/laravel/bootstrap/app.php',
-            FrameworkBootstrapper::TYPE_CONSOLE
+            FrameworkBootstrapper::TYPE_CONSOLE,
+            __DIR__.'/frameworks/laravel/bootstrap/app.php'
         );
 
         $app = $bootstrapper->boot();
@@ -44,8 +44,8 @@ class FrameworkBootstrapperTest extends TestCase
     public function test_boot_lumen_http_application()
     {
         $bootstrapper = new FrameworkBootstrapper(
-            __DIR__.'/frameworks/lumen/bootstrap/app.php',
-            FrameworkBootstrapper::TYPE_HTTP
+            FrameworkBootstrapper::TYPE_HTTP,
+            __DIR__.'/frameworks/lumen/bootstrap/app.php'
         );
 
         $app = $bootstrapper->boot();
@@ -57,8 +57,8 @@ class FrameworkBootstrapperTest extends TestCase
     public function test_boot_lumen_console_application()
     {
         $bootstrapper = new FrameworkBootstrapper(
-            __DIR__.'/frameworks/lumen/bootstrap/app.php',
-            FrameworkBootstrapper::TYPE_CONSOLE
+            FrameworkBootstrapper::TYPE_CONSOLE,
+            __DIR__.'/frameworks/lumen/bootstrap/app.php'
         );
 
         $app = $bootstrapper->boot();

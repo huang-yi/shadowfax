@@ -37,14 +37,15 @@ class FrameworkBootstrapper
     /**
      * FrameworkBootstrapper constructor.
      *
-     * @param  string  $path
-     * @param  string  $type
+     * @param  int  $type
+     * @param  string  $userPath
      * @return void
      */
-    public function __construct($path, $type)
+    public function __construct($type, $userPath = null)
     {
-        $this->path = $path;
         $this->type = $type;
+
+        $this->initPath($userPath);
     }
 
     /**
@@ -68,7 +69,7 @@ class FrameworkBootstrapper
      */
     protected function bootConsoleApplication()
     {
-        $app = require $this->path;
+        $app = require $this->getPath();
 
         if ($app instanceof LaravelApplication) {
             $app->make(LaravelConsoleKernel::class)->bootstrap();
@@ -86,7 +87,7 @@ class FrameworkBootstrapper
      */
     protected function bootHttpApplication()
     {
-        $app = require $this->path;
+        $app = require $this->getPath();
 
         $app->instance('request', Request::create('http://localhost'));
 
@@ -97,5 +98,42 @@ class FrameworkBootstrapper
         }
 
         return $app;
+    }
+
+    /**
+     * Initialize the bootstrap file path.
+     *
+     * @param  string  $userPath
+     * @return $this
+     */
+    protected function initPath($userPath = null)
+    {
+        if ($userPath) {
+            $this->path = $userPath;
+        } else {
+            $this->path = __DIR__.'/../../../../bootstrap/app.php';
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get the bootstrap path.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    /**
+     * Get the kernel type.
+     *
+     * @return int
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
