@@ -69,7 +69,7 @@ class Config
         foreach ($items as $key => $value) {
             if (is_array($value)) {
                 $items[$key] = $this->convertEmptyStringsToNull($value);
-            } elseif (empty($value)) {
+            } elseif (! is_numeric($value) && empty($value)) {
                 $items[$key] = null;
             }
         }
