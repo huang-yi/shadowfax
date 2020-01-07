@@ -24,25 +24,57 @@ class Controller
     protected $output;
 
     /**
-     * The container.
+     * The configuration instance.
      *
-     * @var \HuangYi\Shadowfax\Shadowfax
+     * @var \HuangYi\Shadowfax\Config
      */
-    protected $shadowfax;
+    protected $config;
 
     /**
      * The server controller.
      *
      * @param  \Symfony\Component\Console\Input\InputInterface  $input
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
-     * @param  \HuangYi\Shadowfax\Shadowfax  $shadowfax
      * @return void
      */
-    public function __construct(InputInterface $input, OutputInterface $output, Shadowfax $shadowfax = null)
+    public function __construct(InputInterface $input, OutputInterface $output)
     {
         $this->input = $input;
         $this->output = $output;
-        $this->shadowfax = $shadowfax ?: new Shadowfax;
+
+        $this->loadConfig();
+    }
+
+    /**
+     * Load configurations.
+     *
+     * @return void
+     */
+    protected function loadConfig()
+    {
+        $userPath = $this->input->getOption('config');
+
+        if ($userPath) {
+            if (! file_exists($userPath)) {
+                $this->output->writeln("<error>Cannot find configuration file [$userPath].</error>");
+
+                exit(1);
+            }
+
+            $userPath = $this->shadowfax()->basePath($userPath);
+        }
+
+        $this->shadowfax()->instance(Config::class, $this->config = new Config($userPath));
+    }
+
+    /**
+     * Get the Shadowfax instance.
+     *
+     * @return \HuangYi\Shadowfax\Shadowfax
+     */
+    public function shadowfax()
+    {
+        return Shadowfax::getInstance();
     }
 
     /**
@@ -54,6 +86,6 @@ class Controller
      */
     public function config($key, $default = null)
     {
-        return $this->shadowfax->make(Config::class)->get($key, $default);
+        return $this->shadowfax()->make(Config::class)->get($key, $default);
     }
 }
