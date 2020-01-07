@@ -2,6 +2,7 @@
 
 namespace HuangYi\Shadowfax\Server;
 
+use Exception;
 use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
 use Swoole\Http\Server;
@@ -34,6 +35,8 @@ class Starter extends Controller
             $server->host,
             $server->port
         ));
+
+        $this->createControllerServer($server);
 
         $this->unregisterAutoload();
 
@@ -80,6 +83,49 @@ class Starter extends Controller
         }
 
         return $server;
+    }
+
+    /**
+     * Create the controller server.
+     *
+     * @param  \Swoole\Http\Server  $server
+     * @return void
+     */
+    protected function createControllerServer($server)
+    {
+        $config = $this->config('controller');
+
+        $ctl = $server->addListener(
+            $config['host'] ?? '127.0.0.1',
+            $config['port'] ?? '1216',
+            SWOOLE_SOCK_TCP
+        );
+
+        $ctl->on('Request', function ($request, $response) use ($server) {
+            try {
+                $instruction = trim($request->server['request_uri'], '/');
+
+                switch ($instruction) {
+                    case 'stop':
+                        $server->shutdown();
+                        $response->end();
+                        break;
+
+                    case 'reload':
+                        $server->reload();
+                        $response->end();
+                        break;
+
+                    default:
+                        $response->status(404);
+                        $response->end("Undefined instruction [$instruction].");
+                        break;
+                }
+            } catch (Exception $e) {
+                $response->status(500);
+                $response->end("Controller server error [{$e->getMessage()}].");
+            }
+        });
     }
 
     /**
