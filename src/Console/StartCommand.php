@@ -41,6 +41,7 @@ class StartCommand extends Command
             ->setHelp('This command allows you to start the Shadowfax server.')
             ->addOption('host', null, InputOption::VALUE_OPTIONAL, 'Shadowfax server host.')
             ->addOption('port', null, InputOption::VALUE_OPTIONAL, 'Shadowfax server port.')
+            ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Shadowfax configuration file.')
         ;
     }
 }
