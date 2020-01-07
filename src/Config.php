@@ -5,13 +5,6 @@ namespace HuangYi\Shadowfax;
 class Config
 {
     /**
-     * The container.
-     *
-     * @var \HuangYi\Shadowfax\Shadowfax
-     */
-    protected $shadowfax;
-
-    /**
      * The configuration items.
      *
      * @var array
@@ -19,23 +12,27 @@ class Config
     protected $items = [];
 
     /**
-     * The default config path.
+     * The configuration file in project.
      *
      * @var string
      */
-    protected $defaultPath = __DIR__.'/../shadowfax.ini';
+    protected $projectPath = __DIR__.'/../../../../shadowfax.ini';
+
+    /**
+     * The configuration file in package.
+     *
+     * @var string
+     */
+    protected $packagePath = __DIR__.'/../shadowfax.ini';
 
     /**
      * Config constructor.
      *
      * @param  string  $userPath
-     * @param  \HuangYi\Shadowfax\Shadowfax  $shadowfax
      * @return void
      */
-    public function __construct(string $userPath = null, Shadowfax $shadowfax = null)
+    public function __construct(string $userPath = null)
     {
-        $this->shadowfax = $shadowfax ?: new Shadowfax;
-
         $this->init($userPath);
     }
 
@@ -47,15 +44,17 @@ class Config
      */
     protected function init($userPath)
     {
-        $items = parse_ini_file($this->defaultPath, true);
-
-        if ($userPath && file_exists($userPath)) {
-            $userItems = parse_ini_file($userPath, true);
-
-            $items = array_merge($items, $userItems);
+        if ($userPath) {
+            $path = $userPath;
+        } elseif (file_exists($this->projectPath)) {
+            $path = $this->projectPath;
+        } else {
+            $path = $this->packagePath;
         }
 
-        $this->items = $this->convertEmptyStringsToNull($items);
+        $this->items = $this->convertEmptyStringsToNull(
+            parse_ini_file($path, true)
+        );
     }
 
     /**
