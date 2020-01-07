@@ -16,7 +16,6 @@
         </testsuite>
     </testsuites>
     <php>
-        <server name="APP_BASE_PATH" value="/home/travis/build/shadowfax-php/shadowfax/tests/frameworks/laravel" />
         <server name="APP_ENV" value="testing"/>
         <server name="CACHE_DRIVER" value="array" />
     </php>
