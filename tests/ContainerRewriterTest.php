@@ -12,11 +12,12 @@ class ContainerRewriterTest extends TestCase
         $rewriter = new ContainerRewriter;
 
         $rewriter
-            ->setPath($path = __DIR__.'/container.php')
+            ->setPath(__DIR__.'/container.php')
             ->rewrite();
 
-        $this->assertStringContainsString('shadowfax_correct_app', file_get_contents($path));
+        $this->assertTrue(file_exists($rewriter->getPath()));
+        $this->assertStringContainsString('shadowfax_correct_app', file_get_contents($rewriter->getPath()));
 
-        unlink($path);
+        unlink($rewriter->getPath());
     }
 }
