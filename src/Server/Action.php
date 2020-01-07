@@ -4,10 +4,11 @@ namespace HuangYi\Shadowfax\Server;
 
 use HuangYi\Shadowfax\Config;
 use HuangYi\Shadowfax\Shadowfax;
+use Swoole\Coroutine\Http\Client;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Controller
+abstract class Action
 {
     /**
      * The console input.
@@ -65,6 +66,39 @@ class Controller
         }
 
         $this->shadowfax()->instance(Config::class, $this->config = new Config($userPath));
+    }
+
+    /**
+     * Create a controller client.
+     *
+     * @return \Swoole\Coroutine\Http\Client
+     */
+    protected function createControllerClient()
+    {
+        return new Client(
+            $this->getControllerHost(),
+            $this->getControllerPort()
+        );
+    }
+
+    /**
+     * Get the controller server host.
+     *
+     * @return int
+     */
+    protected function getControllerHost()
+    {
+        return $this->config('controller')['host'] ?? '127.0.0.1';
+    }
+
+    /**
+     * Get the controller server port.
+     *
+     * @return int
+     */
+    protected function getControllerPort()
+    {
+        return intval($this->config('controller')['port'] ?? 1216);
     }
 
     /**

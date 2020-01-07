@@ -7,7 +7,7 @@ use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
 use Swoole\Http\Server;
 
-class Starter extends Controller
+class Starter extends Action
 {
     /**
      * The swoole server events.
@@ -93,11 +93,9 @@ class Starter extends Controller
      */
     protected function createControllerServer($server)
     {
-        $config = $this->config('controller');
-
         $ctl = $server->addListener(
-            $config['host'] ?? '127.0.0.1',
-            $config['port'] ?? '1216',
+            $this->getControllerHost(),
+            $this->getControllerPort(),
             SWOOLE_SOCK_TCP
         );
 
@@ -109,16 +107,35 @@ class Starter extends Controller
                     case 'stop':
                         $server->shutdown();
                         $response->end();
+
                         break;
 
                     case 'reload':
-                        $server->reload();
-                        $response->end();
+                        if ($this->isSingleProcessServer($server)) {
+                            $response->status(403);
+                            $response->end('Cannot reload a single process server.');
+                        } else {
+                            $server->reload();
+                            $response->end();
+                        }
+
+                        break;
+
+                    case 'reload-task':
+                        if ($this->isSingleProcessServer($server)) {
+                            $response->status(403);
+                            $response->end('Cannot reload a single process server.');
+                        } else {
+                            $server->reload(true);
+                            $response->end();
+                        }
+
                         break;
 
                     default:
                         $response->status(404);
                         $response->end("Undefined instruction [$instruction].");
+
                         break;
                 }
             } catch (Exception $e) {
@@ -126,6 +143,21 @@ class Starter extends Controller
                 $response->end("Controller server error [{$e->getMessage()}].");
             }
         });
+    }
+
+    /**
+     * Determine if the Shadowfax is a single process server.
+     *
+     * @param  \Swoole\Server  $server
+     * @return bool
+     */
+    public function isSingleProcessServer($server)
+    {
+        if ($server->mode != SWOOLE_BASE) {
+            return false;
+        }
+
+        return $server->setting['worker_num'] == 1;
     }
 
     /**

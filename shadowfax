@@ -27,6 +27,8 @@ $shadowfax->instance(HuangYi\Shadowfax\Composer::class, $composer);
 
 $shadowfax->addCommands([
     new HuangYi\Shadowfax\Console\StartCommand,
+    new HuangYi\Shadowfax\Console\StopCommand,
+    new HuangYi\Shadowfax\Console\ReloadCommand,
 ]);
 
 unset($autoload, $composer);
