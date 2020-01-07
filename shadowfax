@@ -31,6 +31,10 @@ $config = new HuangYi\Shadowfax\Config(
 $shadowfax->instance(HuangYi\Shadowfax\Composer::class, $composer);
 $shadowfax->instance(HuangYi\Shadowfax\Config::class, $config);
 
+$shadowfax->addCommands([
+    new HuangYi\Shadowfax\Console\StartCommand,
+]);
+
 unset($autoload, $composer, $config);
 
 $shadowfax->run();

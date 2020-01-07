@@ -56,12 +56,24 @@ abstract class Event
     }
 
     /**
+     * Get config item.
+     *
+     * @param  string  $key
+     * @param  mixed  $default
+     * @return mixed
+     */
+    protected function getConfig($key, $default = null)
+    {
+        return $this->shadowfax()->make(Config::class)->get($key, $default);
+    }
+
+    /**
      * Get the name.
      *
      * @return string
      */
     protected function getName()
     {
-        return $this->shadowfax()->make(Config::class)->get('name', 'shadowfax');
+        return $this->getConfig('name', 'shadowfax');
     }
 }

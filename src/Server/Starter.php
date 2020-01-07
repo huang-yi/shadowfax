@@ -29,13 +29,13 @@ class Starter extends Controller
 
         $server = $this->createServer();
 
-        $this->shadowfax->make(Composer::class)->unregister();
-
         $this->output->writeln(sprintf(
             '<info>Starting the Shadowfax server: %s:%d</info>',
             $server->host,
             $server->port
         ));
+
+        $this->unregisterAutoload();
 
         $server->start();
     }
@@ -80,6 +80,16 @@ class Starter extends Controller
         }
 
         return $server;
+    }
+
+    /**
+     * Unregister autoload.
+     *
+     * @return void
+     */
+    protected function unregisterAutoload()
+    {
+        $this->shadowfax->make(Composer::class)->unregister();
     }
 
     /**

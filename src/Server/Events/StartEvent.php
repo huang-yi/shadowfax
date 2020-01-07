@@ -2,8 +2,6 @@
 
 namespace HuangYi\Shadowfax\Events;
 
-use HuangYi\Shadowfax\Config;
-
 class StartEvent extends Event
 {
     /**

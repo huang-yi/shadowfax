@@ -49,7 +49,7 @@ class RequestEvent extends Event
      */
     protected function outputRequestInfo($request, $response)
     {
-        if (! $this->shadowfax()->make(Config::class)->get('access_log')) {
+        if (! $this->getConfig('access_log')) {
             return;
         }
 

@@ -4,8 +4,8 @@ namespace HuangYi\Shadowfax\Events;
 
 use HuangYi\Shadowfax\ApplicationFactory;
 use HuangYi\Shadowfax\Composer;
-use HuangYi\Shadowfax\Config;
 use HuangYi\Shadowfax\ContainerRewriter;
+use HuangYi\Shadowfax\FrameworkBootstrapper;
 
 class WorkerStartEvent extends Event
 {
@@ -114,22 +114,26 @@ class WorkerStartEvent extends Event
     protected function createApplicationFactory($server, $workerId)
     {
         $factory = new ApplicationFactory(
-            $this->getBootstrapPath(),
-            $this->getKernelType($server, $workerId),
-            $this->getPoolCapacity()
+            $this->createFrameworkBootstrapper($server, $workerId),
+            $this->getConfig('applications', 10)
         );
 
         $this->shadowfax()->instance(ApplicationFactory::class, $factory);
     }
 
     /**
-     * Get the framework bootstrap path.
+     * Create the framework bootstrapper.
      *
-     * @return string
+     * @param  \Swoole\Server  $server
+     * @param  int  $workerId
+     * @return \HuangYi\Shadowfax\FrameworkBootstrapper
      */
-    protected function getBootstrapPath()
+    protected function createFrameworkBootstrapper($server, $workerId)
     {
-        return $this->shadowfax()->make(Config::class)->get('bootstrap');
+        return new FrameworkBootstrapper(
+            $this->getKernelType($server, $workerId),
+            $_ENV['APP_BASE_PATH'] ?? $this->getConfig('bootstrap')
+        );
     }
 
     /**
@@ -142,19 +146,9 @@ class WorkerStartEvent extends Event
     protected function getKernelType($server, $workerId)
     {
         if ($this->isTaskProcess($server, $workerId)) {
-            return ApplicationFactory::TYPE_CONSOLE;
+            return FrameworkBootstrapper::TYPE_CONSOLE;
         }
 
-        return ApplicationFactory::TYPE_HTTP;
-    }
-
-    /**
-     * Get the pool capacity.
-     *
-     * @return int
-     */
-    protected function getPoolCapacity()
-    {
-        return (int) $this->shadowfax()->make(Config::class)->get('applications', 10);
+        return FrameworkBootstrapper::TYPE_HTTP;
     }
 }
