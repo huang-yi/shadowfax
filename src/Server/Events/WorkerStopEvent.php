@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Shadowfax\Events;
+namespace HuangYi\Shadowfax\Server\Events;
 
 class WorkerStopEvent extends Event
 {

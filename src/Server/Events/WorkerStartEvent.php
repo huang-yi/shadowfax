@@ -1,6 +1,6 @@
 <?php
 
-namespace HuangYi\Shadowfax\Events;
+namespace HuangYi\Shadowfax\Server\Events;
 
 use HuangYi\Shadowfax\ApplicationFactory;
 use HuangYi\Shadowfax\Composer;
@@ -132,7 +132,7 @@ class WorkerStartEvent extends Event
     {
         return new FrameworkBootstrapper(
             $this->getKernelType($server, $workerId),
-            $_ENV['APP_BASE_PATH'] ?? $this->getConfig('bootstrap')
+            $this->getUserBootstrapPath()
         );
     }
 
@@ -150,5 +150,19 @@ class WorkerStartEvent extends Event
         }
 
         return FrameworkBootstrapper::TYPE_HTTP;
+    }
+
+    /**
+     * Get user bootstrap path.
+     *
+     * @return string
+     */
+    protected function getUserBootstrapPath()
+    {
+        if ($userPath = $this->getConfig('bootstrap')) {
+            $userPath = $this->shadowfax()->basePath($userPath);
+        }
+
+        return $userPath;
     }
 }

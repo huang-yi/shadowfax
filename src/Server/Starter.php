@@ -51,7 +51,7 @@ class Starter extends Controller
 
         $rewriter->rewrite();
 
-        $this->shadowfax->instance(ContainerRewriter::class, $rewriter);
+        $this->shadowfax()->instance(ContainerRewriter::class, $rewriter);
     }
 
     /**
@@ -74,7 +74,7 @@ class Starter extends Controller
                 continue;
             }
 
-            $eventClass = "\\HuangYi\\Shadowfax\\Events\\{$name}Event";
+            $eventClass = "\\HuangYi\\Shadowfax\\Server\\Events\\{$name}Event";
 
             $server->on($name, [new $eventClass($this->output), 'handle']);
         }
@@ -89,7 +89,7 @@ class Starter extends Controller
      */
     protected function unregisterAutoload()
     {
-        $this->shadowfax->make(Composer::class)->unregister();
+        $this->shadowfax()->make(Composer::class)->unregister();
     }
 
     /**
@@ -117,7 +117,7 @@ class Starter extends Controller
             return (int) $port;
         }
 
-        return $this->config('host', '1215');
+        return $this->config('port', '1215');
     }
 
     /**
