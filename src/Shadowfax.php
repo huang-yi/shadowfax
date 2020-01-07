@@ -45,7 +45,7 @@ class Shadowfax extends Application
 
         $this->basePath = rtrim($basePath, '/');
 
-        static::$instance = $this;
+        static::setInstance($this);
 
         $this->setDefaultCommand('start');
     }
@@ -98,6 +98,10 @@ class Shadowfax extends Application
      */
     public function basePath($path = null)
     {
+        if (! is_null($path) && $path[0] == '/') {
+            return $path;
+        }
+
         $path = ltrim($path, '/');
 
         return $path ? $this->basePath.'/'.$path : $this->basePath;
@@ -125,5 +129,16 @@ class Shadowfax extends Application
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Set the global instance.
+     *
+     * @param  static  $instance
+     * @return void
+     */
+    public static function setInstance($instance)
+    {
+        static::$instance = $instance;
     }
 }
