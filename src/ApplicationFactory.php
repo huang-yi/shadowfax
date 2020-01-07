@@ -3,27 +3,13 @@
 namespace HuangYi\Shadowfax;
 
 use Illuminate\Container\Container;
-use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Container\Container as ContainerContract;
-use Illuminate\Contracts\Http\Kernel as HttpKernel;
-use Illuminate\Foundation\Application;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Facade;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 
 class ApplicationFactory
 {
-    /**
-     * The HTTP type.
-     */
-    const TYPE_HTTP = 1;
-
-    /**
-     * The console type.
-     */
-    const TYPE_CONSOLE = 2;
-
     /**
      * The application pool.
      *
@@ -32,18 +18,11 @@ class ApplicationFactory
     protected $pool;
 
     /**
-     * The application bootstrap file.
+     * The application bootstrapper.
      *
-     * @var string
+     * @var \HuangYi\Shadowfax\FrameworkBootstrapper
      */
-    protected $path;
-
-    /**
-     * The application kernel type.
-     *
-     * @var int
-     */
-    protected $type;
+    protected $bootstrapper;
 
     /**
      * The pool capacity.
@@ -55,15 +34,13 @@ class ApplicationFactory
     /**
      * ApplicationFactory constructor.
      *
-     * @param  string  $path
-     * @param  int  $type
+     * @param  \HuangYi\Shadowfax\FrameworkBootstrapper  $bootstrapper
      * @param  int  $capacity
      * @return void
      */
-    public function __construct($path, $type, $capacity = 10)
+    public function __construct(FrameworkBootstrapper $bootstrapper, $capacity = 10)
     {
-        $this->path = $path;
-        $this->type = $type;
+        $this->bootstrapper = $bootstrapper;
         $this->capacity = $capacity;
 
         $this->init();
@@ -79,56 +56,8 @@ class ApplicationFactory
         $this->pool = new Channel($this->capacity);
 
         for ($i = 0; $i < $this->capacity; $i++) {
-            $this->pool->push($this->createApplication());
+            $this->pool->push($this->bootstrapper->boot());
         }
-    }
-
-    /**
-     * Create an application.
-     *
-     * @return \Illuminate\Contracts\Container\Container
-     */
-    protected function createApplication()
-    {
-        if ($this->type == static::TYPE_CONSOLE) {
-            return $this->createConsoleApplication();
-        }
-
-        return $this->createHttpApplication();
-    }
-
-    /**
-     * Create the console kernel application.
-     *
-     * @return \Illuminate\Contracts\Container\Container
-     */
-    protected function createConsoleApplication()
-    {
-        $app = require $this->path;
-
-        if ($app instanceof Application) {
-            $app->make(ConsoleKernel::class)->bootstrap();
-        }
-
-        return $app;
-    }
-
-    /**
-     * Create the http kernel application.
-     *
-     * @return \Illuminate\Contracts\Container\Container
-     */
-    protected function createHttpApplication()
-    {
-        $app = require $this->path;
-
-        $app->instance('request', Request::create('http://localhost'));
-
-        if ($app instanceof Application) {
-            $app->make(HttpKernel::class)->bootstrap();
-        }
-
-        return $app;
     }
 
     /**
@@ -170,6 +99,10 @@ class ApplicationFactory
      */
     protected function rebindAbstracts(ContainerContract $app)
     {
+        if (! $app->bound('config')) {
+            return;
+        }
+
         $resets = $app['config']['shadowfax.abstracts'] ?: [];
 
         foreach ($resets as $item) {
@@ -206,26 +139,6 @@ class ApplicationFactory
     public function getPool()
     {
         return $this->pool;
-    }
-
-    /**
-     * Get the application bootstrap file.
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * Get the application kernel type.
-     *
-     * @return int
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 
     /**
