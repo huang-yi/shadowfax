@@ -46,6 +46,10 @@
     "config": {
         "sort-packages": true
     },
+    "bin": [
+        "shadowfax",
+        "swooleunit"
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
