@@ -1,25 +1,7 @@
 <?php
 
-use HuangYi\Shadowfax\Shadowfax;
 use Illuminate\Contracts\Container\Container as ContainerContract;
 use Illuminate\Support\Facades\Facade;
-
-if (! function_exists('shadowfax')) {
-    /**
-     * Get the entry from Shadowfax container.
-     *
-     * @param  string  $id
-     * @return \HuangYi\Shadowfax\Shadowfax|mixed
-     */
-    function shadowfax($id = null)
-    {
-        if (is_null($id)) {
-            return Shadowfax::getInstance();
-        }
-
-        return Shadowfax::make($id);
-    }
-}
 
 if (! function_exists('shadowfax_correct_app')) {
     /**
