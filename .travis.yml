@@ -1,0 +1,22 @@
+dist: trusty
+sudo: false
+
+language: php
+
+php:
+  - '7.2'
+  - '7.3'
+
+before_install:
+  - pecl channel-update pecl.php.net
+  - printf "\n" | pecl install swoole
+
+install:
+  - travis_retry composer install --no-suggest --prefer-dist
+
+before_script:
+  - ./shadowfax start -c tests/frameworks/laravel/shadowfax.ini
+  - ./shadowfax start -c tests/frameworks/lumen/shadowfax.ini
+
+script:
+  - vendor/bin/phpunit
