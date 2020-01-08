@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-foreach ([__DIR__.'/../autoload.php', __DIR__.'/../../autoload.php', __DIR__.'/vendor/autoload.php'] as $file) {
+foreach ([
+    __DIR__ . '/../../autoload.php',
+    __DIR__ . '/../autoload.php',
+    __DIR__ . '/vendor/autoload.php',
+] as $file) {
     if (file_exists($file)) {
         $autoload = $file;
 
@@ -9,8 +13,8 @@ foreach ([__DIR__.'/../autoload.php', __DIR__.'/../../autoload.php', __DIR__.'/v
     }
 }
 
-if (! isset($autoload) || ! file_exists($autoload)) {
-    fwrite(STDERR, 'Autoload not found.'.PHP_EOL);
+if (! isset($autoload)) {
+    fwrite(STDERR, 'Autoload not found.' . PHP_EOL);
 
     die(1);
 }
@@ -31,6 +35,6 @@ $shadowfax->addCommands([
     new HuangYi\Shadowfax\Console\ReloadCommand,
 ]);
 
-unset($autoload, $composer);
+unset($file, $autoload, $composer);
 
 $shadowfax->run();

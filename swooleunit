@@ -2,8 +2,8 @@
 <?php
 
 foreach ([
-    __DIR__ . '/vendor/phpunit/phpunit/phpunit',
     __DIR__ . '/../../phpunit/phpunit/phpunit',
+    __DIR__ . '/vendor/phpunit/phpunit/phpunit',
     __DIR__ . '/../vendor/phpunit/phpunit/phpunit',
 ] as $file) {
     if (file_exists($file)) {
@@ -16,10 +16,7 @@ foreach ([
 unset($file);
 
 if (! isset($phpunit)) {
-    fwrite(
-        STDERR,
-        'Cannot find phpunit.' . PHP_EOL
-    );
+    fwrite(STDERR, 'Phpunit not found.' . PHP_EOL);
 
     die(1);
 }
