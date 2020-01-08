@@ -2,7 +2,6 @@
 
 namespace HuangYi\Shadowfax\Server;
 
-use Exception;
 use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
 use HuangYi\Shadowfax\Server\Events\ControllerRequestEvent;
