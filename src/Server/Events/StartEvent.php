@@ -25,7 +25,7 @@ class StartEvent extends Event
     {
         $this->output->writeln("<info>[√] master process started. [{$server->master_pid}]</info>");
 
-        shadowfax_set_process_name(sprintf(
+        $this->setProcessName(sprintf(
             '%s: master process %s:%d',
             $this->getName(),
             $server->host,

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Contracts\Container\Container as ContainerContract;
+use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Facade;
 
 if (! function_exists('shadowfax_correct_app')) {
@@ -40,20 +41,5 @@ if (! function_exists('shadowfax_get_coroutine_app')) {
         }
 
         return $app;
-    }
-}
-
-if (! function_exists('shadowfax_set_process_name')) {
-    /**
-     * Set the process name.
-     *
-     * @param  string  $name
-     * @return void
-     */
-    function shadowfax_set_process_name($name)
-    {
-        if (PHP_OS != 'Darwin') {
-            swoole_set_process_name($name);
-        }
     }
 }

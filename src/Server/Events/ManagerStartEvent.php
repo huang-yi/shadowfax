@@ -27,7 +27,7 @@ class ManagerStartEvent extends Event
 
         $host = $server->mode == SWOOLE_BASE ? " {$server->host}:{$server->port}" : '';
 
-        shadowfax_set_process_name(sprintf(
+        $this->setProcessName(sprintf(
             '%s: manager process%s',
             $this->getName(),
             $host

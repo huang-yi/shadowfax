@@ -41,7 +41,7 @@ class WorkerStartEvent extends Event
 
         $host = $this->isSingleProcess($server) ? " {$server->host}:{$server->port}" : '';
 
-        shadowfax_set_process_name(sprintf(
+        $this->setProcessName(sprintf(
             '%s: %s process%s',
             $this->getName(),
             $type,

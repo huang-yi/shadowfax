@@ -36,6 +36,19 @@ abstract class Event
     abstract public function handle(...$args);
 
     /**
+     * Set the process name.
+     *
+     * @param  string  $name
+     * @return void
+     */
+    protected function setProcessName($name)
+    {
+        if (PHP_OS != 'Darwin') {
+            swoole_set_process_name($name);
+        }
+    }
+
+    /**
      * Get the Shadowfax container.
      *
      * @return \HuangYi\Shadowfax\Shadowfax
