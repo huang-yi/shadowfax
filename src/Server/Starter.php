@@ -30,6 +30,8 @@ class Starter extends Action
 
         $server = $this->createServer();
 
+        $this->shadowfax()->instance(Server::class, $server);
+
         $this->output->writeln(sprintf(
             '<info>Starting the Shadowfax server: %s:%d</info>',
             $server->host,
