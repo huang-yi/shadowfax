@@ -49,6 +49,21 @@ abstract class Event
     }
 
     /**
+     * Determine if the Shadowfax is single process.
+     *
+     * @param  \Swoole\Server  $server
+     * @return bool
+     */
+    protected function isSingleProcess($server)
+    {
+        if ($server->mode != SWOOLE_BASE) {
+            return false;
+        }
+
+        return $server->setting['worker_num'] == 1;
+    }
+
+    /**
      * Get the Shadowfax container.
      *
      * @return \HuangYi\Shadowfax\Shadowfax

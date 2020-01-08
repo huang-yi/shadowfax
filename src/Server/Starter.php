@@ -5,6 +5,7 @@ namespace HuangYi\Shadowfax\Server;
 use Exception;
 use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
+use HuangYi\Shadowfax\Server\Events\ControllerRequestEvent;
 use Swoole\Http\Server;
 
 class Starter extends Action
@@ -101,65 +102,7 @@ class Starter extends Action
             SWOOLE_SOCK_TCP
         );
 
-        $ctl->on('Request', function ($request, $response) use ($server) {
-            try {
-                $instruction = trim($request->server['request_uri'], '/');
-
-                switch ($instruction) {
-                    case 'stop':
-                        $server->shutdown();
-                        $response->end();
-
-                        break;
-
-                    case 'reload':
-                        if ($this->isSingleProcessServer($server)) {
-                            $response->status(403);
-                            $response->end('Cannot reload a single process server.');
-                        } else {
-                            $server->reload();
-                            $response->end();
-                        }
-
-                        break;
-
-                    case 'reload-task':
-                        if ($this->isSingleProcessServer($server)) {
-                            $response->status(403);
-                            $response->end('Cannot reload a single process server.');
-                        } else {
-                            $server->reload(true);
-                            $response->end();
-                        }
-
-                        break;
-
-                    default:
-                        $response->status(404);
-                        $response->end("Undefined instruction [$instruction].");
-
-                        break;
-                }
-            } catch (Exception $e) {
-                $response->status(500);
-                $response->end("Controller server error [{$e->getMessage()}].");
-            }
-        });
-    }
-
-    /**
-     * Determine if the Shadowfax is a single process server.
-     *
-     * @param  \Swoole\Server  $server
-     * @return bool
-     */
-    public function isSingleProcessServer($server)
-    {
-        if ($server->mode != SWOOLE_BASE) {
-            return false;
-        }
-
-        return $server->setting['worker_num'] == 1;
+        $ctl->on('Request', [new ControllerRequestEvent($this->output, $server), 'handle']);
     }
 
     /**
