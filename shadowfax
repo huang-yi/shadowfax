@@ -10,7 +10,7 @@ foreach ([__DIR__.'/../autoload.php', __DIR__.'/../../autoload.php', __DIR__.'/v
 }
 
 if (! isset($autoload) || ! file_exists($autoload)) {
-    fwrite(STDERR, 'Autoload not found'.PHP_EOL);
+    fwrite(STDERR, 'Autoload not found.'.PHP_EOL);
 
     die(1);
 }
