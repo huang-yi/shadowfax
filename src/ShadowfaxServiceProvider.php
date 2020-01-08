@@ -16,6 +16,9 @@ class ShadowfaxServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__.'/../config/shadowfax.php', 'shadowfax'
         );
+
+        $this->app->instance(Shadowfax::class, Shadowfax::getInstance());
+        $this->app->alias(Shadowfax::class, 'shadowfax');
     }
 
     /**
