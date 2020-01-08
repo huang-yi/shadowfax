@@ -72,7 +72,7 @@ class Starter extends Action
             $this->getMode()
         );
 
-        $server->set($this->config('server', []));
+        $server->set($this->getSettings());
 
         foreach ($this->events as $name) {
             if ($name == 'Start' && $server->mode == SWOOLE_BASE) {
@@ -209,5 +209,18 @@ class Starter extends Action
     {
         return $this->config('mode', 'process') == 'base' ?
             SWOOLE_BASE : SWOOLE_PROCESS;
+    }
+
+    /**
+     * Get the Swoole server settings.
+     *
+     * @return array
+     */
+    protected function getSettings()
+    {
+        return array_merge($this->config('server', []), [
+            'enable_coroutine' => 1,
+            'task_enable_coroutine' => 1,
+        ]);
     }
 }
