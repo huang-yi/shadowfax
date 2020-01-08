@@ -16,8 +16,8 @@ install:
 
 before_script:
   - phpenv config-rm xdebug.ini
-  - ./shadowfax start -c tests/frameworks/laravel/shadowfax.ini
-  - ./shadowfax start -c tests/frameworks/lumen/shadowfax.ini
+  - ./shadowfax start -c tests/frameworks/laravel/shadowfax.ini -q
+  - ./shadowfax start -c tests/frameworks/lumen/shadowfax.ini -q
 
 script:
   - ./swooleunit
