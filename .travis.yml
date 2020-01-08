@@ -15,6 +15,7 @@ install:
   - travis_retry composer install --no-suggest --prefer-dist
 
 before_script:
+  - phpenv config-rm xdebug.ini
   - ./shadowfax start -c tests/frameworks/laravel/shadowfax.ini
   - ./shadowfax start -c tests/frameworks/lumen/shadowfax.ini
 
