@@ -19,4 +19,4 @@ before_script:
   - ./shadowfax start -c tests/frameworks/lumen/shadowfax.ini
 
 script:
-  - vendor/bin/phpunit
+  - ./swooleunit
