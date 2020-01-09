@@ -1,14 +1,16 @@
 <?php
 
-namespace HuangYi\Shadowfax;
+namespace HuangYi\Shadowfax\Factories;
 
+use HuangYi\Shadowfax\Contracts\AppFactory;
+use HuangYi\Shadowfax\FrameworkBootstrapper;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\Container as ContainerContract;
 use Illuminate\Support\Facades\Facade;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 
-class ApplicationFactory
+class CoroutineAppFactory implements AppFactory
 {
     /**
      * The application pool.
@@ -32,7 +34,7 @@ class ApplicationFactory
     protected $capacity;
 
     /**
-     * ApplicationFactory constructor.
+     * CoroutineAppFactory constructor.
      *
      * @param  \HuangYi\Shadowfax\FrameworkBootstrapper  $bootstrapper
      * @param  int  $capacity
@@ -65,7 +67,7 @@ class ApplicationFactory
      *
      * @return \Illuminate\Contracts\Container\Container
      */
-    public function make()
+    public function make(): ContainerContract
     {
         $app = $this->pool->pop();
 

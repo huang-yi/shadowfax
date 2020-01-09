@@ -3,8 +3,6 @@
 namespace HuangYi\Shadowfax\Server\Events;
 
 use Exception;
-use HuangYi\Shadowfax\ApplicationFactory;
-use HuangYi\Shadowfax\Config;
 use HuangYi\Shadowfax\Http\Kernel;
 use HuangYi\Shadowfax\Http\Request;
 use Illuminate\Contracts\Debug\ExceptionHandler;

@@ -2,10 +2,13 @@
 
 namespace HuangYi\Shadowfax\Server\Events;
 
-use HuangYi\Shadowfax\ApplicationFactory;
 use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
+use HuangYi\Shadowfax\Contracts\AppFactory as AppFactoryContract;
+use HuangYi\Shadowfax\Factories\AppFactory;
+use HuangYi\Shadowfax\Factories\CoroutineAppFactory;
 use HuangYi\Shadowfax\FrameworkBootstrapper;
+use Swoole\Runtime;
 
 class WorkerStartEvent extends Event
 {
@@ -23,7 +26,9 @@ class WorkerStartEvent extends Event
 
         $this->registerAutoload();
 
-        $this->createApplicationFactory(...$args);
+        $this->createAppFactory(...$args);
+
+        $this->enableRuntimeCoroutine();
     }
 
     /**
@@ -96,14 +101,20 @@ class WorkerStartEvent extends Event
      * @param  int  $workerId
      * @return void
      */
-    protected function createApplicationFactory($server, $workerId)
+    protected function createAppFactory($server, $workerId)
     {
-        $factory = new ApplicationFactory(
-            $this->createFrameworkBootstrapper($server, $workerId),
-            $this->getConfig('applications', 10)
-        );
+        $bootstrapper = $this->createFrameworkBootstrapper($server, $workerId);
 
-        $this->shadowfax()->instance(ApplicationFactory::class, $factory);
+        if ($this->isCoroutineEnabled()) {
+            $factory = new CoroutineAppFactory(
+                $bootstrapper,
+                $this->getConfig('app_pool_capacity', 10)
+            );
+        } else {
+            $factory = new AppFactory($bootstrapper);
+        }
+
+        $this->shadowfax()->instance(AppFactoryContract::class, $factory);
     }
 
     /**
@@ -122,7 +133,29 @@ class WorkerStartEvent extends Event
     }
 
     /**
-     * Get the Laravel applications count
+     * Enable runtime coroutine.
+     *
+     * @return void
+     */
+    protected function enableRuntimeCoroutine()
+    {
+        if ($this->isCoroutineEnabled()) {
+            Runtime::enableCoroutine(true, SWOOLE_HOOK_ALL);
+        }
+    }
+
+    /**
+     * Determine if the coroutine is enabled.
+     *
+     * @return int
+     */
+    protected function isCoroutineEnabled()
+    {
+        return $this->getConfig('enable_coroutine', 1);
+    }
+
+    /**
+     * Get the kernel type.
      *
      * @param  \Swoole\Server  $server
      * @param  int  $workerId

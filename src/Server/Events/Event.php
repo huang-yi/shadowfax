@@ -2,8 +2,8 @@
 
 namespace HuangYi\Shadowfax\Server\Events;
 
-use HuangYi\Shadowfax\ApplicationFactory;
 use HuangYi\Shadowfax\Config;
+use HuangYi\Shadowfax\Contracts\AppFactory;
 use HuangYi\Shadowfax\Shadowfax;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -76,11 +76,11 @@ abstract class Event
     /**
      * Get the application factory.
      *
-     * @return \HuangYi\Shadowfax\ApplicationFactory
+     * @return \HuangYi\Shadowfax\Contracts\AppFactory
      */
     protected function appFactory()
     {
-        return $this->shadowfax()->make(ApplicationFactory::class);
+        return $this->shadowfax()->make(AppFactory::class);
     }
 
     /**

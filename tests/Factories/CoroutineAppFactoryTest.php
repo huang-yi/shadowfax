@@ -2,7 +2,7 @@
 
 namespace HuangYi\Shadowfax\Tests;
 
-use HuangYi\Shadowfax\ApplicationFactory;
+use HuangYi\Shadowfax\Factories\CoroutineAppFactory;
 use HuangYi\Shadowfax\FrameworkBootstrapper;
 use Illuminate\Container\Container;
 use Illuminate\Foundation\Application;
@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Facade;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class ApplicationFactoryTest extends TestCase
+class CoroutineAppFactoryTest extends TestCase
 {
     public function test_make()
     {
-        $factory = new ApplicationFactory($this->mockBootstrapper(), 2);
+        $factory = new CoroutineAppFactory($this->mockBootstrapper(), 2);
 
         $app1 = $factory->make();
 
@@ -34,7 +34,7 @@ class ApplicationFactoryTest extends TestCase
 
     public function test_recycle()
     {
-        $factory = new ApplicationFactory($this->mockBootstrapper(), 2);
+        $factory = new CoroutineAppFactory($this->mockBootstrapper(), 2);
 
         $app = $factory->make();
 
