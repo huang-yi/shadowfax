@@ -2,6 +2,7 @@
 
 namespace HuangYi\Shadowfax;
 
+use HuangYi\Shadowfax\Task\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 
 class ShadowfaxServiceProvider extends ServiceProvider
@@ -17,8 +18,33 @@ class ShadowfaxServiceProvider extends ServiceProvider
             __DIR__.'/../config/shadowfax.php', 'shadowfax'
         );
 
-        $this->app->instance(Shadowfax::class, Shadowfax::getInstance());
-        $this->app->alias(Shadowfax::class, 'shadowfax');
+        $this->registerShadowfax();
+        $this->registerTaskDispatcher();
+    }
+
+    /**
+     * Register the shadowfax.
+     *
+     * @return void
+     */
+    protected function registerShadowfax()
+    {
+        $this->app->instance('shadowfax', Shadowfax::getInstance());
+        $this->app->alias('shadowfax', Shadowfax::class);
+    }
+
+    /**
+     * Register the task dispatcher.
+     *
+     * @return void
+     */
+    protected function registerTaskDispatcher()
+    {
+        $this->app->singleton('shadowfax.task', function () {
+            return new Dispatcher;
+        });
+
+        $this->app->alias('shadowfax.task', Dispatcher::class);
     }
 
     /**
