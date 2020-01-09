@@ -147,7 +147,7 @@ class WorkerStartEvent extends Event
     protected function enableRuntimeCoroutine()
     {
         if ($this->isCoroutineEnabled()) {
-            Runtime::enableCoroutine(true, static::$runtimeHooks);
+            Runtime::enableCoroutine(static::$runtimeHooks);
         }
     }
 
