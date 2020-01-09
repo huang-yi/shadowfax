@@ -13,6 +13,13 @@ use Swoole\Runtime;
 class WorkerStartEvent extends Event
 {
     /**
+     * The supported runtime hooks.
+     *
+     * @var int
+     */
+    public static $runtimeHooks = SWOOLE_HOOK_FILE | SWOOLE_HOOK_SLEEP | SWOOLE_HOOK_BLOCKING_FUNCTION;
+
+    /**
      * Handle the event.
      *
      * @param  mixed  ...$args
@@ -140,7 +147,7 @@ class WorkerStartEvent extends Event
     protected function enableRuntimeCoroutine()
     {
         if ($this->isCoroutineEnabled()) {
-            Runtime::enableCoroutine(true, SWOOLE_HOOK_ALL);
+            Runtime::enableCoroutine(true, static::$runtimeHooks);
         }
     }
 
