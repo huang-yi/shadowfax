@@ -1,7 +1,7 @@
 {
     "name": "huang-yi/shadowfax",
     "description": "Run Laravel on Swoole.",
-    "keywords": ["laravel", "swoole", "http-server"],
+    "keywords": ["laravel", "swoole", "coroutine", "http-server"],
     "license": "MIT",
     "authors": [
         {
