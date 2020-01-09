@@ -90,7 +90,7 @@ abstract class Event
      * @param  mixed  $default
      * @return mixed
      */
-    protected function getConfig($key, $default = null)
+    protected function config($key, $default = null)
     {
         return $this->shadowfax()->make(Config::class)->get($key, $default);
     }
@@ -102,6 +102,6 @@ abstract class Event
      */
     protected function getName()
     {
-        return $this->getConfig('name', 'shadowfax');
+        return $this->config('name', 'shadowfax');
     }
 }

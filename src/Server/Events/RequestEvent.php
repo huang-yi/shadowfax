@@ -47,7 +47,7 @@ class RequestEvent extends Event
      */
     protected function outputRequestInfo($request, $response)
     {
-        if (! $this->getConfig('access_log')) {
+        if (! $this->config('access_log')) {
             return;
         }
 

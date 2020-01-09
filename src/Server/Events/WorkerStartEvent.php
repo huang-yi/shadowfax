@@ -108,7 +108,7 @@ class WorkerStartEvent extends Event
         if ($this->isCoroutineEnabled()) {
             $factory = new CoroutineAppFactory(
                 $bootstrapper,
-                $this->getConfig('app_pool_capacity', 10)
+                $this->config('app_pool_capacity', 10)
             );
         } else {
             $factory = new AppFactory($bootstrapper);
@@ -151,7 +151,7 @@ class WorkerStartEvent extends Event
      */
     protected function isCoroutineEnabled()
     {
-        return $this->getConfig('enable_coroutine', 1);
+        return $this->config('enable_coroutine', 1);
     }
 
     /**
@@ -177,7 +177,7 @@ class WorkerStartEvent extends Event
      */
     protected function getUserBootstrapPath()
     {
-        if ($userPath = $this->getConfig('bootstrap')) {
+        if ($userPath = $this->config('bootstrap')) {
             $userPath = $this->shadowfax()->basePath($userPath);
         }
 
