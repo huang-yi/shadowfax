@@ -80,6 +80,8 @@ $app->singleton(
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
+$app->register(HuangYi\Shadowfax\ShadowfaxServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

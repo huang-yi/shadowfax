@@ -165,6 +165,7 @@ return [
         /*
          * Package Service Providers...
          */
+        HuangYi\Shadowfax\ShadowfaxServiceProvider::class,
 
         /*
          * Application Service Providers...
