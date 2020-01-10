@@ -149,8 +149,8 @@ class Starter extends Action
      */
     protected function getMode()
     {
-        return $this->config('mode', 'process') == 'base' ?
-            SWOOLE_BASE : SWOOLE_PROCESS;
+        return $this->config('mode', 'base') == 'process' ?
+            SWOOLE_PROCESS : SWOOLE_BASE;
     }
 
     /**
@@ -176,6 +176,6 @@ class Starter extends Action
      */
     protected function isCoroutineEnabled()
     {
-        return $this->config('enable_coroutine', 1);
+        return $this->config('enable_coroutine', 0);
     }
 }
