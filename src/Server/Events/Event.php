@@ -60,7 +60,7 @@ abstract class Event
             return false;
         }
 
-        return $server->setting['worker_num'] == 1;
+        return $server->setting['worker_num'] + $server->setting['task_worker_num'] == 1;
     }
 
     /**
