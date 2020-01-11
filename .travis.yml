@@ -21,4 +21,4 @@ before_script:
   - ./shadowfax start -c tests/frameworks/lumen/shadowfax.ini -q
 
 script:
-  - ./swooleunit
+  - composer test

@@ -19,6 +19,7 @@
         "symfony/console": "^4.3.4"
     },
     "require-dev": {
+        "huang-yi/swooleunit": "^1.0",
         "laravel/framework": "^6.0",
         "laravel/lumen-framework": "^6.0",
         "mockery/mockery": "^1.3",
@@ -48,9 +49,11 @@
         "sort-packages": true
     },
     "bin": [
-        "shadowfax",
-        "swooleunit"
+        "shadowfax"
     ],
     "minimum-stability": "dev",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "test": "swooleunit"
+    }
 }
