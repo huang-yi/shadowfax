@@ -5,6 +5,8 @@ namespace HuangYi\Shadowfax\Server;
 use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
 use HuangYi\Shadowfax\Server\Events\ControllerRequestEvent;
+use HuangYi\Watcher\Commands\Fswatch;
+use HuangYi\Watcher\Watcher;
 use Swoole\Http\Server;
 
 class Starter extends Action
@@ -17,6 +19,16 @@ class Starter extends Action
     protected $events = [
         'Start', 'ManagerStart', 'WorkerStart', 'Request', 'Task',
         'WorkerStop', 'ManagerStop', 'Shutdown',
+    ];
+
+    /**
+     * The fswatch events.
+     *
+     * @var array
+     */
+    protected $fswatchEvents = [
+        Fswatch::CREATED, Fswatch::UPDATED, Fswatch::REMOVED, Fswatch::RENAMED,
+        Fswatch::MOVED_FROM, Fswatch::MOVED_TO,
     ];
 
     /**
@@ -39,6 +51,8 @@ class Starter extends Action
         ));
 
         $this->createControllerServer($server);
+
+        $this->watch($server);
 
         $this->unregisterAutoload();
 
@@ -112,6 +126,35 @@ class Starter extends Action
     protected function unregisterAutoload()
     {
         $this->shadowfax()->make(Composer::class)->unregister();
+    }
+
+    protected function watch($server)
+    {
+        if ($this->input->getOption('watch') === false) {
+            return;
+        }
+
+        $command = new Fswatch($this->shadowfax()->basePath('../../..'));
+        $command->setEvent($this->getFswatchEvents());
+
+        $watcher = new Watcher($command);
+
+        $watcher->onChange(function () use ($server) {
+            $server->reload();
+        });
+
+        $watcher->watch();
+    }
+
+    protected function getFswatchEvents()
+    {
+        $events = 0;
+
+        foreach ($this->fswatchEvents as $event) {
+            $events |= $event;
+        }
+
+        return $events;
     }
 
     /**
