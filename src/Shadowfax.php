@@ -102,8 +102,6 @@ class Shadowfax extends Application
             return $path;
         }
 
-        $path = ltrim($path, '/');
-
         return $path ? $this->basePath.'/'.$path : $this->basePath;
     }
 
