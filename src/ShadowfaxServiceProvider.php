@@ -55,6 +55,7 @@ class ShadowfaxServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
+            __DIR__.'/../.watch' => base_path('.watch'),
             __DIR__.'/../shadowfax.ini' => base_path('shadowfax.ini'),
             __DIR__.'/../config/shadowfax.php' => base_path('config/shadowfax.php'),
         ]);

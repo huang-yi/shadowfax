@@ -1,0 +1,7 @@
+- .*
++ \.php$
++ \.env(\.[a-zA-Z0-9]+)?$
+- \.env\.example$
+- /database/
+- /storage/
+- /tests/
