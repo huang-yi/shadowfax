@@ -52,7 +52,7 @@ class Starter extends Action
 
         $this->createControllerServer($server);
 
-        $this->watch($server);
+        $this->createWatcherProcess($server);
 
         $this->unregisterAutoload();
 
@@ -128,7 +128,13 @@ class Starter extends Action
         $this->shadowfax()->make(Composer::class)->unregister();
     }
 
-    protected function watch($server)
+    /**
+     * Create the watcher process.
+     *
+     * @param  \Swoole\Http\Server  $server
+     * @return void
+     */
+    protected function createWatcherProcess($server)
     {
         if ($this->input->getOption('watch') === false) {
             return;
@@ -136,16 +142,23 @@ class Starter extends Action
 
         $command = new Fswatch($this->shadowfax()->basePath('../../..'));
         $command->setEvent($this->getFswatchEvents());
+        $command->setFilterFrom($this->getFswatchFilterPath());
 
         $watcher = new Watcher($command);
-
         $watcher->onChange(function () use ($server) {
             $server->reload();
         });
 
-        $watcher->watch();
+        $server->addProcess($watcher->getProcess());
+
+        $watcher->watch(false);
     }
 
+    /**
+     * Get the fswatch events.
+     *
+     * @return int
+     */
     protected function getFswatchEvents()
     {
         $events = 0;
@@ -155,6 +168,22 @@ class Starter extends Action
         }
 
         return $events;
+    }
+
+    /**
+     * Get the fswatch filter rules path.
+     *
+     * @return string
+     */
+    protected function getFswatchFilterPath()
+    {
+        $path = $this->shadowfax()->basePath('../../../.watch');
+
+        if (! file_exists($path)) {
+            $path = __DIR__.'/../../.watch';
+        }
+
+        return realpath($path);
     }
 
     /**
