@@ -33,6 +33,7 @@ $shadowfax->addCommands([
     new HuangYi\Shadowfax\Console\StartCommand,
     new HuangYi\Shadowfax\Console\StopCommand,
     new HuangYi\Shadowfax\Console\ReloadCommand,
+    new HuangYi\Shadowfax\Console\WatchCommand,
 ]);
 
 unset($file, $autoload, $composer);
