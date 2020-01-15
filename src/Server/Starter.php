@@ -5,8 +5,6 @@ namespace HuangYi\Shadowfax\Server;
 use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
 use HuangYi\Shadowfax\Server\Events\ControllerRequestEvent;
-use HuangYi\Watcher\Commands\Fswatch;
-use HuangYi\Watcher\Watcher;
 use Swoole\Http\Server;
 
 class Starter extends Action
@@ -19,16 +17,6 @@ class Starter extends Action
     protected $events = [
         'Start', 'ManagerStart', 'WorkerStart', 'Request', 'Task',
         'WorkerStop', 'ManagerStop', 'Shutdown',
-    ];
-
-    /**
-     * The fswatch events.
-     *
-     * @var array
-     */
-    protected $fswatchEvents = [
-        Fswatch::CREATED, Fswatch::UPDATED, Fswatch::REMOVED, Fswatch::RENAMED,
-        Fswatch::MOVED_FROM, Fswatch::MOVED_TO,
     ];
 
     /**
@@ -51,8 +39,6 @@ class Starter extends Action
         ));
 
         $this->createControllerServer($server);
-
-        $this->createWatcherProcess($server);
 
         $this->unregisterAutoload();
 
@@ -126,64 +112,6 @@ class Starter extends Action
     protected function unregisterAutoload()
     {
         $this->shadowfax()->make(Composer::class)->unregister();
-    }
-
-    /**
-     * Create the watcher process.
-     *
-     * @param  \Swoole\Http\Server  $server
-     * @return void
-     */
-    protected function createWatcherProcess($server)
-    {
-        if ($this->input->getOption('watch') === false) {
-            return;
-        }
-
-        $command = new Fswatch($this->shadowfax()->basePath('../../..'));
-        $command->setEvent($this->getFswatchEvents());
-        $command->setFilterFrom($this->getFswatchFilterPath());
-
-        $watcher = new Watcher($command);
-        $watcher->onChange(function () use ($server) {
-            $server->reload();
-        });
-
-        $server->addProcess($watcher->getProcess());
-
-        $watcher->watch(false);
-    }
-
-    /**
-     * Get the fswatch events.
-     *
-     * @return int
-     */
-    protected function getFswatchEvents()
-    {
-        $events = 0;
-
-        foreach ($this->fswatchEvents as $event) {
-            $events |= $event;
-        }
-
-        return $events;
-    }
-
-    /**
-     * Get the fswatch filter rules path.
-     *
-     * @return string
-     */
-    protected function getFswatchFilterPath()
-    {
-        $path = $this->shadowfax()->basePath('../../../.watch');
-
-        if (! file_exists($path)) {
-            $path = __DIR__.'/../../.watch';
-        }
-
-        return realpath($path);
     }
 
     /**

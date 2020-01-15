@@ -42,7 +42,6 @@ class StartCommand extends Command
             ->addOption('host', null, InputOption::VALUE_OPTIONAL, 'Shadowfax server host.')
             ->addOption('port', null, InputOption::VALUE_OPTIONAL, 'Shadowfax server port.')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Shadowfax configuration file.')
-            ->addOption('watch', 'w', InputOption::VALUE_OPTIONAL, 'Watch the files for changes, and then reload.', false)
         ;
     }
 }
