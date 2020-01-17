@@ -127,6 +127,13 @@ class Watcher extends Action
      */
     protected function reloadServer()
     {
-        (new Reloader($this->input, $this->output))->reload();
+        $command = $this->shadowfax()->find('reload');
+
+        $arguments = [
+            'command' => 'reload',
+            '--config' => $this->input->getOption('config'),
+        ];
+
+        $command->run(new ArrayInput($arguments), $this->output);
     }
 }
