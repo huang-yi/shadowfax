@@ -58,7 +58,7 @@ class Watcher extends Action
     protected function startFswatch()
     {
         $process = new Process(function ($process) {
-            $command = new Fswatch(getcwd());
+            $command = new Fswatch(SHADOWFAX_PATH);
 
             $command->setOptions([
                 '--event'       => $this->getWatchedEvents(),
