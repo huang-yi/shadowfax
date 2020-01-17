@@ -57,12 +57,14 @@ abstract class Action
 
         if ($userPath) {
             if (! file_exists($userPath)) {
-                $this->output->writeln("<error>Cannot find configuration file [$userPath].</error>");
+                $this->output->writeln(
+                    "<error>Cannot find configuration file [$userPath].</error>"
+                );
 
                 exit(1);
             }
 
-            $userPath = $this->shadowfax()->basePath($userPath);
+            $userPath = realpath($userPath);
         }
 
         $this->shadowfax()->instance(Config::class, $this->config = new Config($userPath));

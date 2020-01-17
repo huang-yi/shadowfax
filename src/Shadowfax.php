@@ -27,23 +27,13 @@ class Shadowfax extends Application
     protected $instances = [];
 
     /**
-     * The base path.
-     *
-     * @var string
-     */
-    protected $basePath;
-
-    /**
      * The Shadowfax constructor.
      *
-     * @param  string  $basePath
      * @return void
      */
-    public function __construct($basePath = null)
+    public function __construct()
     {
         parent::__construct('Shadowfax', static::VERSION);
-
-        $this->basePath = rtrim($basePath, '/');
 
         static::setInstance($this);
 
@@ -88,21 +78,6 @@ class Shadowfax extends Application
     public function hasInstance($abstract)
     {
         return isset($this->instances[$abstract]);
-    }
-
-    /**
-     * Get the base path.
-     *
-     * @param  string  $path
-     * @return string
-     */
-    public function basePath($path = null)
-    {
-        if (! is_null($path) && $path[0] == '/') {
-            return $path;
-        }
-
-        return $path ? $this->basePath.'/'.$path : $this->basePath;
     }
 
     /**

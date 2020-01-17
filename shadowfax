@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+define('SHADOWFAX_PATH', getcwd());
+
 foreach ([
     __DIR__ . '/../../autoload.php',
     __DIR__ . '/../autoload.php',
@@ -24,8 +26,8 @@ require $autoload;
 $shadowfax = new HuangYi\Shadowfax\Shadowfax;
 
 $shadowfax->instance(
-        HuangYi\Shadowfax\Composer::class,
-        new HuangYi\Shadowfax\Composer($autoload)
+    HuangYi\Shadowfax\Composer::class,
+    new HuangYi\Shadowfax\Composer($autoload)
 );
 
 $shadowfax->addCommands([

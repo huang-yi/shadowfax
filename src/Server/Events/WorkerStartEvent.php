@@ -5,6 +5,7 @@ namespace HuangYi\Shadowfax\Server\Events;
 use HuangYi\Shadowfax\Composer;
 use HuangYi\Shadowfax\ContainerRewriter;
 use HuangYi\Shadowfax\Contracts\AppFactory as AppFactoryContract;
+use HuangYi\Shadowfax\Exceptions\InvalidBootstrapException;
 use HuangYi\Shadowfax\Factories\AppFactory;
 use HuangYi\Shadowfax\Factories\CoroutineAppFactory;
 use HuangYi\Shadowfax\FrameworkBootstrapper;
@@ -20,7 +21,7 @@ class WorkerStartEvent extends Event
      */
     public function handle(...$args)
     {
-        $this->outputProcessInfo(...$args);
+        chdir(SHADOWFAX_PATH);
 
         $this->clearCaches();
 
@@ -29,29 +30,8 @@ class WorkerStartEvent extends Event
         $this->createAppFactory(...$args);
 
         $this->enableRuntimeCoroutine();
-    }
 
-    /**
-     * Output the process information.
-     *
-     * @param  \Swoole\Server  $server
-     * @param  int  $workerId
-     * @return void
-     */
-    protected function outputProcessInfo($server, $workerId)
-    {
-        $type = $this->isTaskProcess($server, $workerId) ? 'task worker' : 'worker';
-
-        $this->output->writeln("<info>[√] $type process started. [{$server->worker_pid}]</info>");
-
-        $host = $this->isSingleProcess($server) ? " {$server->host}:{$server->port}" : '';
-
-        $this->setProcessName(sprintf(
-            '%s: %s process%s',
-            $this->getName(),
-            $type,
-            $host
-        ));
+        $this->outputProcessInfo(...$args);
     }
 
     /**
@@ -178,9 +158,38 @@ class WorkerStartEvent extends Event
     protected function getUserBootstrapPath()
     {
         if ($userPath = $this->config('bootstrap')) {
-            $userPath = $this->shadowfax()->basePath($userPath);
+            if (file_exists($userPath)) {
+                $userPath = realpath($userPath);
+            } else {
+                throw new InvalidBootstrapException(
+                    "The framework bootstrap file [{$userPath}] does not exists."
+                );
+            }
         }
 
         return $userPath;
+    }
+
+    /**
+     * Output the process information.
+     *
+     * @param  \Swoole\Server  $server
+     * @param  int  $workerId
+     * @return void
+     */
+    protected function outputProcessInfo($server, $workerId)
+    {
+        $type = $this->isTaskProcess($server, $workerId) ? 'task worker' : 'worker';
+
+        $this->output->writeln("<info>[√] $type process started. [{$server->worker_pid}]</info>");
+
+        $host = $this->isSingleProcess($server) ? " {$server->host}:{$server->port}" : '';
+
+        $this->setProcessName(sprintf(
+            '%s: %s process%s',
+            $this->getName(),
+            $type,
+            $host
+        ));
     }
 }

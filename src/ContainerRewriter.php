@@ -64,10 +64,10 @@ REPLACE;
      */
     public function getSourcePath()
     {
-        $path = __DIR__.'/../../../laravel/framework/src/Illuminate/Container/Container.php';
+        $path = 'vendor/laravel/framework/src/Illuminate/Container/Container.php';
 
         if (! file_exists($path)) {
-            $path = __DIR__.'/../../../illuminate/container/Container.php';
+            $path = 'vendor/illuminate/container/Container.php';
         }
 
         if (! file_exists($path)) {

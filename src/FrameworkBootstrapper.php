@@ -2,6 +2,7 @@
 
 namespace HuangYi\Shadowfax;
 
+use HuangYi\Shadowfax\Exceptions\InvalidBootstrapException;
 use Illuminate\Contracts\Console\Kernel as LaravelConsoleKernel;
 use Illuminate\Contracts\Http\Kernel as LaravelHttpKernel;
 use Illuminate\Foundation\Application as LaravelApplication;
@@ -110,8 +111,12 @@ class FrameworkBootstrapper
     {
         if ($userPath) {
             $this->path = $userPath;
+        } elseif (file_exists('bootstrap/app.php')) {
+            $this->path = realpath('bootstrap/app.php');
         } else {
-            $this->path = __DIR__.'/../../../../bootstrap/app.php';
+            throw new InvalidBootstrapException(
+                "Cannot find framework bootstrap file."
+            );
         }
 
         return $this;

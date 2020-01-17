@@ -16,7 +16,7 @@ class Config
      *
      * @var string
      */
-    protected $projectPath = __DIR__.'/../../../../shadowfax.ini';
+    protected $projectPath = 'shadowfax.ini';
 
     /**
      * The configuration file in package.
@@ -47,7 +47,7 @@ class Config
         if ($userPath) {
             $path = $userPath;
         } elseif (file_exists($this->projectPath)) {
-            $path = $this->projectPath;
+            $path = realpath($this->projectPath);
         } else {
             $path = $this->packagePath;
         }
