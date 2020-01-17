@@ -4,7 +4,6 @@ namespace HuangYi\Shadowfax\Server;
 
 use HuangYi\Watcher\Commands\Fswatch;
 use Swoole\Process;
-use Symfony\Component\Console\Input\ArrayInput;
 
 class Watcher extends Action
 {
@@ -32,9 +31,9 @@ class Watcher extends Action
      */
     public function watch()
     {
-        $this->start();
+        $this->startServer();
 
-        $this->fswatch();
+        $this->startFswatch();
     }
 
     /**
@@ -42,20 +41,10 @@ class Watcher extends Action
      *
      * @return void
      */
-    protected function start()
+    protected function startServer()
     {
         $process = new Process(function () {
-            $command = $this->shadowfax()->find('start');
-
-            $arguments = [
-                'command' => 'start',
-                '--host' => $this->input->getOption('host'),
-                '--port' => $this->input->getOption('port'),
-                '--config' => $this->input->getOption('config'),
-            ];
-
-            $input = new ArrayInput($arguments);
-            $command->run($input, $this->output);
+            (new Starter($this->input, $this->output))->start();
         });
 
         $process->start();
@@ -66,13 +55,14 @@ class Watcher extends Action
      *
      * @return void
      */
-    protected function fswatch()
+    protected function startFswatch()
     {
         $process = new Process(function ($process) {
-            $command = new Fswatch($this->shadowfax()->basePath('../../..'));
+            $command = new Fswatch(getcwd());
 
             $command->setOptions([
                 '--event'       => $this->getWatchedEvents(),
+                '--one-event'   => true,
                 '--recursive'   => true,
                 '--filter-from' => $this->getFilterFile(),
             ]);
@@ -88,7 +78,7 @@ class Watcher extends Action
             if (! $this->reloading) {
                 $this->reloading = true;
 
-                $this->reload();
+                $this->reloadServer();
 
                 $this->reloading = false;
             }
@@ -118,9 +108,9 @@ class Watcher extends Action
      */
     protected function getFilterFile()
     {
-        $path = $this->shadowfax()->basePath('../../../.watch');
-
-        if (! file_exists($path)) {
+        if (file_exists('.watch')) {
+            $path = '.watch';
+        } else {
             $path = __DIR__.'/../../.watch';
         }
 
@@ -132,16 +122,8 @@ class Watcher extends Action
      *
      * @return void
      */
-    protected function reload()
+    protected function reloadServer()
     {
-        $command = $this->shadowfax()->find('reload');
-
-        $arguments = [
-            'command' => 'reload',
-            '--config' => $this->input->getOption('config'),
-        ];
-
-        $input = new ArrayInput($arguments);
-        $command->run($input, $this->output);
+        (new Reloader($this->input, $this->output))->reload();
     }
 }

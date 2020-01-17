@@ -3,6 +3,7 @@
 namespace HuangYi\Shadowfax\Console;
 
 use HuangYi\Shadowfax\Server\Starter;
+use HuangYi\Shadowfax\Server\Watcher;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,7 +27,11 @@ class StartCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        (new Starter($input, $output))->start();
+        if ($input->getOption('watch') === false) {
+            (new Starter($input, $output))->start();
+        } else {
+            (new Watcher($input, $output))->watch();
+        }
     }
 
     /**
@@ -42,6 +47,7 @@ class StartCommand extends Command
             ->addOption('host', null, InputOption::VALUE_OPTIONAL, 'Shadowfax server host.')
             ->addOption('port', null, InputOption::VALUE_OPTIONAL, 'Shadowfax server port.')
             ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Shadowfax configuration file.')
+            ->addOption('watch', 'w', InputOption::VALUE_OPTIONAL, 'Run server in watch mode.', false)
         ;
     }
 }
