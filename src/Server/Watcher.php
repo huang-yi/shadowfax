@@ -62,7 +62,6 @@ class Watcher extends Action
 
         $command->setOptions([
             '--event'       => $this->getWatchedEvents(),
-            '--one-event'   => true,
             '--recursive'   => true,
             '--filter-from' => $this->getFilterFile(),
         ]);
