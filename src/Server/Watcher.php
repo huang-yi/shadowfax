@@ -4,6 +4,7 @@ namespace HuangYi\Shadowfax\Server;
 
 use HuangYi\Watcher\Commands\Fswatch;
 use Swoole\Process;
+use Symfony\Component\Console\Input\ArrayInput;
 
 class Watcher extends Action
 {
@@ -71,6 +72,8 @@ class Watcher extends Action
         }, true);
 
         $process->start();
+
+        Process::wait(false);
 
         swoole_event_add($process->pipe, function () use ($process) {
             $process->read();
