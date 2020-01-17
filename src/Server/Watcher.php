@@ -58,16 +58,16 @@ class Watcher extends Action
      */
     protected function startFswatch()
     {
-        $process = new Process(function ($process) {
-            $command = new Fswatch(SHADOWFAX_PATH);
+        $command = new Fswatch(SHADOWFAX_PATH);
 
-            $command->setOptions([
-                '--event'       => $this->getWatchedEvents(),
-                '--one-event'   => true,
-                '--recursive'   => true,
-                '--filter-from' => $this->getFilterFile(),
-            ]);
+        $command->setOptions([
+            '--event'       => $this->getWatchedEvents(),
+            '--one-event'   => true,
+            '--recursive'   => true,
+            '--filter-from' => $this->getFilterFile(),
+        ]);
 
+        $process = new Process(function ($process) use ($command) {
             $process->exec($command->getBinary(), $command->getArguments());
         }, true);
 
@@ -75,8 +75,8 @@ class Watcher extends Action
 
         Process::wait(false);
 
-        swoole_event_add($process->pipe, function () use ($process) {
-            $process->read();
+        swoole_event_add($process->pipe, function () use ($process, $command) {
+            $command->parseEvents($process->read());
 
             if (! $this->reloading) {
                 $this->reloading = true;
