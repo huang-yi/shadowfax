@@ -1,8 +1,6 @@
 - .*
-+ \.php$
-+ \.env(\.[a-zA-Z0-9]+)?$
-- \.env\.example$
-- /database/
-- /tests/
-- /storage/
-- /vendor/
++ie /app/.+\.php$
++ie /bootstrap/.+\.php$
++ie /config/.+\.php$
++ie /routes/.+\.php$
++ \.env$
