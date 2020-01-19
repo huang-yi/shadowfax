@@ -20,7 +20,6 @@
         "illuminate/container": "^6.0",
         "illuminate/http": "^6.0",
         "illuminate/support": "^6.0",
-        "psr/container": "^1.0",
         "symfony/console": "^4.3.4"
     },
     "require-dev": {
