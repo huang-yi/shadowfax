@@ -22,16 +22,14 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 1. 基本配置：
 
-| 配置项 | 描述 |
-|:--:|:--:|
-| `name` | 指定进程名 |
-| `host` | 服务器监听的IP地址，默认`127.0.0.1` |
-| `port` | 服务器监听的端口，默认`1215` |
-| `mode` | 服务器模式，支持`base`、`process`两种，默认为`base` |
-| `access_log` | 是否开启访问日志，启用后会打印所有的request，默认开启 |
-| `runtime_hooks` | 设置Swoole的Runtime Hooks，默认不启用。`1`表示全部启用，如果你不想全部启用，也可以设置具体的flag值（整型） |
-| `app_pool_capacity` | 设置App池的容量，默认100。仅在启用协程后有效 |
-| `bootstrap` | 设置Laravel的启动文件，如果你修改了Laravel框架的文件结构，那么你也需要设置该项配置 |
+- **name**：指定进程名
+- **host**：服务器监听的IP地址，默认`127.0.0.1`
+- **port**：服务器监听的端口，默认`1215`
+- **mode**：服务器模式，支持`base`、`process`两种，默认为`base`
+- **access_log**：是否开启访问日志，启用后会打印所有的request，默认开启
+- **runtime_hooks**：设置Swoole的Runtime Hooks，默认不启用。`1`表示全部启用，如果你不想全部启用，也可以设置具体的flag值（整型）
+- **app_pool_capacity**：设置App池的容量，默认100。仅在启用协程后有效
+- **bootstrap**：设置Laravel的启动文件，如果你修改了Laravel框架的文件结构，那么你也需要设置该项配置
 
 2. `server`配置：
 
@@ -71,7 +69,7 @@ Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.
 
 ## Task
 
-Task功能需要启用Swoole的task进程，所以需要将配置项`server.task_work_num`设置为大于0的数值。启用ask进程后，某些耗时任务就可以投递到task进程中进行异步处理。
+Task功能需要启用Swoole的task进程，所以需要将配置项`server.task_work_num`设置为大于0的数值。启用task进程后，某些耗时任务就可以投递到task进程中进行异步处理。
 
 首先在程序中创建一个task类，所有task类必须实现`HuangYi\Shadowfax\Contracts\Task`接口：
 
@@ -136,7 +134,7 @@ Task::dispatch($task);
 
 ```
 
-## Nginx
+## Nginx配置
 
 在生产环境中，你可以使用Nginx作为反向代理服务器：
 
@@ -190,3 +188,28 @@ server {
 ```
 
 > 请将Shadowfax监听的IP填加到`App\Http\Middleware\TrustProxies`中，这样才能在你的Laravel程序中获得正确的IP。
+
+## Supervisor配置
+
+在生产环境中，可以可用Supervisor来管理你的Shadowfax进程：
+
+```ini
+[program:shadowfax]
+process_name=%(program_name)s
+command=cd /path/to/project && ./vendor/bin/shadowfax start
+autostart=true
+autorestart=true
+user=www
+redirect_stderr=true
+stdout_logfile=/path/to/project/storage/logs/supervisor.log
+```
+
+## 单元测试
+
+```sh
+composer test
+```
+
+## 协议
+
+Shadowfax是一个开源软件，遵循[MIT协议](LICENSE).
