@@ -212,4 +212,4 @@ composer test
 
 ## 协议
 
-Shadowfax是一个开源软件，遵循[MIT协议](LICENSE).
+Shadowfax是一个开源软件，遵循[MIT协议](LICENSE)。
