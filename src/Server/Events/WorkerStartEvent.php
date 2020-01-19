@@ -85,7 +85,7 @@ class WorkerStartEvent extends Event
     {
         $bootstrapper = $this->createFrameworkBootstrapper($server, $workerId);
 
-        if ($this->isCoroutineEnabled()) {
+        if ($this->isCoroutineEnabled($server, $workerId)) {
             $factory = new CoroutineAppFactory(
                 $bootstrapper,
                 $this->config('app_pool_capacity', 10)
@@ -127,11 +127,17 @@ class WorkerStartEvent extends Event
     /**
      * Determine if the coroutine is enabled.
      *
+     * @param  \Swoole\Server  $server
+     * @param  int  $workerId
      * @return int
      */
-    protected function isCoroutineEnabled()
+    protected function isCoroutineEnabled($server, $workerId)
     {
-        return $this->config('enable_coroutine', 0);
+        if ($this->isTaskProcess($server, $workerId)) {
+            return $server->setting['task_enable_coroutine'];
+        }
+
+        return $server->setting['enable_coroutine'];
     }
 
     /**

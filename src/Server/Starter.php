@@ -160,22 +160,6 @@ class Starter extends Action
      */
     protected function getSettings()
     {
-        $settings = $this->config('server', []);
-        $isCoroutineEnabled = $this->isCoroutineEnabled();
-
-        $settings['enable_coroutine'] = $isCoroutineEnabled;
-        $settings['task_enable_coroutine'] = $isCoroutineEnabled;
-
-        return $settings;
-    }
-
-    /**
-     * Determine if the coroutine is enabled.
-     *
-     * @return int
-     */
-    protected function isCoroutineEnabled()
-    {
-        return $this->config('enable_coroutine', 0);
+        return $this->config('server', []);
     }
 }
