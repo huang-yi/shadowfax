@@ -1,7 +1,7 @@
 {
     "name": "huang-yi/shadowfax",
     "description": "Run Laravel on Swoole.",
-    "keywords": ["laravel", "swoole", "coroutine", "http-server"],
+    "keywords": ["laravel", "swoole", "coroutine", "http-server", "shadowfax"],
     "license": "MIT",
     "authors": [
         {
@@ -9,6 +9,10 @@
             "email": "coodeer@163.com"
         }
     ],
+    "support": {
+        "source": "https://github.com/huang-yi/shadowfax",
+        "issues": "https://github.com/huang-yi/laravel-swoole-http/issues"
+    },
     "require": {
         "php": "^7.2",
         "ext-swoole": "^4.3.2",
