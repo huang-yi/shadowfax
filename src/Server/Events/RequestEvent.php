@@ -76,6 +76,6 @@ class RequestEvent extends Event
             return '';
         }
 
-        return ' ['.intval((microtime(true) - $start) * 1000).'ms]';
+        return ' ['.round((microtime(true) - $start) * 1000, 2).'ms]';
     }
 }
