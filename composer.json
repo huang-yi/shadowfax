@@ -11,7 +11,7 @@
     ],
     "support": {
         "source": "https://github.com/huang-yi/shadowfax",
-        "issues": "https://github.com/huang-yi/laravel-swoole-http/issues"
+        "issues": "https://github.com/huang-yi/shadowfax/issues"
     },
     "require": {
         "php": "^7.2",
