@@ -191,7 +191,7 @@ server {
 
 ## Supervisor配置
 
-在生产环境中，可以可用Supervisor来管理你的Shadowfax进程：
+在生产环境中，可以使用Supervisor来管理你的Shadowfax进程：
 
 ```ini
 [program:shadowfax]
