@@ -103,9 +103,9 @@ class Response
             $method = $cookie->isRaw() ? 'rawCookie' : 'cookie';
 
             $swooleResponse->$method(
-                $cookie->getName(), $cookie->getValue(),
+                $cookie->getName(), (string) $cookie->getValue(),
                 $cookie->getExpiresTime(), $cookie->getPath(),
-                $cookie->getDomain(), $cookie->isSecure(),
+                (string) $cookie->getDomain(), $cookie->isSecure(),
                 $cookie->isHttpOnly()
             );
         }
