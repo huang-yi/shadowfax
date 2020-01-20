@@ -12,6 +12,8 @@ use Swoole\Coroutine\Channel;
 
 class CoroutineAppFactory implements AppFactory
 {
+    use RebindsAbstracts;
+
     /**
      * The application pool.
      *
@@ -91,46 +93,6 @@ class CoroutineAppFactory implements AppFactory
         $this->rebindAbstracts($app);
 
         $this->pool->push($app);
-    }
-
-    /**
-     * Rebind the application's abstracts.
-     *
-     * @param  \Illuminate\Contracts\Container\Container  $app
-     * @return void
-     */
-    protected function rebindAbstracts(ContainerContract $app)
-    {
-        if (! $app->bound('config')) {
-            return;
-        }
-
-        $resets = $app['config']['shadowfax.abstracts'] ?: [];
-
-        foreach ($resets as $item) {
-            if ($app->bound($item)) {
-                static::rebindAbstract($app, $item);
-            }
-        }
-    }
-
-    /**
-     * Rebind abstract.
-     *
-     * @param  \Illuminate\Contracts\Container\Container  $app
-     * @param  string  $name
-     * @return void
-     */
-    protected function rebindAbstract(ContainerContract $app, $name)
-    {
-        $abstract = $app->getAlias($name);
-        $binding = $app->getBindings()[$abstract] ?? null;
-
-        unset($app[$abstract]);
-
-        if ($binding) {
-            $app->bind($abstract, $binding['concrete'], $binding['shared']);
-        }
     }
 
     /**
