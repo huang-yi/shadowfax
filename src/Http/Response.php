@@ -92,9 +92,7 @@ class Response
 
         // Set headers.
         foreach ($illuminateResponse->headers->allPreserveCaseWithoutCookies() as $name => $values) {
-            foreach ($values as $value) {
-                $swooleResponse->header($name, $value);
-            }
+            $swooleResponse->header($name, implode('; ', $values));
         }
 
         // Set status code.
@@ -102,7 +100,7 @@ class Response
 
         // Set cookies.
         foreach ($illuminateResponse->headers->getCookies() as $cookie) {
-            $method = $cookie->isRaw() ? 'rawcookie' : 'cookie';
+            $method = $cookie->isRaw() ? 'rawCookie' : 'cookie';
 
             $swooleResponse->$method(
                 $cookie->getName(), $cookie->getValue(),
@@ -121,13 +119,7 @@ class Response
      */
     protected function sendContent(SwooleResponse $swooleResponse)
     {
-        ob_start();
-
-        $this->illuminateResponse->sendContent();
-
-        $swooleResponse->end(ob_get_contents());
-
-        ob_end_clean();
+        $swooleResponse->end($this->illuminateResponse->getContent());
     }
 
     /**
