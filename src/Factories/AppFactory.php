@@ -8,6 +8,8 @@ use Illuminate\Contracts\Container\Container;
 
 class AppFactory implements AppFactoryContract
 {
+    use RebindsAbstracts;
+
     /**
      * The Laravel/Lumen application.
      *
@@ -44,6 +46,6 @@ class AppFactory implements AppFactoryContract
      */
     public function recycle(Container $app)
     {
-        return;
+        $this->rebindAbstracts($app);
     }
 }
