@@ -65,8 +65,6 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.enable_coroutine`和`server.task_enable_coroutine`。如果你想启用Swoole的Runtime Hooks，请调整设置`runtime_hooks`的值。
 
-> 需要特别注意的是，目前不建议启用MySQL、Redis等可复用客户端的hook，在未实现连接池的前提下，不同的协程使用同一个客户端会导致异常。
-
 ## Task
 
 Task功能需要启用Swoole的task进程，所以需要将配置项`server.task_work_num`设置为大于0的数值。启用task进程后，某些耗时任务就可以投递到task进程中进行异步处理。
