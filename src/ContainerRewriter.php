@@ -23,7 +23,7 @@ class ContainerRewriter
 SEARCH;
 
         $replace = <<<'REPLACE'
-        shadowfax_correct_app(static::$instance);
+        shadowfax_correct_container(static::$instance);
 
         return static::$instance;
 REPLACE;

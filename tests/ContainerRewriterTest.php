@@ -16,7 +16,7 @@ class ContainerRewriterTest extends TestCase
             ->rewrite();
 
         $this->assertTrue(file_exists($rewriter->getPath()));
-        $this->assertStringContainsString('shadowfax_correct_app', file_get_contents($rewriter->getPath()));
+        $this->assertStringContainsString('shadowfax_correct_container', file_get_contents($rewriter->getPath()));
 
         unlink($rewriter->getPath());
     }
