@@ -4,9 +4,7 @@ namespace HuangYi\Shadowfax\Factories;
 
 use HuangYi\Shadowfax\Contracts\AppFactory;
 use HuangYi\Shadowfax\FrameworkBootstrapper;
-use Illuminate\Container\Container;
 use Illuminate\Contracts\Container\Container as ContainerContract;
-use Illuminate\Support\Facades\Facade;
 use Swoole\Coroutine;
 use Swoole\Coroutine\Channel;
 
@@ -75,9 +73,7 @@ class CoroutineAppFactory implements AppFactory
 
         Coroutine::getContext()->laravel = $app;
 
-        Container::setInstance($app);
-        Facade::setFacadeApplication($app);
-        Facade::clearResolvedInstances();
+        shadowfax_set_global_container($app);
 
         return $app;
     }
