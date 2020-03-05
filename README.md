@@ -115,7 +115,8 @@ If you want to use the Supervisor to manage your Shadowfax processes, the follow
 ```ini
 [program:shadowfax]
 process_name=%(program_name)s
-command=cd /path/to/project && ./vendor/bin/shadowfax start
+directory=/path/to/project
+command=php vendor/bin/shadowfax start
 autostart=true
 autorestart=true
 user=www
