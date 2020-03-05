@@ -17,15 +17,15 @@
         "php": "^7.2",
         "ext-swoole": "^4.3.2",
         "huang-yi/swoole-watcher": "^1.0",
-        "illuminate/container": "^6.0",
-        "illuminate/http": "^6.0",
-        "illuminate/support": "^6.0",
-        "symfony/console": "^4.3.4"
+        "illuminate/container": "^6.0|^7.0",
+        "illuminate/http": "^6.0|^7.0",
+        "illuminate/support": "^6.0|^7.0",
+        "symfony/console": "^4.3.4|^5.0"
     },
     "require-dev": {
         "huang-yi/swooleunit": "^1.0",
-        "laravel/framework": "^6.0",
-        "laravel/lumen-framework": "^6.0",
+        "laravel/framework": "^6.0|^7.0",
+        "laravel/lumen-framework": "^6.0|^7.0",
         "mockery/mockery": "^1.3",
         "phpunit/phpunit": "^8.5"
     },
