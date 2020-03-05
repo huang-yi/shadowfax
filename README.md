@@ -8,19 +8,19 @@ The Shadowfax is a package that runs your Laravel application on [Swoole](https:
 
 You may use Composer to install Shadowfax to your project:
 
-```sh
+```shell
 composer require huang-yi/shadowfax
 ```
 
 After installing Shadowfax, publish its configuration files using the `vendor:publish` Artisan command:
 
-```
+```shell
 php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvider"
 ```
 
 ## Configuration
 
-The primary configuration file will be located at `shadowfax.ini`.
+You should copy the `shadowfax.ini.example` file to a new file named `shadowfax.ini` in the root directory of your application. And you'd better add the `shadowfax.ini` file to the `.gitignore`.
 
 1. Basic configuration:
 
@@ -125,7 +125,7 @@ stdout_logfile=/path/to/project/storage/logs/supervisor.log
 
 ## Testing
 
-```sh
+```shell
 composer test
 ```
 

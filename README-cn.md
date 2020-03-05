@@ -6,19 +6,19 @@ Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)�
 
 你可以使用Composer将Shadowfax安装到你的Laravel项目中:
 
-```sh
+```shell
 composer require huang-yi/shadowfax
 ```
 
 安装好Shadowfax之后，使用Laravel的Artisan命令发布配置文件:
 
-```
+```shell
 php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvider"
 ```
 
 ## 配置
 
-主配置文件位于项目根目录的`shadowfax.ini`，该文件允许你自定义`swoole-http-server`的各项参数。
+你需要在项目的根目录复制配置样例文件`shadowfax.ini.example`并命名为`shadowfax.ini`，复制的新文件即为配置文件。大多数情况下，不同的环境会使用不同的配置，所以你最好将`shadowfax.ini`写入`.gitignore`。
 
 1. 基本配置：
 
@@ -206,7 +206,7 @@ stdout_logfile=/path/to/project/storage/logs/supervisor.log
 
 ## 单元测试
 
-```sh
+```shell
 composer test
 ```
 
