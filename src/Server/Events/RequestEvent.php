@@ -2,11 +2,9 @@
 
 namespace HuangYi\Shadowfax\Server\Events;
 
-use Exception;
 use HuangYi\Shadowfax\Http\Kernel;
 use HuangYi\Shadowfax\Http\Request;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 class RequestEvent extends Event
@@ -29,10 +27,8 @@ class RequestEvent extends Event
             $response->send($args[1]);
 
             $this->outputRequestInfo($request, $response);
-        } catch (Exception $e) {
-            $app[ExceptionHandler::class]->report($e);
         } catch (Throwable $e) {
-            $app[ExceptionHandler::class]->report(new FatalThrowableError($e));
+            $app[ExceptionHandler::class]->report($e);
         }
 
         $this->appFactory()->recycle($app);

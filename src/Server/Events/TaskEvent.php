@@ -2,10 +2,8 @@
 
 namespace HuangYi\Shadowfax\Server\Events;
 
-use Exception;
 use HuangYi\Shadowfax\Contracts\Task;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 class TaskEvent extends Event
@@ -26,10 +24,8 @@ class TaskEvent extends Event
 
         try {
             $args[3]->handle($args[0], $args[2], $args[2]);
-        } catch (Exception $e) {
-            $app[ExceptionHandler::class]->report($e);
         } catch (Throwable $e) {
-            $app[ExceptionHandler::class]->report(new FatalThrowableError($e));
+            $app[ExceptionHandler::class]->report($e);
         }
 
         $this->appFactory()->recycle($app);
