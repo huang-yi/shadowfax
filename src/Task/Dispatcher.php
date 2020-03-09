@@ -12,12 +12,10 @@ class Dispatcher
      * Dispatch a task to task worker process.
      *
      * @param  \HuangYi\Shadowfax\Contracts\Task  $task
-     * @return $this
+     * @return int
      */
     public function dispatch(Task $task)
     {
-        Shadowfax::getInstance()->make(Server::class)->task($task);
-
-        return $this;
+        return Shadowfax::getInstance()->make(Server::class)->task($task);
     }
 }
