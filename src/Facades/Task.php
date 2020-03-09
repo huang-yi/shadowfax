@@ -5,7 +5,7 @@ namespace HuangYi\Shadowfax\Facades;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @method static \HuangYi\Shadowfax\Task\Dispatcher dispatch(\HuangYi\Shadowfax\Contracts\Task $task)
+ * @method static int dispatch(\HuangYi\Shadowfax\Contracts\Task $task)
  */
 class Task extends Facade
 {
