@@ -10,7 +10,8 @@ interface Task
      * @param  \Swoole\Server  $server
      * @param  int  $taskId
      * @param  int  $fromWorkerId
-     * @return void
+     * @param  int  $flags
+     * @return mixed
      */
-    public function handle($server, $taskId, $fromWorkerId);
+    public function handle($server, $taskId, $fromWorkerId, $flags = null);
 }
