@@ -133,7 +133,7 @@ trait HasHelpers
         $app = $this->appPool()->pop();
 
         try {
-            return $callback($app);
+            $callback($app);
         } catch (Exception $e) {
             $app[ExceptionHandler::class]->report($e);
         } catch (Throwable $e) {
