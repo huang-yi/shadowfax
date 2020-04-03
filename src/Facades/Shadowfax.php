@@ -4,10 +4,6 @@ namespace HuangYi\Shadowfax\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-/**
- * @method static mixed make(string $abstract)
- * @method static \HuangYi\Shadowfax\Shadowfax instance(string $abstract, mixed $instance)
- */
 class Shadowfax extends Facade
 {
     /**

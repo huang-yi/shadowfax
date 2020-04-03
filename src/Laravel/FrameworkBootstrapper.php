@@ -1,0 +1,107 @@
+<?php
+
+namespace HuangYi\Shadowfax\Laravel;
+
+use HuangYi\Shadowfax\Exceptions\InvalidFrameworkBootstrapperException;
+use HuangYi\Shadowfax\Exceptions\ShadowfaxException;
+use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
+use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
+use Illuminate\Foundation\Application as Laravel;
+use Laravel\Lumen\Application as Lumen;
+
+class FrameworkBootstrapper
+{
+    /**
+     * The application bootstrap path.
+     *
+     * @var string
+     */
+    protected $bootstrapFile;
+
+    /**
+     * Indicates whether to bootstrap a console kernel application.
+     *
+     * @var bool
+     */
+    protected $isConsoleKernel;
+
+    /**
+     * Create a new FrameworkBootstrapper instance.
+     *
+     * @param  string  $bootstrapFile
+     * @param  bool  $isConsoleKernel
+     * @return void
+     */
+    public function __construct($bootstrapFile, $isConsoleKernel = false)
+    {
+        $this->bootstrapFile = $bootstrapFile;
+        $this->isConsoleKernel = $isConsoleKernel;
+    }
+
+    /**
+     * Bootstrap a Laravel/Lumen application.
+     *
+     * @return \Illuminate\Contracts\Container\Container
+     * @throws \HuangYi\Shadowfax\Exceptions\InvalidFrameworkBootstrapperException
+     */
+    public function bootstrap(): Container
+    {
+        $app = $this->createApplication();
+
+        $this->bootstrapApplication($app);
+
+        return $app;
+    }
+
+    /**
+     * Create the application.
+     *
+     * @return \Illuminate\Contracts\Container\Container
+     * @throws \HuangYi\Shadowfax\Exceptions\InvalidFrameworkBootstrapperException
+     */
+    protected function createApplication()
+    {
+        if (! file_exists($this->bootstrapFile)) {
+            throw new InvalidFrameworkBootstrapperException($this->bootstrapFile);
+        }
+
+        $app = require $this->bootstrapFile;
+
+        if (! $app instanceof Container) {
+            throw new InvalidFrameworkBootstrapperException($this->bootstrapFile);
+        }
+
+        return $app;
+    }
+
+    /**
+     * Bootstrap the application.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
+     */
+    protected function bootstrapApplication(Container $app)
+    {
+        if ($app instanceof Laravel) {
+            $this->bootstrapLaravelKernel($app);
+        } elseif ($app instanceof Lumen) {
+            $app->boot();
+        }
+    }
+
+    /**
+     * Bootstrap the Laravel kernel.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     * @return void
+     */
+    protected function bootstrapLaravelKernel(Laravel $app)
+    {
+        if ($this->isConsoleKernel) {
+            $app->make(ConsoleKernel::class)->bootstrap();
+        } else {
+            $app->make(HttpKernel::class)->bootstrap();
+        }
+    }
+}

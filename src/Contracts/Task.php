@@ -13,5 +13,5 @@ interface Task
      * @param  int  $flags
      * @return mixed
      */
-    public function handle($server, $taskId, $fromWorkerId, $flags = null);
+    public function handle($server, $taskId, $fromWorkerId, $flags);
 }

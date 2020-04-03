@@ -49,7 +49,7 @@ class Kernel
      */
     public function runLaravel(Request $request)
     {
-        $kernel = $this->app->make(IlluminateHttpKernel::class);
+        $kernel = $this->app[IlluminateHttpKernel::class];
 
         $illuminateResponse = $kernel->handle(
             $illuminateRequest = $request->toIlluminate()

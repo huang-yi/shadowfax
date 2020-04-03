@@ -2,8 +2,10 @@
 
 namespace HuangYi\Shadowfax;
 
-use HuangYi\Shadowfax\Task\Dispatcher;
+use HuangYi\Shadowfax\WebSocket\LaravelRouter;
+use HuangYi\Shadowfax\WebSocket\LumenRouter;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Lumen\Application as Lumen;
 
 class ShadowfaxServiceProvider extends ServiceProvider
 {
@@ -14,12 +16,9 @@ class ShadowfaxServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(
-            __DIR__.'/../config/shadowfax.php', 'shadowfax'
-        );
-
         $this->registerShadowfax();
         $this->registerTaskDispatcher();
+        $this->registerWebSocket();
     }
 
     /**
@@ -29,7 +28,7 @@ class ShadowfaxServiceProvider extends ServiceProvider
      */
     protected function registerShadowfax()
     {
-        $this->app->instance('shadowfax', Shadowfax::getInstance());
+        $this->app->instance('shadowfax', shadowfax());
         $this->app->alias('shadowfax', Shadowfax::class);
     }
 
@@ -41,10 +40,26 @@ class ShadowfaxServiceProvider extends ServiceProvider
     protected function registerTaskDispatcher()
     {
         $this->app->singleton('shadowfax.task', function () {
-            return new Dispatcher;
+            return new TaskDispatcher();
         });
 
-        $this->app->alias('shadowfax.task', Dispatcher::class);
+        $this->app->alias('shadowfax.task', TaskDispatcher::class);
+    }
+
+    /**
+     * Register the websocket router.
+     *
+     * @return void
+     */
+    protected function registerWebSocket()
+    {
+        $this->app->singleton('shadowfax.websocket', function ($app) {
+            if ($app instanceof Lumen) {
+                return new LumenRouter($app);
+            }
+
+            return new LaravelRouter($app['events'], $app);
+        });
     }
 
     /**
@@ -56,8 +71,8 @@ class ShadowfaxServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../.watch' => base_path('.watch'),
-            __DIR__.'/../shadowfax.ini' => base_path('shadowfax.ini.example'),
-            __DIR__.'/../config/shadowfax.php' => base_path('config/shadowfax.php'),
+            __DIR__.'/../shadowfax' => base_path('shadowfax'),
+            __DIR__.'/../shadowfax.yml' => base_path('shadowfax.yml.example'),
         ]);
     }
 }

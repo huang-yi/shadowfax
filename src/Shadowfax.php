@@ -2,116 +2,129 @@
 
 namespace HuangYi\Shadowfax;
 
-use HuangYi\Shadowfax\Exceptions\InstanceNotFoundException;
+use Illuminate\Config\Repository;
 use Symfony\Component\Console\Application;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class Shadowfax extends Application
+class Shadowfax extends Container
 {
     /**
      * The current version.
      */
-    const VERSION = '1.0.0';
+    const VERSION = '2.0.0';
 
     /**
-     * The Shadowfax instance.
+     * The base path.
      *
-     * @var static
+     * @var string
      */
-    protected static $instance;
+    protected $basePath;
 
     /**
-     * The registered instances.
+     * The Symfony console application.
+     *
+     * @var \Symfony\Component\Console\Application
+     */
+    protected $console;
+
+    /**
+     * The bootstrap classes.
      *
      * @var array
      */
-    protected $instances = [];
+    protected $bootstrappers = [
+        \HuangYi\Shadowfax\Bootstrap\CreateCoroutineContainer::class,
+        \HuangYi\Shadowfax\Bootstrap\LoadConfiguration::class,
+        \HuangYi\Shadowfax\Bootstrap\RegisterEventListeners::class,
+    ];
 
     /**
-     * The Shadowfax constructor.
      *
+     * Create a new Shadowfax instance.
+     *
+     * @param  null  $basePath
      * @return void
      */
-    public function __construct()
+    public function __construct($basePath = null)
     {
-        parent::__construct('Shadowfax', static::VERSION);
+        if ($basePath) {
+            $this->setBasePath($basePath);
+        }
 
-        static::setInstance($this);
+        $this->registerBaseBindings();
 
-        $this->setDefaultCommand('start');
+        $this->bootstrap();
+
+        $this->registerConsoleApplication();
     }
 
     /**
-     * Register an existing instance in the container.
+     * Set the base path.
      *
-     * @param  string  $abstract
-     * @param  mixed  $instance
+     * @param  string  $basePath
      * @return $this
      */
-    public function instance($abstract, $instance)
+    public function setBasePath($basePath)
     {
-        $this->instances[$abstract] = $instance;
+        $this->basePath = rtrim($basePath, '\/');
 
         return $this;
     }
 
     /**
-     * Resolve the given type from the container.
+     * Get the base path.
      *
-     * @param  string  $abstract
-     * @return mixed
+     * @param  string  $path
+     * @return string
      */
-    public function make($abstract)
+    public function basePath($path = '')
     {
-        if (! $this->hasInstance($abstract)) {
-            throw new InstanceNotFoundException($abstract);
-        }
-
-        return $this->instances[$abstract];
+        return $this->basePath.($path ? DIRECTORY_SEPARATOR.$path : $path);
     }
 
     /**
-     * Determine if the given abstract type has been bound.
+     * Register the basic bindings into the container.
      *
-     * @param  string  $abstract
-     * @return bool
-     */
-    public function hasInstance($abstract)
-    {
-        return isset($this->instances[$abstract]);
-    }
-
-    /**
-     * Get the instances.
-     *
-     * @return array
-     */
-    public function getInstances()
-    {
-        return $this->instances;
-    }
-
-    /**
-     * Get the instance.
-     *
-     * @return static
-     */
-    public static function getInstance()
-    {
-        if (is_null(static::$instance)) {
-            static::$instance = new static;
-        }
-
-        return static::$instance;
-    }
-
-    /**
-     * Set the global instance.
-     *
-     * @param  static  $instance
      * @return void
      */
-    public static function setInstance($instance)
+    protected function registerBaseBindings()
     {
-        static::$instance = $instance;
+        static::setInstance($this);
+
+        $this->instance('config', new Repository([]));
+
+        $this->instance('events', new EventDispatcher);
+    }
+
+    /**
+     * Bootstrap the application.
+     *
+     * @return void
+     */
+    protected function bootstrap()
+    {
+        foreach ($this->bootstrappers as $bootstrapper) {
+            (new $bootstrapper)->bootstrap($this);
+        }
+    }
+
+    /**
+     * Register the Symfony console application.
+     *
+     * @return void
+     */
+    protected function registerConsoleApplication()
+    {
+        $this->console = new Application('Shadowfax', static::VERSION);
+    }
+
+    /**
+     * Get the Symfony console application.
+     *
+     * @return \Symfony\Component\Console\Application
+     */
+    public function getConsole()
+    {
+        return $this->console;
     }
 }

@@ -1,30 +1,49 @@
 <?php
 
+use HuangYi\Shadowfax\Shadowfax;
 use Illuminate\Contracts\Container\Container as ContainerContract;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Facade;
+use Swoole\Coroutine;
+
+if (! function_exists('shadowfax')) {
+    /**
+     * Get the Shadowfax instance.
+     *
+     * @param  string|null  $abstract
+     * @return mixed|\HuangYi\Shadowfax\Shadowfax
+     */
+    function shadowfax($abstract = null)
+    {
+        if (is_null($abstract)) {
+            return Shadowfax::getInstance();
+        }
+
+        return Shadowfax::getInstance()->make($abstract);
+    }
+}
 
 if (! function_exists('shadowfax_correct_container')) {
     /**
-     * Correct the IoC container.
+     * Correct the global Laravel IoC container in coroutine.
      *
      * @param  \Illuminate\Contracts\Container\Container  $current
      * @return void
      */
     function shadowfax_correct_container(ContainerContract $current)
     {
-        $instance = shadowfax_get_coroutine_container();
+        $container = shadowfax_get_coroutine_container();
 
-        if ($instance && $current !== $instance) {
-            shadowfax_set_global_container($instance);
+        if ($container && $current !== $container) {
+            shadowfax_set_global_container($container);
         }
     }
 }
 
 if (! function_exists('shadowfax_get_coroutine_container')) {
     /**
-     * Get the IoC container in coroutine environment.
+     * Get the Laravel IoC container from a coroutine.
      *
      * @param  int  $cid
      * @return \Illuminate\Contracts\Container\Container|null
@@ -35,8 +54,10 @@ if (! function_exists('shadowfax_get_coroutine_container')) {
             return null;
         }
 
-        if (! $app = Swoole\Coroutine::getContext($cid)->laravel ?? null) {
-            return shadowfax_get_coroutine_container(Swoole\Coroutine::getPcid($cid));
+        // We will use the container set in the parent coroutine
+        // when the current coroutine is not set a global container.
+        if (! $app = Coroutine::getContext($cid)->laravel ?? null) {
+            return shadowfax_get_coroutine_container(Coroutine::getPcid($cid));
         }
 
         return $app;
@@ -52,6 +73,8 @@ if (! function_exists('shadowfax_set_global_container')) {
      */
     function shadowfax_set_global_container(ContainerContract $container)
     {
+        Coroutine::getContext()->laravel = $container;
+
         Container::setInstance($container);
         Facade::setFacadeApplication($container);
         Facade::clearResolvedInstances();

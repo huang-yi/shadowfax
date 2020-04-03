@@ -2,8 +2,8 @@
 
 namespace HuangYi\Shadowfax\Exceptions;
 
-use RuntimeException;
+use Exception;
 
-class ShadowfaxException extends RuntimeException
+class ShadowfaxException extends Exception
 {
 }

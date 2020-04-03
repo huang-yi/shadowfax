@@ -1,41 +1,8 @@
 #!/usr/bin/env php
 <?php
 
-define('SHADOWFAX_PATH', getcwd());
+require __DIR__.'/vendor/autoload.php';
 
-foreach ([
-    __DIR__ . '/../../autoload.php',
-    __DIR__ . '/../autoload.php',
-    __DIR__ . '/vendor/autoload.php',
-] as $file) {
-    if (file_exists($file)) {
-        $autoload = $file;
+$shadowfax = require_once __DIR__.'/bootstrap/shadowfax.php';
 
-        break;
-    }
-}
-
-if (! isset($autoload)) {
-    fwrite(STDERR, 'Autoload not found.' . PHP_EOL);
-
-    die(1);
-}
-
-require $autoload;
-
-$shadowfax = new HuangYi\Shadowfax\Shadowfax;
-
-$shadowfax->instance(
-    HuangYi\Shadowfax\Composer::class,
-    new HuangYi\Shadowfax\Composer($autoload)
-);
-
-$shadowfax->addCommands([
-    new HuangYi\Shadowfax\Console\StartCommand,
-    new HuangYi\Shadowfax\Console\StopCommand,
-    new HuangYi\Shadowfax\Console\ReloadCommand,
-]);
-
-unset($file, $autoload, $composer);
-
-$shadowfax->run();
+$shadowfax->getConsole()->run();
