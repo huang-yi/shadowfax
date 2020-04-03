@@ -2,7 +2,7 @@
 
 namespace HuangYi\Shadowfax\Listeners\ManagerStartEvent;
 
-use HuangYi\Shadowfax\Events\WorkerStartEvent;
+use HuangYi\Shadowfax\Events\ManagerStartEvent;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 
 class SetManagerProcessName
@@ -12,10 +12,10 @@ class SetManagerProcessName
     /**
      * Handle the event.
      *
-     * @param  \HuangYi\Shadowfax\Events\WorkerStartEvent  $event
+     * @param  \HuangYi\Shadowfax\Events\ManagerStartEvent  $event
      * @return void
      */
-    public function handle(WorkerStartEvent $event)
+    public function handle(ManagerStartEvent $event)
     {
         @swoole_set_process_name(sprintf(
             '%s: manager process%s',
