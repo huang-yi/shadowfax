@@ -2,9 +2,11 @@
 
 namespace HuangYi\Shadowfax\Server\Events;
 
+use Exception;
 use HuangYi\Shadowfax\Contracts\Task;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Swoole\Server\Task as SwooleTask;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Throwable;
 
 class TaskEvent extends Event
@@ -29,7 +31,13 @@ class TaskEvent extends Event
 
         try {
             $args[3]->handle($args[0], $args[1], $args[2]);
+        } catch (Exception $e) {
+            $app[ExceptionHandler::class]->report($e);
         } catch (Throwable $e) {
+            if (class_exists(FatalThrowableError::class)) {
+                $e = new FatalThrowableError($e);
+            }
+
             $app[ExceptionHandler::class]->report($e);
         }
 
@@ -57,7 +65,13 @@ class TaskEvent extends Event
                 $args[1]->worker_id,
                 $args[1]->flags
             );
+        } catch (Exception $e) {
+            $app[ExceptionHandler::class]->report($e);
         } catch (Throwable $e) {
+            if (class_exists(FatalThrowableError::class)) {
+                $e = new FatalThrowableError($e);
+            }
+
             $app[ExceptionHandler::class]->report($e);
         }
 

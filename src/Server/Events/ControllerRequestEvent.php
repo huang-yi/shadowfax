@@ -2,8 +2,8 @@
 
 namespace HuangYi\Shadowfax\Server\Events;
 
-use Exception;
 use Symfony\Component\Console\Output\OutputInterface;
+use Throwable;
 
 class ControllerRequestEvent extends Event
 {
@@ -59,7 +59,7 @@ class ControllerRequestEvent extends Event
 
                     break;
             }
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->serverError($e, ...$args);
         }
     }
@@ -140,7 +140,7 @@ class ControllerRequestEvent extends Event
     /**
      * Server error.
      *
-     * @param  \Exception  $exception
+     * @param  \Throwable  $exception
      * @param  \Swoole\Http\Request  $request
      * @param  \Swoole\Http\Response  $response
      * @return void

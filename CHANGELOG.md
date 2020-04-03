@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v1.2.2
+
+### Fixed
+
+- Fix handle exceptions.
+
+
 ## v1.2.1
 
 ### Fixed
