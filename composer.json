@@ -1,7 +1,7 @@
 {
     "name": "huang-yi/shadowfax",
     "description": "Run Laravel on Swoole.",
-    "keywords": ["laravel", "swoole", "coroutine", "http-server", "shadowfax"],
+    "keywords": ["laravel", "swoole", "coroutine", "http", "websocket", "shadowfax"],
     "license": "MIT",
     "authors": [
         {
@@ -18,9 +18,13 @@
         "ext-swoole": "^4.3.2",
         "huang-yi/swoole-watcher": "^1.0",
         "illuminate/container": "^6.0|^7.0",
+        "illuminate/contracts": "^6.0|^7.0",
         "illuminate/http": "^6.0|^7.0",
         "illuminate/support": "^6.0|^7.0",
-        "symfony/console": "^4.3.4|^5.0"
+        "psr/container": "^1.0",
+        "symfony/console": "^4.3.4|^5.0",
+        "symfony/event-dispatcher": "^4.3.4|^5.0",
+        "symfony/yaml": "^4.3.4|^5.0"
     },
     "require-dev": {
         "huang-yi/swooleunit": "^1.0",
@@ -52,9 +56,6 @@
     "config": {
         "sort-packages": true
     },
-    "bin": [
-        "shadowfax"
-    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
