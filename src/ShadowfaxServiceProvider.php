@@ -16,20 +16,8 @@ class ShadowfaxServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerShadowfax();
         $this->registerTaskDispatcher();
         $this->registerWebSocket();
-    }
-
-    /**
-     * Register the shadowfax.
-     *
-     * @return void
-     */
-    protected function registerShadowfax()
-    {
-        $this->app->instance('shadowfax', shadowfax());
-        $this->app->alias('shadowfax', Shadowfax::class);
     }
 
     /**
