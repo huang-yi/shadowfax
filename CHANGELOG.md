@@ -5,7 +5,7 @@
 
 ### Fixed
 
-- Fix handle exceptions.
+- Fix handle exceptions
 
 
 ## v1.2.1
