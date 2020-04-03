@@ -1,6 +1,8 @@
 #!/usr/bin/env php
 <?php
 
+define('SHADOWFAX_START', microtime(true));
+
 require __DIR__.'/vendor/autoload.php';
 
 $shadowfax = require_once __DIR__.'/bootstrap/shadowfax.php';
