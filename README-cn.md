@@ -1,3 +1,5 @@
+[English](README.md) | 中文
+
 # Shadowfax
 
 Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)之上，从而获得大幅的性能提升。

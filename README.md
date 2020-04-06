@@ -1,8 +1,8 @@
+English | [中文](README-cn.md)
+
 # Shadowfax
 
 The Shadowfax is a package that runs your Laravel application on [Swoole](https://www.swoole.co.uk/).
-
-[中文文档](README-cn.md)
 
 ## Installation
 
@@ -20,7 +20,7 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 ## Configuration
 
-You should copy the `shadowfax.ini.example` file to a new file named `shadowfax.ini` in the root directory of your application. And you'd better add the `shadowfax.ini` file to the `.gitignore`.
+You should copy the `shadowfax.yml.example` file to a new file named `shadowfax.yml` in the root directory of your application. And you'd better add the `shadowfax.yml` file to the `.gitignore`.
 
 1. Basic configuration:
 
