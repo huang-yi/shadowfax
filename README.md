@@ -61,11 +61,11 @@ The `php shadowfax reload` allows you to reload the Shadowfax processes.
 
 The `php shadowfax stop` allows you to stop the Shadowfax server.
 
-## WebSocket
+## WebSocket server
 
 Shadowfax also allows you to build your WebSocket server.
 
-First of all, you need to create a handler. The handler class must implements the `HuangYi\Shadowfax\Contracts\WebSocket\Handler` interface:
+First of all, you need to change the value of configuration item `type` to `websocket`. Then create a handler class that implemented the `HuangYi\Shadowfax\Contracts\WebSocket\Handler` interface:
 
 ```php
 <?php
@@ -116,7 +116,7 @@ class EchoServer implements Handler
 
 ```
 
-And bind the handler to a uri:
+And bind this handler to a uri in your route file:
 
 ```php
 <?php
@@ -124,11 +124,11 @@ And bind the handler to a uri:
 use App\WebSocket\EchoServer;
 use HuangYi\Shadowfax\Facades\WebSocket;
 
-WebSocket::listen('/', new EchoServer);
+WebSocket::listen('/echo', new EchoServer);
 
 ```
 
-Then, you can start the server, and connect your server with a WebSocket client.
+Now, you can start the WebSocket server by command `php shadowfax start`.
 
 ## Nginx configuration
 

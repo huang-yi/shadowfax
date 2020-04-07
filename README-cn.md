@@ -20,7 +20,7 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 ## 配置
 
-你需要在项目的根目录复制配置样例文件`shadowfax.yml.example`并命名为`shadowfax.yml`，复制的新文件即为配置文件。大多数情况下，不同的环境会使用不同的配置，所以你最好将`shadowfax.yml`写入`.gitignore`。
+你需要在项目的根目录复制配置样例文件`shadowfax.yml.example`并命名为`shadowfax.yml`，复制的新文件即为配置文件。大多数情况下，不同的环境会使用不同的配置，所以最好将`shadowfax.yml`写入`.gitignore`。
 
 1. 基本配置：
 
@@ -55,9 +55,11 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 ### 启动服务器
 
-你可以执行命令`php shadowfax start`来启动服务器，默认监听的地址是`127.0.0.1:1215`，你也可以通过指定`--host`和`--port`来修改监听地址。
+你可以执行命令`php shadowfax start`来启动服务器，默认监听的地址是`127.0.0.1:1215`，你也可以通过指定`--host|-h`和`--port|-p`来修改监听地址。
 
 该命令该还提供了一个选项`--watch`，可以使你的服务器运行在`watch`模式下。该模式会监控项目下的文件，如果有文件发生了变动，就会自动重载服务器进程。监控规则在`.watch`文件中配置，可自行调整。
+
+如果你不想使用默认的配置文件`shadowfax.yml`，也可以使用`--config|-c`来指定一个配置文件。
 
 > 注意：`watch`模式依赖于[fswatch](https://github.com/emcrisostomo/fswatch)，请提前安装。
 
@@ -65,17 +67,88 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 你可以通过命令`php shadowfax reload`来重载服务器的进程，如果你只想重载Task进程，请指定选项`--task`。
 
-> 注意：如果你的Server配置的模式为`base`，则不支持重载Task进程。
+> 注意：如果你的Server配置的模式为`base`，则不支持重载Task进程。如果运行`start`命令时指定了配置文件，这里也需要指定配置文件
 
 ### 停止服务器
 
 你可以执行命令`php shadowfax stop`来结束服务器。
+
+> 注意：如果运行`start`命令时指定了配置文件，这里也需要指定配置文件
 
 ## 协程
 
 Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.enable_coroutine`和`server.task_enable_coroutine`。
 
 > 注意：如果启用了Runtime Hooks，请注意`app_pool_capacity * server.worker_num`的值不能超过数据库的最大连接数，否则可能导致`Too many connections`错误。
+
+## WebSocket服务器
+
+你也可以使用Shadowfax来构建你的WebSocket服务。
+
+首先，你需要将配置项`type`的值修改为`websocket`。然后创建一个实现了`HuangYi\Shadowfax\Contracts\WebSocket\Handler`接口的handler类，这个类用于处理你的服务端逻辑，例如：
+
+```php
+<?php
+namespace App\WebSocket;
+
+use Illuminate\Http\Request;
+use HuangYi\Shadowfax\Contracts\WebSocket\Connection;
+use HuangYi\Shadowfax\Contracts\WebSocket\Handler;
+use HuangYi\Shadowfax\Contracts\WebSocket\Message;
+
+class EchoServer implements Handler
+{
+    /**
+     * Handler for open event.
+     *
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Connection  $connection
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    public function onOpen(Connection $connection, Request $request)
+    {
+        $connection->send(['status' => 'connected']);
+    }
+
+    /**
+     * Handler for message event.
+     *
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Connection  $connection
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Message  $message
+     * @return mixed
+     */
+    public function onMessage(Connection $connection, Message $message)
+    {
+        $connection->send($message->getData());
+    }
+
+    /**
+     * Handler for close event.
+     *
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Connection  $connection
+     * @return mixed
+     */
+    public function onClose(Connection $connection)
+    {
+        $connection->send(['status' => 'closed']);
+    }
+}
+
+```
+
+并在你的路由文件中将这个handler绑定到一个uri上面：
+
+```php
+<?php
+
+use App\WebSocket\EchoServer;
+use HuangYi\Shadowfax\Facades\WebSocket;
+
+WebSocket::listen('/echo', new EchoServer);
+
+```
+
+现在你就可以通过命令`php shadowfax start`来启动你的WebSocket服务了。
 
 ## Task
 
@@ -131,7 +204,7 @@ class MyTask implements Task
 
 ```
 
-然后，可以使用Facade进行任务投递：
+然后使用Shadowfax提供的Facade进行任务投递：
 
 ```php
 <?php
