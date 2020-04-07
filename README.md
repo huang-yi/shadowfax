@@ -43,7 +43,7 @@ This option allows you to set a group of abstracts bound in the Laravel IoC cont
 
 4. `websocket` configuration:
 
-- **message**: Specify the message entity class. This class must implements the `\HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
+- **message**: Specify the message entity class. This class must implements the `HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
 
 5. `controller` configuration：
 
@@ -65,7 +65,7 @@ The `php shadowfax stop` allows you to stop the Shadowfax server.
 
 Shadowfax also allows you to build your WebSocket server.
 
-First of all, you need to create a handler:
+First of all, you need to create a handler. The handler class must implements the `HuangYi\Shadowfax\Contracts\WebSocket\Handler` interface:
 
 ```php
 <?php
@@ -135,6 +135,12 @@ Then, you can start the server, and connect your server with a WebSocket client.
 You may use Nginx as a reverse proxy in production environment:
 
 ```nginx
+# Uncomment this if you are running a websocket server.
+# map $http_upgrade $connection_upgrade {
+#     default upgrade;
+#     '' close;
+# }
+
 server {
     listen 80;
     server_name example.com;
@@ -173,6 +179,10 @@ server {
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header X-Forwarded-Port $server_port;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Uncomment this if you are running a websocket server.
+        # proxy_set_header Upgrade $http_upgrade;
+        # proxy_set_header Connection $connection_upgrade;
 
         proxy_pass http://127.0.0.1:1215$suffix;
     }
