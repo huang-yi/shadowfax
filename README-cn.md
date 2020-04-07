@@ -79,7 +79,7 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.enable_coroutine`和`server.task_enable_coroutine`。
 
-> 注意：如果启用了`一键协程化`或者配置了`hook_flags`，请注意`app_pool_capacity * server.worker_num`的值不能超过数据库的最大连接数，否则可能因为连接过多而导致报错。
+> 注意：如果启用了`一键协程化`或者配置了`hook_flags`，请注意`app_pool_capacity * server.worker_num`的值不能超过数据库的最大连接数，否则可能因为连接数过多而导致报错。
 
 ## WebSocket服务器
 
