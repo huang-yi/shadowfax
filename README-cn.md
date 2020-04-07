@@ -57,7 +57,7 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 你可以执行命令`php shadowfax start`来启动服务器，默认监听的地址是`127.0.0.1:1215`，你也可以通过指定`--host|-h`和`--port|-p`来修改监听地址。
 
-该命令该还提供了一个选项`--watch`，可以使你的服务器运行在`watch`模式下。该模式会监控项目下的文件，如果有文件发生了变动，就会自动重载服务器进程。监控规则在`.watch`文件中配置，可自行调整。
+该命令该还提供了一个选项`--watch|-w`，可以使你的服务器运行在`watch`模式下。该模式会监控项目下的文件，如果有文件发生了变动，就会自动重载服务器进程。监控规则在`.watch`文件中配置，可自行调整。
 
 如果你不想使用默认的配置文件`shadowfax.yml`，也可以使用`--config|-c`来指定一个配置文件。
 
@@ -65,7 +65,7 @@ php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvide
 
 ### 重载服务器
 
-你可以通过命令`php shadowfax reload`来重载服务器的进程，如果你只想重载Task进程，请指定选项`--task`。
+你可以通过命令`php shadowfax reload`来重载服务器的进程，如果你只想重载Task进程，请指定选项`--task|-t`。
 
 > 注意：如果你的Server配置的模式为`base`，则不支持重载Task进程。如果运行`start`命令时指定了配置文件，这里也需要指定配置文件
 
