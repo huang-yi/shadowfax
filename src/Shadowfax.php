@@ -28,6 +28,13 @@ class Shadowfax extends Container
     protected $console;
 
     /**
+     * Indicates if the application has been bootstrapped before.
+     *
+     * @var bool
+     */
+    protected $hasBeenBootstrapped = false;
+
+    /**
      * The bootstrap classes.
      *
      * @var array
@@ -52,8 +59,6 @@ class Shadowfax extends Container
         }
 
         $this->registerBaseBindings();
-
-        $this->bootstrap();
 
         $this->registerConsoleApplication();
     }
@@ -99,13 +104,19 @@ class Shadowfax extends Container
     /**
      * Bootstrap the application.
      *
-     * @return void
+     * @return $this
      */
-    protected function bootstrap()
+    public function bootstrap()
     {
-        foreach ($this->bootstrappers as $bootstrapper) {
-            (new $bootstrapper)->bootstrap($this);
+        if (! $this->hasBeenBootstrapped) {
+            foreach ($this->bootstrappers as $bootstrapper) {
+                (new $bootstrapper)->bootstrap($this);
+            }
+
+            $this->hasBeenBootstrapped = true;
         }
+
+        return $this;
     }
 
     /**

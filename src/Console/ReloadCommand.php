@@ -26,6 +26,7 @@ class ReloadCommand extends Command
         $this
             ->setDescription('Reload the Shadowfax server.')
             ->setHelp('This command allows you to reload the Shadowfax server.')
+            ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Shadowfax configuration file.')
             ->addOption('task', 't', InputOption::VALUE_OPTIONAL, 'Reload all task worker process.', false)
         ;
     }
@@ -39,6 +40,8 @@ class ReloadCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->bootstrap($input);
+
         Coroutine::create(function () use ($input, $output) {
             $client = $this->httpClient();
 

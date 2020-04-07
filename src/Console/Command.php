@@ -2,9 +2,11 @@
 
 namespace HuangYi\Shadowfax\Console;
 
+use HuangYi\Shadowfax\Bootstrap\LoadConfiguration;
 use HuangYi\Shadowfax\Shadowfax;
 use Swoole\Coroutine\Http\Client;
 use Symfony\Component\Console\Command\Command as BaseCommand;
+use Symfony\Component\Console\Input\InputInterface;
 
 class Command extends BaseCommand
 {
@@ -52,5 +54,31 @@ class Command extends BaseCommand
             $this->shadowfax['config']['controller.host'] ?: '127.0.0.1',
             $this->shadowfax['config']['controller.port'] ?: 1216
         );
+    }
+
+    /**
+     * Bootstrap the Shadowfax.
+     *
+     * @param  \Symfony\Component\Console\Input\InputInterface  $input
+     * @return void
+     */
+    protected function bootstrap(InputInterface $input)
+    {
+        $this->setUserConfigurationFile($input);
+
+        $this->shadowfax->bootstrap();
+    }
+
+    /**
+     * Set the user configuration file path.
+     *
+     * @param  \Symfony\Component\Console\Input\InputInterface  $input
+     * @return void
+     */
+    protected function setUserConfigurationFile(InputInterface $input)
+    {
+        if ($config = $input->getOption('config')) {
+            LoadConfiguration::setUserFile($config);
+        }
     }
 }

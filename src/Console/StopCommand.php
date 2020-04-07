@@ -4,6 +4,7 @@ namespace HuangYi\Shadowfax\Console;
 
 use Swoole\Coroutine;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class StopCommand extends Command
@@ -25,6 +26,7 @@ class StopCommand extends Command
         $this
             ->setDescription('Stop the Shadowfax server.')
             ->setHelp('This command allows you to stop the Shadowfax server.')
+            ->addOption('config', 'c', InputOption::VALUE_OPTIONAL, 'Shadowfax configuration file.')
         ;
     }
 
@@ -37,6 +39,8 @@ class StopCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->bootstrap($input);
+
         Coroutine::create(function () use ($input, $output) {
             $client = $this->httpClient();
 
