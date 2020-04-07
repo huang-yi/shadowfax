@@ -25,33 +25,110 @@ You should copy the `shadowfax.yml.example` file to a new file named `shadowfax.
 1. Basic configuration:
 
 - **name**: The processes name.
+- **type**: The server type, support: `http`, `websocket`.
 - **host**: The server host.
 - **port**: The server port.
-- **mode**: The server mode, support: `base`, `process`.
+- **mode**: The server mode, support: `process`, `base`.
 - **access_log**: Indicates whether to print the request information.
-- **runtime_hooks**: Set the Swoole runtime hooks.
-- **app_pool_capacity**: Set the capacity of the apps pool. Only valid if coroutine is enabled.
-- **bootstrap**: Set Laravel bootstrap file. If you changed Laravel's directory structure, you should modify this value.
+- **app_pool_capacity**: Set the capacity of the apps pool. Only valid when coroutine is enabled.
+- **framework_bootstrapper**: Set Laravel bootstrap file. If you changed Laravel's directory structure, you should modify this value.
 
 2. `server` configuration：
 
 This section defines the `swoole-server` configuration. Read the [official docs](https://www.swoole.co.uk/docs/modules/swoole-server/configuration) for more information.
 
-3. `controller` configuration：
+3. `abstracts` configuration:
+
+This option allows you to set a group of abstracts bound in the Laravel IoC container. These abstracts will be rebound after each request.
+
+4. `websocket` configuration:
+
+- **message**: Specify the message entity class. This class must implements the `\HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
+
+5. `controller` configuration：
 
 This section defines the controller server configuration. The controller server allows you to stop or reload your Shadowfax.
 
 ## Command
 
-Shadowfax provides the `./vendor/bin/shadowfax` command to manage your server processes. This command is build on the Symfony console component, so you can run `./vendor/bin/shadowfax list` for more information.
+Shadowfax provides the `shadowfax` command to manage your server processes. This command is build on the Symfony console component, so you can run `php shadowfax list` for more information.
 
-You may run the `./vendor/bin/shadowfax start` command to start Shadowfax server. The `--watch` option can run your Shadowfax in watch mode. In watch mode, the processes will be automatically reloaded when the files under your project change.
+You may run the `php shadowfax start` command to start Shadowfax server. The `--watch` option can run your Shadowfax in watch mode. In watch mode, the processes will be automatically reloaded when the files under your project change.
 
 > You must install the [fswatch](https://github.com/emcrisostomo/fswatch) before using `--watch` option.
 
-The `./vendor/bin/shadowfax reload` allows you to reload the Shadowfax processes.
+The `php shadowfax reload` allows you to reload the Shadowfax processes.
 
-The `./vendor/bin/shadowfax stop` allows you to stop the Shadowfax server.
+The `php shadowfax stop` allows you to stop the Shadowfax server.
+
+## WebSocket
+
+Shadowfax also allows you to build your WebSocket server.
+
+First of all, you need to create a handler:
+
+```php
+<?php
+namespace App\WebSocket;
+
+use Illuminate\Http\Request;
+use HuangYi\Shadowfax\Contracts\WebSocket\Connection;
+use HuangYi\Shadowfax\Contracts\WebSocket\Handler;
+use HuangYi\Shadowfax\Contracts\WebSocket\Message;
+
+class EchoServer implements Handler
+{
+    /**
+     * Handler for open event.
+     *
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Connection  $connection
+     * @param  \Illuminate\Http\Request  $request
+     * @return mixed
+     */
+    public function onOpen(Connection $connection, Request $request)
+    {
+        $connection->send(['status' => 'connected']);
+    }
+
+    /**
+     * Handler for message event.
+     *
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Connection  $connection
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Message  $message
+     * @return mixed
+     */
+    public function onMessage(Connection $connection, Message $message)
+    {
+        $connection->send($message->getData());
+    }
+
+    /**
+     * Handler for close event.
+     *
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Connection  $connection
+     * @return mixed
+     */
+    public function onClose(Connection $connection)
+    {
+        $connection->send(['status' => 'closed']);
+    }
+}
+
+```
+
+And bind the handler to a uri:
+
+```php
+<?php
+
+use App\WebSocket\EchoServer;
+use HuangYi\Shadowfax\Facades\WebSocket;
+
+WebSocket::listen('/', new EchoServer);
+
+```
+
+Then, you can start the server, and connect your server with a WebSocket client.
 
 ## Nginx configuration
 
@@ -116,7 +193,7 @@ If you want to use the Supervisor to manage your Shadowfax processes, the follow
 [program:shadowfax]
 process_name=%(program_name)s
 directory=/path/to/project
-command=php vendor/bin/shadowfax start
+command=php shadowfax start
 autostart=true
 autorestart=true
 user=www
