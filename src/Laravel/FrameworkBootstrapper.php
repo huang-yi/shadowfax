@@ -8,6 +8,7 @@ use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Foundation\Application as Laravel;
+use Illuminate\Http\Request;
 use Laravel\Lumen\Application as Lumen;
 
 class FrameworkBootstrapper
@@ -101,6 +102,8 @@ class FrameworkBootstrapper
         if ($this->isConsoleKernel) {
             $app->make(ConsoleKernel::class)->bootstrap();
         } else {
+            $app->instance('request', Request::create('http://localhost'));
+
             $app->make(HttpKernel::class)->bootstrap();
         }
     }
