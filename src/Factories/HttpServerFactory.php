@@ -98,13 +98,14 @@ class HttpServerFactory implements ServerFactory
     public function events(): array
     {
         return [
-            'start' => \HuangYi\Shadowfax\Events\StartEvent::class,
-            'shutdown' => \HuangYi\Shadowfax\Events\ShutdownEvent::class,
-            'workerStart' => \HuangYi\Shadowfax\Events\WorkerStartEvent::class,
-            'workerStop' => \HuangYi\Shadowfax\Events\WorkerStopEvent::class,
             'managerStart' => \HuangYi\Shadowfax\Events\ManagerStartEvent::class,
             'managerStop' => \HuangYi\Shadowfax\Events\ManagerStopEvent::class,
+            'request' => \HuangYi\Shadowfax\Events\RequestEvent::class,
+            'shutdown' => \HuangYi\Shadowfax\Events\ShutdownEvent::class,
+            'start' => \HuangYi\Shadowfax\Events\StartEvent::class,
             'task' => \HuangYi\Shadowfax\Events\TaskEvent::class,
+            'workerStart' => \HuangYi\Shadowfax\Events\WorkerStartEvent::class,
+            'workerStop' => \HuangYi\Shadowfax\Events\WorkerStopEvent::class,
         ];
     }
 

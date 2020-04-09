@@ -24,9 +24,9 @@ class WebSocketServerFactory extends HttpServerFactory
     public function events(): array
     {
         return array_merge(parent::events(), [
-            'open' => \HuangYi\Shadowfax\Events\OpenEvent::class,
-            'message' => \HuangYi\Shadowfax\Events\MessageEvent::class,
             'close' => \HuangYi\Shadowfax\Events\CloseEvent::class,
+            'message' => \HuangYi\Shadowfax\Events\MessageEvent::class,
+            'open' => \HuangYi\Shadowfax\Events\OpenEvent::class,
         ]);
     }
 }
