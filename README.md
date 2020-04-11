@@ -51,7 +51,7 @@ This section defines the controller server configuration. The controller server 
 
 ## Command
 
-Shadowfax provides the `shadowfax` command to manage your server processes. This command is build on the Symfony console component, so you can run `php shadowfax list` for more information.
+Shadowfax provides a `shadowfax` command to manage your server processes. This command is build on the Symfony console component, so you can run `php shadowfax list` for more information.
 
 You may run the `php shadowfax start` command to start Shadowfax server. The `--watch|-w` option can run your Shadowfax in watch mode. In watch mode, the processes will be automatically reloaded when the files under your project change.
 

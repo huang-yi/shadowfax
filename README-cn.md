@@ -30,7 +30,7 @@ php artisan shadowfax:publish
 - **port**：服务器监听的端口
 - **mode**：服务器模式，支持`base`、`process`两种
 - **access_log**：是否开启访问日志，启用后会打印所有的request
-- **app_pool_capacity**：设置App池的容量，默认100。仅在启用协程后有效
+- **app_pool_capacity**：设置App池的容量，仅在启用协程后有效
 - **framework_bootstrapper**：设置Laravel的启动文件，如果你修改了Laravel框架的文件结构，那么你也需要设置该项配置
 
 2. `server`配置：
