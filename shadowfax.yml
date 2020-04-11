@@ -8,7 +8,7 @@ app_pool_capacity: 10
 
 server:
   worker_num: 1
-  task_worker_num: 1
+  task_worker_num: 0
   enable_coroutine: false
   task_enable_coroutine: false
 
