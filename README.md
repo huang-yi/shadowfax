@@ -224,7 +224,7 @@ Environment:
 Run test using [wrk](https://github.com/wg/wrk):
 
 ```shell
-$ wrk -c100 http://127.0.0.1:1215
+$ wrk -c100 http://127.0.0.1:1215/
 ```
 
 Result:
