@@ -66,7 +66,6 @@ class ShadowfaxServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../.watch' => base_path('.watch'),
             __DIR__.'/../shadowfax' => base_path('shadowfax'),
-            __DIR__.'/../shadowfax.yml' => base_path('shadowfax.yml'),
             __DIR__.'/../shadowfax.yml' => base_path('shadowfax.yml.example'),
             __DIR__.'/../bootstrap/shadowfax.php' => base_path('bootstrap/shadowfax.php'),
         ], 'shadowfax');
