@@ -76,7 +76,7 @@ class RegisterEventListeners
     {
         foreach ($this->listen as $event => $listeners) {
             foreach ($listeners as $listener) {
-                $shadowfax['events']->addListener($event, [new $listener, 'handle']);
+                $shadowfax['events']->listen($event, new $listener);
             }
         }
     }

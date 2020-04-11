@@ -2,16 +2,16 @@
 
 namespace HuangYi\Shadowfax\Factories;
 
+use HuangYi\Shadowfax\Contracts\EventDispatcher;
 use HuangYi\Shadowfax\Contracts\ServerFactory;
 use Swoole\Http\Server;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class HttpServerFactory implements ServerFactory
 {
     /**
      * The EventDispatcher instance.
      *
-     * @var \Symfony\Component\EventDispatcher\EventDispatcher
+     * @var \HuangYi\Shadowfax\Contracts\EventDispatcher
      */
     protected $dispatcher;
 
@@ -46,7 +46,7 @@ class HttpServerFactory implements ServerFactory
     /**
      * Create a new HttpServerFactory instance.
      *
-     * @param  \Symfony\Component\EventDispatcher\EventDispatcher  $dispatcher
+     * @param  \HuangYi\Shadowfax\Contracts\EventDispatcher  $dispatcher
      * @return void
      */
     public function __construct(EventDispatcher $dispatcher)

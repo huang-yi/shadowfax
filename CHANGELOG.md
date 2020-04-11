@@ -10,6 +10,6 @@
 
 ### Changed
 
-- Use `symfony/event-dispatcher` component to dispatch Swoole server events
+- Use a event dispatcher to dispatch Swoole server events
 - Use `shadowfax.yml` as the configuration file (replaced `shadowfax.ini`)
 - Publish the console script `shadowfax` to project root

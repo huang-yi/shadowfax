@@ -4,7 +4,6 @@ namespace HuangYi\Shadowfax;
 
 use Illuminate\Config\Repository;
 use Symfony\Component\Console\Application;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class Shadowfax extends Container
 {
