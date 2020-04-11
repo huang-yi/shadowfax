@@ -211,6 +211,35 @@ redirect_stderr=true
 stdout_logfile=/path/to/project/storage/logs/supervisor.log
 ```
 
+## Benchmark
+
+Environment:
+
+- Hardware: 2 CPUs, 4GB Memory
+- CentOS 7.5.1804
+- PHP 7.3.16
+- Swoole 4.4.17
+- Laravel 7 without session middleware
+
+Run test using [wrk](https://github.com/wg/wrk):
+
+```shell
+$ wrk -c100 http://127.0.0.1:1215
+```
+
+Result:
+
+```shell
+Running 10s test @ http://127.0.0.1:1215/
+  2 threads and 100 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    25.06ms   12.11ms  85.92ms   60.94%
+    Req/Sec     4.02k    41.46     4.08k    79.79%
+  40321 requests in 10.08s, 101.13MB read
+Requests/sec:   4001.76
+Transfer/sec:     10.04MB
+```
+
 ## Testing
 
 ```shell
