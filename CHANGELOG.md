@@ -7,7 +7,7 @@
 
 - Add a bootstrap file `bootstrap/shadowfax.php`
 - Add the WebSocket server
-- Add the `shadowfax:puboish` Artisan command
+- Add the `shadowfax:publish` Artisan command
 
 ### Changed
 
