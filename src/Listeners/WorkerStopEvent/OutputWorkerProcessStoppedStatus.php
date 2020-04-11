@@ -20,7 +20,7 @@ class OutputWorkerProcessStoppedStatus
         $workerName = $this->getWorkerName($event->server, $event->workerId);
 
         $this->output(
-            "<info>[×] {$workerName} process stopped. [{$event->server->worker_pid}]</info>"
+            "<info>[×] {$workerName} process stopped.</info> <comment>[{$event->server->worker_pid}]</comment>"
         );
     }
 }

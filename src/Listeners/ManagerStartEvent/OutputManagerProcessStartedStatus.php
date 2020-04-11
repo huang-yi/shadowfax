@@ -18,7 +18,7 @@ class OutputManagerProcessStartedStatus
     public function handle(ManagerStartEvent $event)
     {
         $this->output(
-            "<info>[√] manager process started. [{$event->server->manager_pid}]</info>"
+            "<info>[√] manager process started.</info> <comment>[{$event->server->manager_pid}]</comment>"
         );
     }
 }

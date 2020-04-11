@@ -20,7 +20,7 @@ class OutputWorkerProcessStartedStatus
         $workerName = $this->getWorkerName($event->server, $event->workerId);
 
         $this->output(
-            "<info>[√] $workerName process started. [{$event->server->worker_pid}]</info>"
+            "<info>[√] $workerName process started.</info> <comment>[{$event->server->worker_pid}]</comment>"
         );
     }
 }

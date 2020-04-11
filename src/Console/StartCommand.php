@@ -88,7 +88,7 @@ class StartCommand extends Command
 
         $this->shadowfax['events']->dispatch(new StartingEvent);
 
-        $output->writeln("<info>Starting the Shadowfax server: {$server->host}:{$server->port}</info>");
+        $output->writeln("<info>Starting the Shadowfax server:</info> <comment>{$server->host}:{$server->port}</comment>");
 
         $server->start();
     }

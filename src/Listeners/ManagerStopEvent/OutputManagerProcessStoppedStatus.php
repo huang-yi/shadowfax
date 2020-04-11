@@ -18,7 +18,7 @@ class OutputManagerProcessStoppedStatus
     public function handle(ManagerStopEvent $event)
     {
         $this->output(
-            "<info>[×] manager process stopped. [{$event->server->manager_pid}]</info>"
+            "<info>[×] manager process stopped.</info> <comment>[{$event->server->manager_pid}]</comment>"
         );
     }
 }
