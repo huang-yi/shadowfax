@@ -32,6 +32,25 @@ class PublishCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
+        $this->copyAndIgnoreConfigFile();
+    }
+
+    /**
+     * Publish the configuration file.
+     *
+     * @return void
+     */
+    protected function copyAndIgnoreConfigFile()
+    {
+        $from = __DIR__.'/../../shadowfax.yml';
+        $to = base_path('shadowfax.yml');
+
+        if (! file_exists($to)) {
+            $this->line('<info>Copied File</info> <comment>['.$from.']</comment> <info>To</info> <comment>['.$to.']</comment>');
+
+            @copy($from, $to);
+        }
+
         $this->ignoreConfigFile();
     }
 
