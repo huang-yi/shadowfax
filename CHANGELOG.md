@@ -5,11 +5,12 @@
 
 ## Added
 
-- Add bootstrap file `bootstrap/shadowfax.php`
+- Add a bootstrap file `bootstrap/shadowfax.php`
 - Add the WebSocket server
+- Add the `shadowfax:puboish` Artisan command
 
 ### Changed
 
-- Use a event dispatcher to dispatch Swoole server events
+- Use event dispatcher to dispatch Swoole server events
 - Use `shadowfax.yml` as the configuration file (replaced `shadowfax.ini`)
 - Publish the console script `shadowfax` to project root
