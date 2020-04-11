@@ -12,15 +12,15 @@ You may use Composer to install Shadowfax to your project:
 composer require huang-yi/shadowfax
 ```
 
-After installing Shadowfax, publish its configuration files using the `vendor:publish` Artisan command:
+After installing Shadowfax, publish its configuration files using the `shadowfax:publish` Artisan command:
 
 ```shell
-php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvider"
+php artisan shadowfax:publish
 ```
 
 ## Configuration
 
-You should copy the `shadowfax.yml.example` file to a new file named `shadowfax.yml` in the root directory of your application. And you'd better add the `shadowfax.yml` file to the `.gitignore`.
+The primary configuration file is `shadowfax.yml`. And this file name is added to the `.gitignore` file by `shadowfax:publish` Artisan command.
 
 1. Basic configuration:
 
@@ -35,7 +35,7 @@ You should copy the `shadowfax.yml.example` file to a new file named `shadowfax.
 
 2. `server` configuration：
 
-This section defines the `swoole-server` configuration. Read the [official docs](https://www.swoole.co.uk/docs/modules/swoole-server/configuration) for more information.
+This section defines the `Swoole\Server` configuration. Read the [official docs](https://www.swoole.co.uk/docs/modules/swoole-server/configuration) for more information.
 
 3. `abstracts` configuration:
 

@@ -12,30 +12,30 @@ Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)�
 composer require huang-yi/shadowfax
 ```
 
-安装好Shadowfax之后，使用Laravel的Artisan命令发布配置文件:
+安装好之后，请用Laravel的`shadowfax:publish`命令来发布配置文件:
 
 ```shell
-php artisan vendor:publish --provider="HuangYi\Shadowfax\ShadowfaxServiceProvider"
+php artisan shadowfax:publish
 ```
 
 ## 配置
 
-你需要在项目的根目录复制配置样例文件`shadowfax.yml.example`并命名为`shadowfax.yml`，复制的新文件即为配置文件。大多数情况下，不同的环境会使用不同的配置，所以最好将`shadowfax.yml`写入`.gitignore`。
+主配置文件为`shadowfax.yml`，位于项目根目录，并且这个文件会被`shadowfax:publish`命令添加到`.gitignore`中。在其它环境中，可以自行拷贝`shadowfax.yml.example`文件进行配置。
 
 1. 基本配置：
 
 - **name**：指定进程名
 - **type**: 服务器类型：`http`, `websocket`
-- **host**：服务器监听的IP地址，默认`127.0.0.1`
-- **port**：服务器监听的端口，默认`1215`
-- **mode**：服务器模式，支持`base`、`process`两种，默认为`base`
-- **access_log**：是否开启访问日志，启用后会打印所有的request，默认开启
+- **host**：服务器监听的IP地址
+- **port**：服务器监听的端口
+- **mode**：服务器模式，支持`base`、`process`两种
+- **access_log**：是否开启访问日志，启用后会打印所有的request
 - **app_pool_capacity**：设置App池的容量，默认100。仅在启用协程后有效
 - **framework_bootstrapper**：设置Laravel的启动文件，如果你修改了Laravel框架的文件结构，那么你也需要设置该项配置
 
 2. `server`配置：
 
-`server`即swoole-server的选项，请参考[官方文档](https://wiki.swoole.com/wiki/page/274.html)并结合自己的需求进行调整。
+`server`即`Swoole\Server`的选项，请参考[官方文档](https://wiki.swoole.com/wiki/page/274.html)并结合自己的需求进行调整。
 
 3. `abstracts`配置:
 

@@ -2,6 +2,7 @@
 
 namespace HuangYi\Shadowfax;
 
+use HuangYi\Shadowfax\Console\PublishCommand;
 use HuangYi\Shadowfax\WebSocket\LaravelRouter;
 use HuangYi\Shadowfax\WebSocket\LumenRouter;
 use Illuminate\Support\ServiceProvider;
@@ -17,7 +18,12 @@ class ShadowfaxServiceProvider extends ServiceProvider
     public function register()
     {
         $this->registerTaskDispatcher();
+
         $this->registerWebSocket();
+
+        $this->commands([
+            PublishCommand::class,
+        ]);
     }
 
     /**
@@ -60,8 +66,9 @@ class ShadowfaxServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/../.watch' => base_path('.watch'),
             __DIR__.'/../shadowfax' => base_path('shadowfax'),
+            __DIR__.'/../shadowfax.yml' => base_path('shadowfax.yml'),
             __DIR__.'/../shadowfax.yml' => base_path('shadowfax.yml.example'),
             __DIR__.'/../bootstrap/shadowfax.php' => base_path('bootstrap/shadowfax.php'),
-        ]);
+        ], 'shadowfax');
     }
 }
