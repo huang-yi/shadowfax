@@ -23,4 +23,19 @@ class SetManagerProcessName
             $this->getHostAndPortString($event->server)
         ));
     }
+
+    /**
+     * Get the host and port string.
+     *
+     * @param  \Swoole\Server  $server
+     * @return string
+     */
+    protected function getHostAndPortString($server)
+    {
+        if ($server->mode == SWOOLE_BASE) {
+            return " {$server->host}:{$server->port}";
+        }
+
+        return '';
+    }
 }

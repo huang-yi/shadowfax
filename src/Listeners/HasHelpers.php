@@ -50,21 +50,6 @@ trait HasHelpers
     }
 
     /**
-     * Get the host and port string.
-     *
-     * @param  \Swoole\Server  $server
-     * @return string
-     */
-    protected function getHostAndPortString($server)
-    {
-        if ($this->isSingleProcess($server)) {
-            return " {$server->host}:{$server->port}";
-        }
-
-        return '';
-    }
-
-    /**
      * Determine if the process is a task worker process.
      *
      * @param  \Swoole\Server  $server

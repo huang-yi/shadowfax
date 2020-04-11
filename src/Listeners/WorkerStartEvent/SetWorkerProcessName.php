@@ -24,4 +24,19 @@ class SetWorkerProcessName
             $this->getHostAndPortString($event->server)
         ));
     }
+
+    /**
+     * Get the host and port string.
+     *
+     * @param  \Swoole\Server  $server
+     * @return string
+     */
+    protected function getHostAndPortString($server)
+    {
+        if ($this->isSingleProcess($server)) {
+            return " {$server->host}:{$server->port}";
+        }
+
+        return '';
+    }
 }
