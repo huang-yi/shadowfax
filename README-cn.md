@@ -305,7 +305,7 @@ stdout_logfile=/path/to/project/storage/logs/supervisor.log
 
 ### 环境1
 
-- 硬件: 4 CPUs, 16GB Memory
+- 硬件: 1 CPU, 4 Cores, 16GB Memory
 - MacOS 10.15.3
 - PHP 7.3.12（启用opcache）
 - Swoole 4.4.13
@@ -334,7 +334,7 @@ Transfer/sec:     31.18MB
 
 ### 环境2
 
-- 硬件: 2 CPUs, 4GB Memory
+- 硬件: 2 CPUs, 2 Cores, 4GB Memory
 - CentOS 7.5.1804
 - PHP 7.3.16（启用opcache）
 - Swoole 4.4.17

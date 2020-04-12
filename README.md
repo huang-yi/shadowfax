@@ -217,7 +217,7 @@ Run tests using [wrk](https://github.com/wg/wrk).
 
 ### Environment 1
 
-- Hardware: 4 CPUs, 16GB Memory
+- Hardware: 1 CPUs, 4 Cores, 16GB Memory
 - MacOS 10.15.3
 - PHP 7.3.12 (with opcache)
 - Swoole 4.4.13
@@ -244,7 +244,7 @@ Transfer/sec:     31.18MB
 
 ### Environment 2
 
-- Hardware: 2 CPUs, 4GB Memory
+- Hardware: 2 CPUs, 2 Cores, 4GB Memory
 - CentOS 7.5.1804
 - PHP 7.3.16 (with opcache)
 - Swoole 4.4.17
