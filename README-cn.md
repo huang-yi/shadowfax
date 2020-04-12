@@ -301,7 +301,7 @@ stdout_logfile=/path/to/project/storage/logs/supervisor.log
 
 ## Benchmarks
 
-我们使用开源软件[wrk](https://github.com/wg/wrk)进行做压力测试。
+我们使用开源软件[wrk](https://github.com/wg/wrk)进行压力测试。
 
 ### 环境1
 
