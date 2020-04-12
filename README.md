@@ -144,7 +144,7 @@ You may use Nginx as a reverse proxy in production environment:
 server {
     listen 80;
     server_name example.com;
-    root ~~~~/example.com/public~~~~;
+    root /example.com/public;
 
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
