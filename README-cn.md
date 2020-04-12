@@ -299,23 +299,55 @@ redirect_stderr=true
 stdout_logfile=/path/to/project/storage/logs/supervisor.log
 ```
 
-## Benchmark
+## Benchmarks
 
-环境：
+我们使用开源软件[wrk](https://github.com/wg/wrk)进行做压力测试。
+
+### 环境1
+
+- 硬件: 4 CPUs, 16GB Memory
+- MacOS 10.15.3
+- PHP 7.3.12（启用opcache）
+- Swoole 4.4.13
+- Laravel 7（无session中间件）
+- Shadowfax 2.0.0（20个worker进程）
+
+wrk启动4个线程，并发200进行压测：
+
+```shell
+wrk -t4 -c200 http://127.0.0.1:1215/
+```
+
+结果为**12430.20rps**：
+
+```shell
+Running 10s test @ http://127.0.0.1:1215/
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.44ms   31.44ms 212.73ms   84.28%
+    Req/Sec     3.13k   839.99     6.07k    65.75%
+  124418 requests in 10.01s, 312.06MB read
+  Socket errors: connect 0, read 54, write 0, timeout 0
+Requests/sec:  12430.20
+Transfer/sec:     31.18MB
+```
+
+### 环境2
 
 - 硬件: 2 CPUs, 4GB Memory
 - CentOS 7.5.1804
-- PHP 7.3.16
+- PHP 7.3.16（启用opcache）
 - Swoole 4.4.17
 - Laravel 7（无session中间件）
+- Shadowfax 2.0.0（10个worker进程）
 
-使用[wrk](https://github.com/wg/wrk)做压力测试：
+wrk启动2个线程，并发100进行压测：
 
 ```shell
 $ wrk -c100 http://127.0.0.1:1215/
 ```
 
-结果：
+结果为**4001.76rps**：
 
 ```shell
 Running 10s test @ http://127.0.0.1:1215/

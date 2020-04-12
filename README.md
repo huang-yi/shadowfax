@@ -61,7 +61,7 @@ The `php shadowfax reload` allows you to reload the Shadowfax processes.
 
 The `php shadowfax stop` allows you to stop the Shadowfax server.
 
-## WebSocket server
+## WebSocket Server
 
 Shadowfax also allows you to build your WebSocket server.
 
@@ -130,7 +130,7 @@ WebSocket::listen('/echo', new EchoServer);
 
 Now, you can start the WebSocket server by command `php shadowfax start`.
 
-## Nginx configuration
+## Nginx Configuration
 
 You may use Nginx as a reverse proxy in production environment:
 
@@ -144,7 +144,7 @@ You may use Nginx as a reverse proxy in production environment:
 server {
     listen 80;
     server_name example.com;
-    root /example.com/public;
+    root ~~~~/example.com/public~~~~;
 
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-XSS-Protection "1; mode=block";
@@ -195,7 +195,7 @@ server {
 
 > You need to add the IP address of the Shadowfax to the App\Http\Middleware\TrustProxies Middleware.
 
-## Supervisor configuration
+## Supervisor Configuration
 
 If you want to use the Supervisor to manage your Shadowfax processes, the following configuration file should suffice:
 
@@ -211,17 +211,45 @@ redirect_stderr=true
 stdout_logfile=/path/to/project/storage/logs/supervisor.log
 ```
 
-## Benchmark
+## Benchmarks
 
-Environment:
+Run tests using [wrk](https://github.com/wg/wrk).
+
+### Environment 1
+
+- Hardware: 4 CPUs, 16GB Memory
+- MacOS 10.15.3
+- PHP 7.3.12 (with opcache)
+- Swoole 4.4.13
+- Laravel 7 (without session middleware)
+- Shadowfax 2.0.0 (with 20 worker processes)
+
+```shell
+wrk -t4 -c200 http://127.0.0.1:1215/
+```
+
+Result:
+
+```shell
+Running 10s test @ http://127.0.0.1:1215/
+  4 threads and 200 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    26.44ms   31.44ms 212.73ms   84.28%
+    Req/Sec     3.13k   839.99     6.07k    65.75%
+  124418 requests in 10.01s, 312.06MB read
+  Socket errors: connect 0, read 54, write 0, timeout 0
+Requests/sec:  12430.20
+Transfer/sec:     31.18MB
+```
+
+### Environment 2
 
 - Hardware: 2 CPUs, 4GB Memory
 - CentOS 7.5.1804
-- PHP 7.3.16
+- PHP 7.3.16 (with opcache)
 - Swoole 4.4.17
-- Laravel 7 without session middleware
-
-Run test using [wrk](https://github.com/wg/wrk):
+- Laravel 7 (without session middleware)
+- Shadowfax 2.0.0 (with 10 worker processes)
 
 ```shell
 $ wrk -c100 http://127.0.0.1:1215/
