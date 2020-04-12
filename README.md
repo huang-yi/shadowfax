@@ -217,7 +217,7 @@ Run tests using [wrk](https://github.com/wg/wrk).
 
 ### Environment 1
 
-- Hardware: 1 CPUs, 4 Cores, 16GB Memory
+- Hardware: 1 CPU, 4 Cores, 16GB Memory
 - MacOS 10.15.3
 - PHP 7.3.12 (with opcache)
 - Swoole 4.4.13
