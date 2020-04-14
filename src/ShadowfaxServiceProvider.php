@@ -17,13 +17,17 @@ class ShadowfaxServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerTaskDispatcher();
+        if ($this->runInShadowfax()) {
+            $this->registerTaskDispatcher();
 
-        $this->registerWebSocket();
+            $this->registerWebSocket();
+        }
 
-        $this->commands([
-            PublishCommand::class,
-        ]);
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                PublishCommand::class,
+            ]);
+        }
     }
 
     /**
@@ -63,11 +67,23 @@ class ShadowfaxServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__.'/../.watch' => base_path('.watch'),
-            __DIR__.'/../shadowfax' => base_path('shadowfax'),
-            __DIR__.'/../shadowfax.yml' => base_path('shadowfax.yml.example'),
-            __DIR__.'/../bootstrap/shadowfax.php' => base_path('bootstrap/shadowfax.php'),
-        ], 'shadowfax');
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__.'/../.watch' => base_path('.watch'),
+                __DIR__.'/../shadowfax' => base_path('shadowfax'),
+                __DIR__.'/../shadowfax.yml' => base_path('shadowfax.yml.example'),
+                __DIR__.'/../bootstrap/shadowfax.php' => base_path('bootstrap/shadowfax.php'),
+            ], 'shadowfax');
+        }
+    }
+
+    /**
+     * Determine if the application is running in the Shadowfax process.
+     *
+     * @return bool
+     */
+    protected function runInShadowfax()
+    {
+        return defined('SHADOWFAX_START');
     }
 }
