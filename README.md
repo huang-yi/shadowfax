@@ -12,6 +12,12 @@ You may use Composer to install Shadowfax to your project:
 composer require huang-yi/shadowfax
 ```
 
+If you are using Lumen, you need to register the service provider manually in `bootstrap/app.php`:
+
+```php
+$app->register(HuangYi\Shadowfax\ShadowfaxServiceProvider::class);
+```
+
 After installing Shadowfax, publish its configuration files using the `shadowfax:publish` Artisan command:
 
 ```shell
@@ -68,7 +74,6 @@ Shadowfax also allows you to build your WebSocket server.
 First of all, you need to change the value of configuration item `type` to `websocket`. Then create a handler class that implemented the `HuangYi\Shadowfax\Contracts\WebSocket\Handler` interface:
 
 ```php
-<?php
 namespace App\WebSocket;
 
 use Illuminate\Http\Request;
@@ -119,8 +124,6 @@ class EchoServer implements Handler
 And bind this handler to a uri in your route file:
 
 ```php
-<?php
-
 use App\WebSocket\EchoServer;
 use HuangYi\Shadowfax\Facades\WebSocket;
 

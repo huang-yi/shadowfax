@@ -12,6 +12,12 @@ Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)�
 composer require huang-yi/shadowfax
 ```
 
+如果你在使用Lumen框架，你需要手动注册服务到`bootstrap/app.php`文件中去:
+
+```php
+$app->register(HuangYi\Shadowfax\ShadowfaxServiceProvider::class);
+```
+
 安装好之后，请用Laravel的`shadowfax:publish`命令来发布配置文件:
 
 ```shell

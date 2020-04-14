@@ -86,7 +86,7 @@ class FrameworkBootstrapper
     {
         if ($app instanceof Laravel) {
             $this->bootstrapLaravelKernel($app);
-        } elseif ($app instanceof Lumen) {
+        } elseif ($app instanceof Lumen && method_exists($app, 'boot')) {
             $app->boot();
         }
     }
