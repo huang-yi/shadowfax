@@ -18,7 +18,7 @@ composer require huang-yi/shadowfax
 $app->register(HuangYi\Shadowfax\ShadowfaxServiceProvider::class);
 ```
 
-安装好之后，请用Laravel的`shadowfax:publish`命令来发布配置文件:
+安装好之后，请用Artisan命令`shadowfax:publish`来发布配置文件:
 
 ```shell
 php artisan shadowfax:publish
