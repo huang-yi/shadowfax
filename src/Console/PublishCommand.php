@@ -27,12 +27,48 @@ class PublishCommand extends Command
      */
     public function handle()
     {
-        $this->call('vendor:publish', [
-            '--tag' => 'shadowfax',
-            '--force' => $this->option('force'),
-        ]);
+        $this->copyResources($this->option('force'));
 
         $this->copyAndIgnoreConfigFile();
+
+        $this->info('Publishing complete.');
+    }
+
+    /**
+     * Copy resources.
+     *
+     * @param  bool  $force
+     * @return void
+     */
+    protected function copyResources($force)
+    {
+        $map = [
+            __DIR__.'/../../.watch' => base_path('.watch'),
+            __DIR__.'/../../shadowfax' => base_path('shadowfax'),
+            __DIR__.'/../../shadowfax.yml' => base_path('shadowfax.yml.example'),
+            __DIR__.'/../../bootstrap/shadowfax.php' => base_path('bootstrap/shadowfax.php'),
+        ];
+
+        foreach ($map as $from => $to) {
+            $this->copyFile($from, $to, $force);
+        }
+    }
+
+    /**
+     * Copy file.
+     *
+     * @param  string  $from
+     * @param  string  $to
+     * @param  bool  $force
+     * @return void
+     */
+    protected function copyFile($from, $to, $force)
+    {
+        if ($force || ! file_exists($to)) {
+            copy($from, $to);
+
+            $this->status($from, $to);
+        }
     }
 
     /**
@@ -42,8 +78,13 @@ class PublishCommand extends Command
      */
     protected function copyAndIgnoreConfigFile()
     {
-        if (! file_exists(base_path('shadowfax.yml'))) {
-            @copy(__DIR__.'/../../shadowfax.yml', base_path('shadowfax.yml'));
+        $from = __DIR__.'/../../shadowfax.yml';
+        $to = base_path('shadowfax.yml');
+
+        if (! file_exists($to)) {
+            copy($from, $to);
+
+            $this->status($from, $to);
         }
 
         $this->ignoreConfigFile();
@@ -71,5 +112,23 @@ class PublishCommand extends Command
         }
 
         file_put_contents(base_path('.gitignore'), $content."shadowfax.yml\n");
+
+        $this->line('<info>Add</info> <comment>[shadowfax.yml]</comment> <info>To</info> <comment>[.gitignore]</comment>');
+    }
+
+    /**
+     * Write a status message to the console.
+     *
+     * @param  string  $from
+     * @param  string  $to
+     * @return void
+     */
+    protected function status($from, $to)
+    {
+        $from = str_replace(base_path(), '', realpath($from));
+
+        $to = str_replace(base_path(), '', realpath($to));
+
+        $this->line('<info>Copied File</info> <comment>['.$from.']</comment> <info>To</info> <comment>['.$to.']</comment>');
     }
 }
