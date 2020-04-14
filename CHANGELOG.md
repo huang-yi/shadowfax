@@ -1,6 +1,17 @@
 # Release Notes
 
 
+## v2.0.1
+
+## Added
+
+- Support more versions for Laravel (5.5 - 5.8)
+
+## Fixed
+
+- Fix `shadowfax:publish` Artisan command in Lumen
+
+
 ## v2.0.0
 
 ## Added
