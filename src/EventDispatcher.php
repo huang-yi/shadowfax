@@ -57,10 +57,8 @@ class EventDispatcher implements EventDispatcherContract
      */
     public function dispatch(object $event)
     {
-        foreach ($this->getListeners($event) as $listeners) {
-            foreach ($listeners as $listener) {
-                $listener->handle($event);
-            }
+        foreach ($this->getListeners($event) as $listener) {
+            $listener->handle($event);
         }
 
         return $event;
@@ -113,6 +111,12 @@ class EventDispatcher implements EventDispatcherContract
 
         krsort($priorities);
 
-        return $this->sorted[$event] = $priorities;
+        $listeners = [];
+
+        foreach ($priorities as $items) {
+            $listeners = array_merge($listeners, $items);
+        }
+
+        return $this->sorted[$event] = $listeners;
     }
 }
