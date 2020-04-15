@@ -15,6 +15,13 @@ class EventDispatcher implements EventDispatcherContract
     protected $listen = [];
 
     /**
+     * The sorted event listener map.
+     *
+     * @var array
+     */
+    protected $sorted = [];
+
+    /**
      * Add an event listener.
      *
      * @param  string|object  $event
@@ -37,6 +44,8 @@ class EventDispatcher implements EventDispatcherContract
 
         $this->listen[$event][$priority][] = $listener;
 
+        unset($this->sorted[$event]);
+
         return $this;
     }
 
@@ -48,11 +57,7 @@ class EventDispatcher implements EventDispatcherContract
      */
     public function dispatch(object $event)
     {
-        $priorities = $this->listen[get_class($event)] ?? [];
-
-        krsort($priorities);
-
-        foreach ($priorities as $listeners) {
+        foreach ($this->getListeners($event) as $listeners) {
             foreach ($listeners as $listener) {
                 $listener->handle($event);
             }
@@ -82,5 +87,32 @@ class EventDispatcher implements EventDispatcherContract
     public function getListen()
     {
         return $this->listen;
+    }
+
+    /**
+     * Get event listeners.
+     *
+     * @param  string|object  $event
+     * @return array
+     */
+    public function getListeners($event)
+    {
+        if (is_object($event)) {
+            $event = get_class($event);
+        }
+
+        if (! $this->hasEvent($event)) {
+            return [];
+        }
+
+        if (isset($this->sorted[$event])) {
+            return $this->sorted[$event];
+        }
+
+        $priorities = $this->listen[$event];
+
+        krsort($priorities);
+
+        return $this->sorted[$event] = $priorities;
     }
 }
