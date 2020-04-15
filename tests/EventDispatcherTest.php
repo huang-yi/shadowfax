@@ -20,7 +20,7 @@ class EventDispatcherTest extends TestCase
 
         $dispatcher->listen('foo', $listener);
 
-        $this->assertTrue('foo', $dispatcher->hasEvent('foo'));
+        $this->assertTrue($dispatcher->hasEvent('foo'));
         $this->assertSame($listener, $dispatcher->getListen()['foo'][0][0]);
     }
 

@@ -48,12 +48,14 @@ class EventDispatcher implements EventDispatcherContract
      */
     public function dispatch(object $event)
     {
-        $listeners = $this->listen[get_class($event)] ?? [];
+        $priorities = $this->listen[get_class($event)] ?? [];
 
-        krsort($listeners);
+        krsort($priorities);
 
-        foreach ($listeners as $listener) {
-            $listener->handle($event);
+        foreach ($priorities as $listeners) {
+            foreach ($listeners as $listener) {
+                $listener->handle($event);
+            }
         }
 
         return $event;
