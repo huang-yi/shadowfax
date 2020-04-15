@@ -9,9 +9,10 @@ interface EventDispatcher extends EventDispatcherInterface
     /**
      * Add an event listener.
      *
-     * @param  string  $event
+     * @param  string|object  $event
      * @param  object  $listener
+     * @param  int  $priority
      * @return void
      */
-    public function listen(string $event, object $listener);
+    public function listen($event, object $listener, int $priority = 0);
 }
