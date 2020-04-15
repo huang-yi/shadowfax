@@ -39,6 +39,22 @@ class EventDispatcherTest extends TestCase
 
         $this->assertEquals(1, $flag->count);
     }
+
+
+    public function testListenersPriority()
+    {
+        $dispatcher = new EventDispatcher();
+
+        $listener1 = new Listener();
+        $listener2 = new Listener2();
+
+        $dispatcher->listen('foo', $listener1, 1);
+        $dispatcher->listen('foo', $listener2, 2);
+
+        $listeners = $dispatcher->getListeners('foo');
+
+        $this->assertSame([$listener2, $listener1], $listeners);
+    }
 }
 
 class Flag
@@ -61,5 +77,13 @@ class Listener
     public function handle(Event $event)
     {
         $event->flag->count++;
+    }
+}
+
+class Listener2
+{
+    public function handle(Event $event)
+    {
+        //
     }
 }
