@@ -1,6 +1,17 @@
 # Release Notes
 
 
+## v2.1.0
+
+## Added
+
+- Add priority for listeners
+
+## Changed
+
+- Register shadowfax services in different environments
+
+
 ## v2.0.1
 
 ## Added
