@@ -46,4 +46,14 @@ class ConnectionCollection
     {
         return static::$connections[$socketId] ?? null;
     }
+
+    /**
+     * Get all the connections.
+     *
+     * @return array
+     */
+    public static function all()
+    {
+        return static::$connections;
+    }
 }
