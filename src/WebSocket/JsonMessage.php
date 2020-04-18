@@ -34,8 +34,9 @@ class JsonMessage implements Message
      * @param  string  $data
      * @param  int  $opcode
      * @return void
+     * @throws \HuangYi\Shadowfax\Exceptions\InvalidMessageException
      */
-    public function __construct($data, $opcode)
+    public function __construct($data, $opcode = WEBSOCKET_OPCODE_TEXT)
     {
         $this->rawData = $data;
         $this->opcode = $opcode;
