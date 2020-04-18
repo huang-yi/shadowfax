@@ -1,31 +1,48 @@
 # Release Notes
 
 
+## v2.2.0
+
+### Added
+
+- Add a default value for the second parameter of JsonMessage constructor
+- Add a bootstrap file for phpunit
+- Add method `HuangYi\Shadowfax\WebSocket\ConnectionCollection::all()`
+
+### Fixed
+
+- Fix `HuangYi\Shadowfax\WebSocket\Connection::close()`
+
+### Changed
+
+- Remove the dev package `huang-yi/swooleunit`
+
+
 ## v2.1.0
 
-## Added
+### Added
 
 - Add priority for listeners
 
-## Changed
+### Changed
 
 - Register shadowfax services in different environments
 
 
 ## v2.0.1
 
-## Added
+### Added
 
 - Support more versions for Laravel (5.5 - 5.8)
 
-## Fixed
+### Fixed
 
 - Fix `shadowfax:publish` Artisan command in Lumen
 
 
 ## v2.0.0
 
-## Added
+### Added
 
 - Add a bootstrap file `bootstrap/shadowfax.php`
 - Add the WebSocket server

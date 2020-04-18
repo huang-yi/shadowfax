@@ -7,37 +7,44 @@ use HuangYi\Shadowfax\Laravel\FrameworkBootstrapper;
 use Illuminate\Container\Container;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
+use Swoole\Coroutine;
 
 class CoroutineAppPoolTest extends TestCase
 {
     public function testPoolCapacity()
     {
-        $pool = new CoroutineAppPool($this->mockFrameworkBootstrapper(), [], 5);
+        Coroutine::create(function () {
+            $pool = new CoroutineAppPool($this->mockFrameworkBootstrapper(), [], 5);
 
-        $this->assertEquals(5, $pool->getChannel()->length());
+            $this->assertEquals(5, $pool->getChannel()->length());
+        });
     }
 
 
     public function testPop()
     {
-        $pool = new CoroutineAppPool($this->mockFrameworkBootstrapper(), [], 5);
+        Coroutine::create(function () {
+            $pool = new CoroutineAppPool($this->mockFrameworkBootstrapper(), [], 5);
 
-        $app = $pool->pop();
+            $app = $pool->pop();
 
-        $this->assertInstanceOf(Container::class, $app);
-        $this->assertEquals(4, $pool->getChannel()->length());
+            $this->assertInstanceOf(Container::class, $app);
+            $this->assertEquals(4, $pool->getChannel()->length());
+        });
     }
 
 
     public function testPush()
     {
-        $pool = new CoroutineAppPool($this->mockFrameworkBootstrapper(), [], 5);
+        Coroutine::create(function () {
+            $pool = new CoroutineAppPool($this->mockFrameworkBootstrapper(), [], 5);
 
-        $app = $pool->getChannel()->pop();
+            $app = $pool->getChannel()->pop();
 
-        $pool->push($app);
+            $pool->push($app);
 
-        $this->assertEquals(5, $pool->getChannel()->length());
+            $this->assertEquals(5, $pool->getChannel()->length());
+        });
     }
 
 

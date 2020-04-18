@@ -11,12 +11,7 @@ class EventDispatcherTest extends TestCase
     {
         $dispatcher = new EventDispatcher();
 
-        $listener = new Class {
-            public function handle()
-            {
-                //
-            }
-        };
+        $listener = new Listener();
 
         $dispatcher->listen('foo', $listener);
 
