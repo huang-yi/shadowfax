@@ -60,10 +60,10 @@ class Connection implements ConnectionContract
      * Send the data to client.
      *
      * @param  mixed  $data
-     * @param  int  $isBinary
+     * @param  bool  $isBinary
      * @return bool
      */
-    public function send($data, $isBinary = 0)
+    public function send($data, $isBinary = false)
     {
         return $this->sendTo($this->id, $data, $isBinary);
     }
@@ -73,10 +73,10 @@ class Connection implements ConnectionContract
      *
      * @param  int  $socket
      * @param  mixed  $data
-     * @param  int  $isBinary
+     * @param  bool  $isBinary
      * @return bool
      */
-    public function sendTo($socket, $data, $isBinary = 0)
+    public function sendTo($socket, $data, $isBinary = false)
     {
         if (! $this->server->isEstablished($socket)) {
             return false;
@@ -92,7 +92,9 @@ class Connection implements ConnectionContract
             $data = (string) $data;
         }
 
-        return $this->server->push($socket, $data, $isBinary ? 2 : 1);
+        $opcode = $isBinary ? WEBSOCKET_OPCODE_BINARY : WEBSOCKET_OPCODE_TEXT;
+
+        return $this->server->push($socket, $data, $opcode);
     }
 
     /**
@@ -104,7 +106,7 @@ class Connection implements ConnectionContract
      */
     public function close($code = 1000, $reason = '')
     {
-        return $this->closeWith($this->getId());
+        return $this->closeWith($this->getId(), $code, $reason);
     }
 
     /**

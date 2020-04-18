@@ -15,20 +15,20 @@ interface Connection
      * Send the data to client.
      *
      * @param  mixed  $data
-     * @param  int  $isBinary
+     * @param  bool  $isBinary
      * @return bool
      */
-    public function send($data, $isBinary = 0);
+    public function send($data, $isBinary = false);
 
     /**
      * Send the data to other client.
      *
      * @param  int  $socket
      * @param  mixed  $data
-     * @param  int  $isBinary
+     * @param  bool  $isBinary
      * @return bool
      */
-    public function sendTo($socket, $data, $isBinary = 0);
+    public function sendTo($socket, $data, $isBinary = false);
 
     /**
      * Close the connection.
