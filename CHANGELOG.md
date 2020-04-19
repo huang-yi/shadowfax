@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## Unreleased
+
+### Added
+
+- Add Swoole server instance for starting event
+
+
 ## v2.2.0
 
 ### Added
