@@ -3,6 +3,7 @@
 namespace HuangYi\Shadowfax;
 
 use ArrayAccess;
+use Closure;
 use HuangYi\Shadowfax\Contracts\Container as ContainerContract;
 use HuangYi\Shadowfax\Exceptions\EntryNotFoundException;
 
@@ -16,11 +17,32 @@ class Container implements ArrayAccess, ContainerContract
     protected static $instance;
 
     /**
+     * The container's bindings.
+     *
+     * @var array
+     */
+    protected $bindings = [];
+
+    /**
      * The container's shared instances.
      *
      * @var array
      */
     protected $instances = [];
+
+    /**
+     * Register a shared binding in the container.
+     *
+     * @param  string  $abstract
+     * @param  \Closure  $concrete
+     * @return void
+     */
+    public function singleton($abstract, Closure $concrete)
+    {
+        $this->forgetInstance($abstract);
+
+        $this->bindings[$abstract] = $concrete;
+    }
 
     /**
      * Register an existing instance as shared in the container.
@@ -46,7 +68,22 @@ class Container implements ArrayAccess, ContainerContract
             return $this->instances[$abstract];
         }
 
+        if (isset($this->bindings[$abstract])) {
+            return $this->instances[$abstract] = $this->bindings[$abstract]($this);
+        }
+
         throw new EntryNotFoundException($abstract);
+    }
+
+    /**
+     * Remove a instance from the container.
+     *
+     * @param  string  $abstract
+     * @return void
+     */
+    public function forgetInstance($abstract)
+    {
+        unset($this->instances[$abstract]);
     }
 
     /**
@@ -57,7 +94,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function forget($abstract)
     {
-        unset($this->instances[$abstract]);
+        unset($this->bindings[$abstract], $this->instances[$abstract]);
     }
 
     /**
@@ -67,6 +104,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function flush()
     {
+        $this->bindings = [];
         $this->instances = [];
     }
 
@@ -108,7 +146,7 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function has($id)
     {
-        return isset($this->instances[$id]);
+        return isset($this->instances[$id]) || isset($this->bindings[$id]);
     }
 
     /**
@@ -154,5 +192,15 @@ class Container implements ArrayAccess, ContainerContract
     public function offsetUnset($key)
     {
         $this->forget($key);
+    }
+
+    /**
+     * Get the container's bindings.
+     *
+     * @return array
+     */
+    public function getBindings()
+    {
+        return $this->bindings;
     }
 }

@@ -2,10 +2,20 @@
 
 namespace HuangYi\Shadowfax\Contracts;
 
+use Closure;
 use Psr\Container\ContainerInterface;
 
 interface Container extends ContainerInterface
 {
+    /**
+     * Register a shared binding in the container.
+     *
+     * @param  string  $abstract
+     * @param  \Closure  $concrete
+     * @return void
+     */
+    public function singleton($abstract, Closure $concrete);
+
     /**
      * Register an existing instance as shared in the container.
      *

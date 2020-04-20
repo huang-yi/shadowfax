@@ -23,7 +23,30 @@ class ContainerTest extends TestCase
     }
 
 
-    public function testMake()
+    public function testSingleton()
+    {
+        $container = new Container;
+
+        $concrete = function () {
+            $object = new stdClass;
+
+            $object->name = 'foo';
+
+            return $object;
+        };
+
+        $container->singleton('foo', $concrete);
+
+        $foo = $container->make('foo');
+
+        $this->assertArrayHasKey('foo', $container->getBindings());
+        $this->assertSame($concrete, $container->getBindings()['foo']);
+        $this->assertInstanceOf(stdClass::class, $foo);
+        $this->assertSame('foo', $foo->name);
+    }
+
+
+    public function testInstance()
     {
         $container = new Container;
 

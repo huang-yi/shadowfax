@@ -7,6 +7,7 @@
 
 - Add Swoole server instance for starting event
 - Add component to extend Shadowfax
+- Add singleton method for container
 
 
 ## v2.2.0
