@@ -34,6 +34,13 @@ class Shadowfax extends Container
     protected $hasBeenBootstrapped = false;
 
     /**
+     * The loaded components.
+     *
+     * @var array
+     */
+    protected $loadedComponents = [];
+
+    /**
      * The bootstrap classes.
      *
      * @var array
@@ -42,6 +49,7 @@ class Shadowfax extends Container
         \HuangYi\Shadowfax\Bootstrap\CreateCoroutineContainer::class,
         \HuangYi\Shadowfax\Bootstrap\LoadConfiguration::class,
         \HuangYi\Shadowfax\Bootstrap\RegisterEventListeners::class,
+        \HuangYi\Shadowfax\Bootstrap\RegisterComponents::class,
     ];
 
     /**
@@ -136,5 +144,41 @@ class Shadowfax extends Container
     public function getConsole()
     {
         return $this->console;
+    }
+
+    /**
+     * Register the component.
+     *
+     * @param  \HuangYi\Shadowfax\Component|string  $component
+     * @return void
+     */
+    public function register($component)
+    {
+        $component = $this->getComponent($component);
+
+        if (isset($this->loadedComponents[get_class($component)])) {
+            return;
+        }
+
+        if (method_exists($component, 'register')) {
+            $component->register();
+
+            $this->loadedComponents[get_class($component)] = $component;
+        }
+    }
+
+    /**
+     * Get the component instance.
+     *
+     * @param  \HuangYi\Shadowfax\Component|string  $component
+     * @return \HuangYi\Shadowfax\Component
+     */
+    protected function getComponent($component)
+    {
+        if ($component instanceof Component) {
+            return $component;
+        }
+
+        return new $component($this);
     }
 }

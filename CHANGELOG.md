@@ -6,6 +6,7 @@
 ### Added
 
 - Add Swoole server instance for starting event
+- Add component to extend Shadowfax
 
 
 ## v2.2.0
