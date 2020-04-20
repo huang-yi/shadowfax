@@ -3,7 +3,6 @@
 namespace HuangYi\Shadowfax\Laravel;
 
 use HuangYi\Shadowfax\Exceptions\InvalidFrameworkBootstrapperException;
-use HuangYi\Shadowfax\Exceptions\ShadowfaxException;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
