@@ -8,6 +8,7 @@
 - Add Swoole server instance for starting event
 - Add component to extend Shadowfax
 - Add singleton method for container
+- Add a new event `HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent`, it will be dispatched when the Laravel framework bootstrapped
 
 
 ## v2.2.0

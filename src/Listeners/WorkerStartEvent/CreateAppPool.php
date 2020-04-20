@@ -47,7 +47,8 @@ class CreateAppPool
     {
         return new FrameworkBootstrapper(
             $this->getBootstrapFile(),
-            $this->isTaskWorker($server, $workerId)
+            $this->isTaskWorker($server, $workerId),
+            shadowfax('events')
         );
     }
 
