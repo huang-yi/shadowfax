@@ -21,9 +21,6 @@ abstracts:
   - auth.driver
   - \Illuminate\Session\Middleware\StartSession
 
-websocket:
-  message: \HuangYi\Shadowfax\WebSocket\JsonMessage
-
 controller:
   host: 127.0.0.1
   port: 1216

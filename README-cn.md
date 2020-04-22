@@ -113,7 +113,7 @@ class EchoServer implements Handler
      */
     public function onOpen(Connection $connection, Request $request)
     {
-        $connection->send(['status' => 'connected']);
+        $connection->send('connected');
     }
 
     /**
@@ -136,7 +136,7 @@ class EchoServer implements Handler
      */
     public function onClose(Connection $connection)
     {
-        $connection->send(['status' => 'closed']);
+        $connection->send('closed');
     }
 }
 

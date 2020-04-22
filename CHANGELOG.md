@@ -10,6 +10,10 @@
 - Add singleton method for container
 - Add a new event `HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent`, it will be dispatched when the Laravel framework bootstrapped
 
+### Changed
+
+- Remove the websocket message configuration option
+
 
 ## v2.2.0
 

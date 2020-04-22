@@ -45,11 +45,11 @@ This section defines the `Swoole\Server` configuration. Read the [official docs]
 
 3. `abstracts` configuration:
 
-This option allows you to set a group of abstracts bound in the Laravel IoC container. These abstracts will be rebound after each request.
+This option allows you to set a group of abstracts in the Laravel IoC container. These abstracts will be rebound after each request.
 
 4. `websocket` configuration:
 
-- **message**: Specify the message entity class. This class must implements the `HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
+- **message**: Specify the message entity class. This class must implement the `HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
 
 5. `controller` configuration：
 
@@ -92,7 +92,7 @@ class EchoServer implements Handler
      */
     public function onOpen(Connection $connection, Request $request)
     {
-        $connection->send(['status' => 'connected']);
+        $connection->send('connected');
     }
 
     /**
@@ -115,7 +115,7 @@ class EchoServer implements Handler
      */
     public function onClose(Connection $connection)
     {
-        $connection->send(['status' => 'closed']);
+        $connection->send('closed');
     }
 }
 
