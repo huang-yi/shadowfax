@@ -2,6 +2,7 @@
 
 namespace HuangYi\Shadowfax\Listeners\MessageEvent;
 
+use HuangYi\Shadowfax\Contracts\WebSocket\Handler;
 use HuangYi\Shadowfax\Events\MessageEvent;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 use HuangYi\Shadowfax\WebSocket\ConnectionCollection;
@@ -23,7 +24,7 @@ class DelegateToMessageHandler
             if ($connection = ConnectionCollection::find($event->frame->fd)) {
                 list($connection, $handler) = $connection;
 
-                $message = $this->createMessage($event->frame);
+                $message = $this->createMessage($event->frame, $handler);
 
                 $handler->onMessage($connection, $message);
             }
@@ -34,11 +35,16 @@ class DelegateToMessageHandler
      * Create a message instance.
      *
      * @param  \Swoole\WebSocket\Frame  $frame
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Handler  $handler
      * @return \HuangYi\Shadowfax\Contracts\WebSocket\Message
      */
-    protected function createMessage($frame)
+    protected function createMessage($frame, Handler $handler)
     {
-        $class = $this->config('websocket.message', RawMessage::class);
+        if (method_exists($handler, 'messageClass')) {
+            $class = $handler->messageClass();
+        } else {
+            $class = $this->config('websocket.message', RawMessage::class);
+        }
 
         return new $class($frame->data, $frame->opcode);
     }

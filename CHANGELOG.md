@@ -13,6 +13,7 @@
 ### Changed
 
 - Remove the websocket message configuration option
+- Use the return value of `HuangYi\Shadowfax\Contracts\WebSocket\Handler::messageClass()` method first to create the message instance (if any)
 
 
 ## v2.2.0
