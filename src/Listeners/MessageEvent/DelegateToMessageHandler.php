@@ -4,6 +4,7 @@ namespace HuangYi\Shadowfax\Listeners\MessageEvent;
 
 use HuangYi\Shadowfax\Contracts\WebSocket\Handler;
 use HuangYi\Shadowfax\Events\MessageEvent;
+use HuangYi\Shadowfax\Exceptions\InvalidMessageException;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 use HuangYi\Shadowfax\WebSocket\ConnectionCollection;
 use HuangYi\Shadowfax\WebSocket\RawMessage;
@@ -24,9 +25,13 @@ class DelegateToMessageHandler
             if ($connection = ConnectionCollection::find($event->frame->fd)) {
                 list($connection, $handler) = $connection;
 
-                $message = $this->createMessage($event->frame, $handler);
+                try {
+                    $message = $this->createMessage($event->frame, $handler);
 
-                $handler->onMessage($connection, $message);
+                    $handler->onMessage($connection, $message);
+                } catch (InvalidMessageException $e) {
+                    $connection->close($e->getCode(), $e->getMessage());
+                }
             }
         });
     }

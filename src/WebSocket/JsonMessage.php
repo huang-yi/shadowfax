@@ -38,6 +38,10 @@ class JsonMessage implements Message
      */
     public function __construct($data, $opcode = WEBSOCKET_OPCODE_TEXT)
     {
+        if ($opcode != WEBSOCKET_OPCODE_TEXT) {
+            throw new InvalidMessageException('Only support text frame.', 1003);
+        }
+
         $this->rawData = $data;
         $this->opcode = $opcode;
 
@@ -55,7 +59,7 @@ class JsonMessage implements Message
         $this->data = json_decode($data, true);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new InvalidMessageException('Invalid json message.');
+            throw new InvalidMessageException('Only support json payload.', 1007);
         }
     }
 
