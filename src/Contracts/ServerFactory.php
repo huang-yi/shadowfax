@@ -29,12 +29,28 @@ interface ServerFactory
     public function setMode(int $mode);
 
     /**
+     * Set the server socket type.
+     *
+     * @param  int  $socket
+     * @return $this
+     */
+    public function setSocket(int $socket);
+
+    /**
      * Set the server settings.
      *
      * @param  array  $settings
      * @return $this
      */
     public function setSettings(array $settings);
+
+    /**
+     * Set the server events.
+     *
+     * @param  array  $events
+     * @return $this
+     */
+    public function setEvents(array $events);
 
     /**
      * Create a server instance.
