@@ -80,6 +80,7 @@ class StartCommand extends Command
             ->setPort($this->getPort($input))
             ->setMode($this->getMode())
             ->setSettings($this->getSettings())
+            ->setEvents($this->getEvents())
             ->create();
 
         $this->listenControllerPort($server);
@@ -114,11 +115,21 @@ class StartCommand extends Command
      */
     protected function getFactory(): ServerFactory
     {
-        if ($this->config('type', 'websocket')) {
+        if ($this->getType() == 'websocket') {
             return new WebSocketServerFactory($this->shadowfax['events']);
         }
 
         return new HttpServerFactory($this->shadowfax['events']);
+    }
+
+    /**
+     * Get the server type.
+     *
+     * @return string
+     */
+    protected function getType()
+    {
+        return strtolower($this->config('type', 'http'));
     }
 
     /**
@@ -169,6 +180,22 @@ class StartCommand extends Command
     protected function getSettings()
     {
         return (array) $this->config('server', []);
+    }
+
+    /**
+     * Get the server events.
+     *
+     * @return array
+     */
+    protected function getEvents()
+    {
+        $events = (array) $this->config('events', []);
+
+        if ($this->getType() == 'websocket' && $this->config('websocket.enable_handshake')) {
+            $events[] = 'Handshake';
+        }
+
+        return $events;
     }
 
     /**
