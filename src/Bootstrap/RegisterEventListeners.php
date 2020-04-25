@@ -20,6 +20,10 @@ class RegisterEventListeners
             \HuangYi\Shadowfax\Listeners\ControllerRequestEvent\HandleInstruction::class,
         ],
 
+        \HuangYi\Shadowfax\Events\HandshakeEvent::class => [
+            \HuangYi\Shadowfax\Listeners\HandshakeEvent\HandleHandshake::class,
+        ],
+
         \HuangYi\Shadowfax\Events\ManagerStartEvent::class => [
             \HuangYi\Shadowfax\Listeners\ManagerStartEvent\SetManagerProcessName::class,
             \HuangYi\Shadowfax\Listeners\ManagerStartEvent\OutputManagerProcessStartedStatus::class,
