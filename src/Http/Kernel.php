@@ -16,14 +16,23 @@ class Kernel
     protected $app;
 
     /**
+     * Indicates if the kernel is processing a WebSocket request.
+     *
+     * @var bool
+     */
+    protected $isWebSocket;
+
+    /**
      * The Swoole Http Kernel.
      *
      * @param  \Illuminate\Contracts\Container\Container  $app
+     * @param  bool  $isWebSocket
      * @return void
      */
-    public function __construct(Container $app)
+    public function __construct(Container $app, $isWebSocket = false)
     {
         $this->app = $app;
+        $this->isWebSocket = $isWebSocket;
     }
 
     /**
@@ -49,7 +58,7 @@ class Kernel
      */
     public function runLaravel(Request $request)
     {
-        $kernel = $this->app[IlluminateHttpKernel::class];
+        $kernel = $this->getKernel();
 
         $illuminateResponse = $kernel->handle(
             $illuminateRequest = $request->toIlluminate()
@@ -77,6 +86,24 @@ class Kernel
         return Response::make(
             $this->app->handle($request->toIlluminate())
         );
+    }
+
+    /**
+     * Get the HTTP kernel instance.
+     *
+     * @return \Illuminate\Contracts\Http\Kernel
+     */
+    protected function getKernel()
+    {
+        $kernel = $this->app[IlluminateHttpKernel::class];
+
+        if (! $this->isWebSocket) {
+            return $kernel;
+        }
+
+        $class = get_class($kernel);
+
+        return new $class($this->app, $this->app['shadowfax.websocket']);
     }
 
     /**

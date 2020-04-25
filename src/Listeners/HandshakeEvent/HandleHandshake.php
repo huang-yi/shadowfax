@@ -11,16 +11,39 @@ class HandleHandshake
 {
     use HasHelpers;
 
+    /**
+     * Handle the event.
+     *
+     * @param  \HuangYi\Shadowfax\Events\HandshakeEvent  $event
+     * @return void
+     */
     public function handle(HandshakeEvent $event)
     {
         $this->handleWithoutException(function ($app) use ($event) {
-            $request = Request::make($event->request);
+            $response = $app->make(Kernel::class)->handle(
+                $request = Request::make($event->request), true
+            );
 
-            // TODO: verify request and handshake
-
-            $response = $app->make(Kernel::class)->handle($request);
+            $this->formatResponse($response);
 
             $response->send($event->response);
         });
+    }
+
+    /**
+     * Format the response.
+     *
+     * @param  \HuangYi\Shadowfax\Http\Response  $response
+     * @return void
+     */
+    protected function formatResponse($response)
+    {
+        $status = $response->getIlluminateResponse()->getStatusCode();
+
+        if ($status >= 200 && $status < 300) {
+            $response->getIlluminateResponse()->setStatusCode(101);
+        }
+
+        $response->getIlluminateResponse()->setContent('');
     }
 }

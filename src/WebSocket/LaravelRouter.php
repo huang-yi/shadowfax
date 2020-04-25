@@ -4,7 +4,6 @@ namespace HuangYi\Shadowfax\WebSocket;
 
 use HuangYi\Shadowfax\Contracts\WebSocket\Handler;
 use HuangYi\Shadowfax\Contracts\WebSocket\Router;
-use HuangYi\Shadowfax\Http\Request;
 use Illuminate\Routing\Router as BaseRouter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -21,6 +20,7 @@ class LaravelRouter extends BaseRouter implements Router
     {
         return $this->get($uri, [
             'handler' => $handler,
+            'middleware' => VerifiesRequest::class,
             'uses' => function () {
                 //
             },
@@ -28,21 +28,36 @@ class LaravelRouter extends BaseRouter implements Router
     }
 
     /**
-     * Find the handler for a given request.
+     * Create a new Route object.
      *
-     * @param  \HuangYi\Shadowfax\Http\Request  $request
-     * @return \HuangYi\Shadowfax\Contracts\WebSocket\Handler
+     * @param  array|string  $methods
+     * @param  string  $uri
+     * @param  mixed  $action
+     * @return \Illuminate\Routing\Route
      */
-    public function findHandler(Request $request): Handler
+    protected function newRoute($methods, $uri, $action)
     {
-        $handler = $this->routes->match(
-            $request->getIlluminateRequest()
-        )->getAction('handler');
+        return (new LaravelRoute($methods, $uri, $action))
+            ->setRouter($this)
+            ->setContainer($this->container);
+    }
+
+    /**
+     * Find the route matching a given request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Routing\Route
+     */
+    protected function findRoute($request)
+    {
+        $route = parent::findRoute($request);
+
+        $handler = $route->getAction('handler');
 
         if (! $handler instanceof Handler) {
             throw new NotFoundHttpException;
         }
 
-        return $handler;
+        return $route;
     }
 }
