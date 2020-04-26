@@ -189,13 +189,7 @@ class StartCommand extends Command
      */
     protected function getEvents()
     {
-        $events = (array) $this->config('events', []);
-
-        if ($this->getType() == 'websocket' && $this->config('websocket.enable_handshake')) {
-            $events[] = 'Handshake';
-        }
-
-        return $events;
+        return (array) $this->config('events', []);
     }
 
     /**
