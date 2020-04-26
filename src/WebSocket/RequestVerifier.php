@@ -13,6 +13,11 @@ class RequestVerifier
     const VERSION = 13;
 
     /**
+     * The Globally Unique Identifier.
+     */
+    const GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
+
+    /**
      * The request instance.
      *
      * @var \Illuminate\Http\Request
@@ -119,5 +124,15 @@ class RequestVerifier
         }
 
         throw new HttpException(426);
+    }
+
+    /**
+     * Get the value of Sec-WebSocket-Accept.
+     *
+     * @return string
+     */
+    public function getSecWebSocketAccept()
+    {
+        return base64_encode(sha1($this->request->header('Sec-WebSocket-Key').static::GUID, true));
     }
 }
