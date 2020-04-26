@@ -12,7 +12,7 @@ class WebSocketServerFactory extends HttpServerFactory
      * @var array
      */
     protected $events = [
-        'Close', 'ManagerStart', 'ManagerStop', 'Message', 'Open',
+        'Close', 'Handshake', 'ManagerStart', 'ManagerStop', 'Message', 'Open',
         'PipMessage', 'Request', 'Shutdown', 'Start', 'Task', 'WorkerStart',
         'WorkerStop',
     ];
