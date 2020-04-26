@@ -3,6 +3,7 @@
 namespace HuangYi\Shadowfax\WebSocket;
 
 use HuangYi\Shadowfax\Contracts\WebSocket\Connection as ConnectionContract;
+use HuangYi\Shadowfax\Http\Request;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
 use Swoole\WebSocket\Server;
@@ -22,6 +23,26 @@ class Connection implements ConnectionContract
      * @var \Swoole\WebSocket\Server
      */
     protected $server;
+
+    /**
+     * Initialize a connection.
+     *
+     * @param  \Swoole\WebSocket\Server  $server
+     * @param  \HuangYi\Shadowfax\Http\Request  $request
+     * @return array
+     */
+    public static function init(Server $server, Request $request)
+    {
+        $connection = new Connection($request->getSwooleRequest()->fd, $server);
+
+        $route = $request->getIlluminateRequest()->route();
+
+        $handler = is_array($route) ? $route[1]['handler'] : $route->getAction('handler');
+
+        ConnectionCollection::add($connection, $handler);
+
+        return [$connection, $handler];
+    }
 
     /**
      * WebSocket Connection.
