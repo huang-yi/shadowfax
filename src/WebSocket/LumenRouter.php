@@ -4,9 +4,8 @@ namespace HuangYi\Shadowfax\WebSocket;
 
 use HuangYi\Shadowfax\Contracts\WebSocket\Handler;
 use HuangYi\Shadowfax\Contracts\WebSocket\Router;
-use HuangYi\Shadowfax\Http\Request;
 use Laravel\Lumen\Routing\Router as BaseRouter;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use ReflectionObject;
 
 class LumenRouter extends BaseRouter implements Router
 {
@@ -19,30 +18,46 @@ class LumenRouter extends BaseRouter implements Router
      */
     public function listen(string $uri, Handler $handler)
     {
-        return $this->get($uri, ['handler' => $handler]);
+        if (method_exists($handler, 'onHandshake')) {
+            $uses = $this->transOnHandshakeToClosure($handler);
+        } else {
+            $uses = function () {
+                //
+            };
+        }
+
+        return $this->get($uri, ['handler' => $handler, $uses]);
     }
 
     /**
-     * Find the handler.
+     * Transform the 'onHandshake' method to a closure.
      *
-     * @param  \HuangYi\Shadowfax\Http\Request  $request
-     * @return \HuangYi\Shadowfax\Contracts\WebSocket\Handler
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Handler  $handler
+     * @return \Closure
      */
-    public function findHandler(Request $request): Handler
+    protected function transOnHandshakeToClosure(Handler $handler)
     {
-        $method = $request->getIlluminateRequest()->getMethod();
-        $pathInfo = '/'.trim($request->getIlluminateRequest()->getPathInfo(), '/');
+        $object = new ReflectionObject($handler);
+        $method = $object->getMethod('onHandshake');
 
-        if (! $route = $this->getRoutes()[$method.$pathInfo] ?? null) {
-            throw new NotFoundHttpException();
+        $params = [];
+
+        foreach ($method->getParameters() as $param) {
+            if (is_null($param->getClass())) {
+                $params[] = '$'.$param->name;
+            } elseif ($param->isVariadic()) {
+                $params[] = $param->getClass()->name.' ...$'.$param->name;
+            } else {
+                $params[] = $param->getClass()->name.' $'.$param->name;
+            }
         }
 
-        $handler = $route['action']['handler'] ?? null;
+        $closure = '$closure = function ('.implode(', ', $params).') use ($handler) {
+            return $handler->onHandshake(...func_get_args());
+        };';
 
-        if (! $handler instanceof Handler) {
-            throw new NotFoundHttpException();
-        }
+        eval($closure);
 
-        return $handler;
+        return $closure;
     }
 }
