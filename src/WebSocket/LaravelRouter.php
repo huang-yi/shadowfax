@@ -35,7 +35,7 @@ class LaravelRouter extends BaseRouter implements Router
      * @param  mixed  $action
      * @return \Illuminate\Routing\Route
      */
-    protected function newRoute($methods, $uri, $action)
+    public function newRoute($methods, $uri, $action)
     {
         return (new LaravelRoute($methods, $uri, $action))
             ->setRouter($this)
