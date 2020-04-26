@@ -22,19 +22,15 @@ class DelegateToOpenHandler
     public function handle(OpenEvent $event)
     {
         $this->handleWithoutException(function ($app) use ($event) {
-            $connection = new Connection($event->request->fd, $event->server);
+            $request = Request::make($event->request);
 
-            try {
-                $handler = $app['shadowfax.websocket']->findHandler(
-                    $request = Request::make($event->request)
-                );
-
-                ConnectionCollection::add($connection, $handler);
-
-                $handler->onOpen($connection, $request->getIlluminateRequest());
-            } catch (NotFoundHttpException $e) {
-                $connection->close();
+            if ($connection = ConnectionCollection::find($event->request->fd)) {
+                list($connection, $handler) = $connection;
+            } else {
+                list($connection, $handler) = Connection::init($event->server, $request);
             }
+
+            $handler->onOpen($connection, $request->getIlluminateRequest());
         });
     }
 }
