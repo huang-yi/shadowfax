@@ -48,7 +48,7 @@ class LaravelRouter extends BaseRouter implements Router
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Routing\Route
      */
-    protected function findRoute($request)
+    public function findRoute($request)
     {
         $route = parent::findRoute($request);
 
