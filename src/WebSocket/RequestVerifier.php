@@ -38,15 +38,32 @@ class RequestVerifier
     /**
      * Verify the request.
      *
-     * @return void
+     * @return bool
      */
     public function verify()
     {
+        $this->verifyMethod();
         $this->verifyProtocolVersion();
         $this->verifyUpgrade();
         $this->verifyConnection();
         $this->verifyKey();
         $this->verifyVersion();
+
+        return true;
+    }
+
+    /**
+     * Verify the HTTP method.
+     *
+     * @return bool
+     */
+    public function verifyMethod()
+    {
+        if ($this->request->getMethod() == 'GET') {
+            return true;
+        }
+
+        throw new HttpException(505);
     }
 
     /**
