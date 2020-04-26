@@ -8,6 +8,8 @@
 - Add Swoole server instance for starting event
 - Add component to extend Shadowfax
 - Add singleton method for container
+- Add support for WebSocket handshake event
+- Add `events` configuration option for customizing the events Swoole server listened
 - Add a new event `HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent`, it will be dispatched when the Laravel framework bootstrapped
 
 ### Changed
