@@ -2,10 +2,10 @@
 
 namespace HuangYi\Shadowfax\Console;
 
-use HuangYi\Shadowfax\Contracts\ServerFactory;
 use HuangYi\Shadowfax\Events\ControllerRequestEvent;
 use HuangYi\Shadowfax\Events\StartingEvent;
 use HuangYi\Shadowfax\Factories\HttpServerFactory;
+use HuangYi\Shadowfax\Factories\ServerFactory;
 use HuangYi\Shadowfax\Factories\WebSocketServerFactory;
 use HuangYi\Watcher\Commands\Fswatch;
 use Swoole\Process;
@@ -111,7 +111,7 @@ class StartCommand extends Command
     /**
      * Get the server factory
      *
-     * @return \HuangYi\Shadowfax\Contracts\ServerFactory
+     * @return \HuangYi\Shadowfax\Factories\ServerFactory
      */
     protected function getFactory(): ServerFactory
     {
