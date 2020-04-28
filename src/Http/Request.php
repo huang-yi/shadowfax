@@ -61,7 +61,7 @@ class Request
         $symfonyRequest = new SymfonyRequest(
             $this->swooleRequest->get ?? [],
             $this->swooleRequest->post ?? [],
-            [],
+            ['swoole_request' => $this->swooleRequest],
             $this->swooleRequest->cookie ?? [],
             $this->swooleRequest->files ?? [],
             $this->formatServerVars(),
