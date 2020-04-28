@@ -36,7 +36,9 @@ class HandleHandshake
             $response->send($event->response);
 
             if ($this->isSuccessful($response)) {
-                shadowfax('events')->dispatch(new OpenEvent(shadowfax('server'), $event->request));
+                $event->server->defer(function () use ($event) {
+                    shadowfax('events')->dispatch(new OpenEvent(shadowfax('server'), $event->request));
+                });
             }
         });
     }
