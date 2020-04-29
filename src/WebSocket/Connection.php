@@ -3,6 +3,7 @@
 namespace HuangYi\Shadowfax\WebSocket;
 
 use HuangYi\Shadowfax\Contracts\WebSocket\Connection as ConnectionContract;
+use HuangYi\Shadowfax\Contracts\WebSocket\Handler;
 use HuangYi\Shadowfax\Http\Request;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Jsonable;
@@ -25,36 +26,41 @@ class Connection implements ConnectionContract
     protected $server;
 
     /**
+     * The connection handler.
+     *
+     * @var \HuangYi\Shadowfax\Contracts\WebSocket\Handler
+     */
+    protected $handler;
+
+    /**
      * Initialize a connection.
      *
      * @param  \Swoole\WebSocket\Server  $server
      * @param  \HuangYi\Shadowfax\Http\Request  $request
-     * @return array
+     * @return static
      */
     public static function init(Server $server, Request $request)
     {
-        $connection = new Connection($request->getSwooleRequest()->fd, $server);
-
         $route = $request->getIlluminateRequest()->route();
 
         $handler = is_array($route) ? $route[1]['handler'] : $route->getAction('handler');
 
-        ConnectionCollection::add($connection, $handler);
-
-        return [$connection, $handler];
+        return new static($request->getSwooleRequest()->fd, $server, $handler);
     }
 
     /**
-     * WebSocket Connection.
+     * Create a new Connection instance.
      *
      * @param  int  $id
      * @param  \Swoole\WebSocket\Server  $server
+     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Handler  $handler
      * @return void
      */
-    public function __construct(int $id, Server $server)
+    public function __construct(int $id, Server $server, Handler $handler)
     {
         $this->id = $id;
         $this->server = $server;
+        $this->handler = $handler;
     }
 
     /**
@@ -65,6 +71,16 @@ class Connection implements ConnectionContract
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * Get the handler.
+     *
+     * @return \HuangYi\Shadowfax\Contracts\WebSocket\Handler
+     */
+    public function getHandler(): Handler
+    {
+        return $this->handler;
     }
 
     /**

@@ -8,6 +8,7 @@ use HuangYi\Shadowfax\Http\Kernel;
 use HuangYi\Shadowfax\Http\Request;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 use HuangYi\Shadowfax\WebSocket\Connection;
+use HuangYi\Shadowfax\WebSocket\ConnectionCollection;
 use HuangYi\Shadowfax\WebSocket\RequestVerifier;
 
 class HandleHandshake
@@ -23,23 +24,26 @@ class HandleHandshake
     public function handle(HandshakeEvent $event)
     {
         $this->handleWithoutException(function ($app) use ($event) {
-            $response = $app->make(Kernel::class)->handle(
-                $request = Request::make($event->request), true
+            $request = Request::make($event->request);
+            $connection = Connection::init(shadowfax('server'), $request);
+
+            $request->getIlluminateRequest()->attributes->set(
+                'swoole_connection', $connection
             );
 
+            $response = $app->make(Kernel::class)->handle($request, true);
+
             if ($this->isSuccessful($response)) {
-                Connection::init(shadowfax('server'), $request);
+                ConnectionCollection::add($connection);
+
+                $event->server->defer(function () use ($event) {
+                    shadowfax('events')->dispatch(new OpenEvent(shadowfax('server'), $event->request));
+                });
             }
 
             $this->formatResponse($request, $response);
 
             $response->send($event->response);
-
-            if ($this->isSuccessful($response)) {
-                $event->server->defer(function () use ($event) {
-                    shadowfax('events')->dispatch(new OpenEvent(shadowfax('server'), $event->request));
-                });
-            }
         });
     }
 

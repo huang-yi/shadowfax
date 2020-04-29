@@ -17,12 +17,11 @@ class ConnectionCollection
      * Add a connection.
      *
      * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Connection  $connection
-     * @param  \HuangYi\Shadowfax\Contracts\WebSocket\Handler  $handler
      * @return void
      */
-    public static function add(Connection $connection, $handler)
+    public static function add(Connection $connection)
     {
-        static::$connections[$connection->getId()] = [$connection, $handler];
+        static::$connections[$connection->getId()] = $connection;
     }
 
     /**

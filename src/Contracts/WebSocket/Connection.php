@@ -12,6 +12,13 @@ interface Connection
     public function getId(): int;
 
     /**
+     * Get the connection's handler.
+     *
+     * @return \HuangYi\Shadowfax\Contracts\WebSocket\Handler
+     */
+    public function getHandler(): Handler;
+
+    /**
      * Send the data to client.
      *
      * @param  mixed  $data

@@ -24,13 +24,13 @@ class DelegateToOpenHandler
         $this->handleWithoutException(function ($app) use ($event) {
             $request = Request::make($event->request);
 
-            if ($connection = ConnectionCollection::find($event->request->fd)) {
-                list($connection, $handler) = $connection;
-            } else {
-                list($connection, $handler) = Connection::init($event->server, $request);
+            if (! $connection = ConnectionCollection::find($event->request->fd)) {
+                ConnectionCollection::add(
+                    $connection = Connection::init($event->server, $request)
+                );
             }
 
-            $handler->onOpen($connection, $request->getIlluminateRequest());
+            $connection->getHandler()->onOpen($connection, $request->getIlluminateRequest());
         });
     }
 }

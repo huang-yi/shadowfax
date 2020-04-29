@@ -23,12 +23,10 @@ class DelegateToMessageHandler
     {
         $this->handleWithoutException(function ($app) use ($event) {
             if ($connection = ConnectionCollection::find($event->frame->fd)) {
-                list($connection, $handler) = $connection;
-
                 try {
-                    $message = $this->createMessage($event->frame, $handler);
+                    $message = $this->createMessage($event->frame, $connection->getHandler());
 
-                    $handler->onMessage($connection, $message);
+                    $connection->getHandler()->onMessage($connection, $message);
                 } catch (InvalidMessageException $e) {
                     $connection->close($e->getCode(), $e->getMessage());
                 }

@@ -21,7 +21,7 @@ class ConnectionTest extends TestCase
         $server->shouldReceive('isEstablished')->once()->with($socketId)->andReturn(true);
         $server->shouldReceive('push')->once()->with($socketId, $data, $opcode)->andReturn(true);
 
-        $connection = new Connection($socketId, $server);
+        $connection = new Connection($socketId, $server, new EmptyHandler);
 
         $result = $connection->sendTo($socketId, $data, $isBinary);
 
@@ -38,7 +38,7 @@ class ConnectionTest extends TestCase
         $server = m::mock(WebSocketServer::class);
         $server->shouldReceive('isEstablished')->once()->with($socketId)->andReturn(false);
 
-        $connection = new Connection($socketId, $server);
+        $connection = new Connection($socketId, $server, new EmptyHandler);
 
         $result = $connection->sendTo($socketId, $data, $isBinary);
 
@@ -56,7 +56,7 @@ class ConnectionTest extends TestCase
         $server->shouldReceive('isEstablished')->once()->with($socketId)->andReturn(true);
         $server->shouldReceive('disconnect')->once()->with($socketId, $code, $reason)->andReturn(true);
 
-        $connection = new Connection($socketId, $server);
+        $connection = new Connection($socketId, $server, new EmptyHandler);
 
         $result = $connection->closeWith($socketId, $code, $reason);
 
