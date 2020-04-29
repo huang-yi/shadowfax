@@ -13,7 +13,7 @@ before_install:
   - printf "\n" | pecl install swoole
 
 install:
-  - travis_retry composer install --no-suggest --prefer-dist
+  - COMPOSER_MEMORY_LIMIT=-1 travis_retry composer install --no-suggest --prefer-dist
 
 before_script:
   - phpenv config-rm xdebug.ini
