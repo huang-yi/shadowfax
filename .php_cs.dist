@@ -1,0 +1,18 @@
+<?php
+$finder = PhpCsFixer\Finder::create()
+    ->exclude('vendor')
+    ->exclude('tests/frameworks')
+    ->name('*.php')
+    ->in(__DIR__)
+;
+
+return PhpCsFixer\Config::create()
+    ->setRules([
+        'psr0' => false,
+        '@PSR2' => true,
+        'no_unused_imports' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'ordered_imports' => ['sortAlgorithm' => 'alpha'],
+    ])
+    ->setFinder($finder)
+;
