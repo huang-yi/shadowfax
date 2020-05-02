@@ -31,7 +31,7 @@ class HandleHandshake
             if ($this->isSuccessful($response)) {
                 Connection::init(shadowfax('server'), $request);
 
-                $event->server->defer(function () use ($event) {
+                shadowfax('server')->defer(function () use ($event) {
                     shadowfax('events')->dispatch(new OpenEvent(shadowfax('server'), $event->request));
                 });
             }
