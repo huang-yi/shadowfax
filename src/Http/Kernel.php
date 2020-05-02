@@ -20,7 +20,6 @@ class Kernel
      * The Swoole Http Kernel.
      *
      * @param  \Illuminate\Contracts\Container\Container  $app
-     * @param  bool  $isWebSocket
      * @return void
      */
     public function __construct(Container $app)
