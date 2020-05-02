@@ -45,7 +45,16 @@ class Connection implements ConnectionContract
 
         $handler = is_array($route) ? $route[1]['handler'] : $route->getAction('handler');
 
-        return new static($request->getSwooleRequest()->fd, $server, $handler);
+        $connection = new static($request->getSwooleRequest()->fd, $server, $handler);
+
+        $request->getIlluminateRequest()->attributes->set(
+            'swoole_connection',
+            $connection
+        );
+
+        ConnectionCollection::add($connection);
+
+        return $connection;
     }
 
     /**

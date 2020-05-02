@@ -20,13 +20,11 @@ class DelegateToOpenHandler
      */
     public function handle(OpenEvent $event)
     {
-        $this->handleWithoutException(function ($app) use ($event) {
+        $this->handleWithoutException(function () use ($event) {
             $request = Request::make($event->request);
 
             if (! $connection = ConnectionCollection::find($event->request->fd)) {
-                ConnectionCollection::add(
-                    $connection = Connection::init($event->server, $request)
-                );
+                $connection = Connection::init($event->server, $request);
             }
 
             $connection->getHandler()->onOpen($connection, $request->getIlluminateRequest());

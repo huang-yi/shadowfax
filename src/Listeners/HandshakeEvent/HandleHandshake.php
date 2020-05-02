@@ -25,17 +25,11 @@ class HandleHandshake
     {
         $this->handleWithoutException(function ($app) use ($event) {
             $request = Request::make($event->request);
-            $connection = Connection::init(shadowfax('server'), $request);
-
-            $request->getIlluminateRequest()->attributes->set(
-                'swoole_connection',
-                $connection
-            );
 
             $response = $app->make(Kernel::class)->handle($request, true);
 
             if ($this->isSuccessful($response)) {
-                ConnectionCollection::add($connection);
+                Connection::init(shadowfax('server'), $request);
 
                 $event->server->defer(function () use ($event) {
                     shadowfax('events')->dispatch(new OpenEvent(shadowfax('server'), $event->request));
