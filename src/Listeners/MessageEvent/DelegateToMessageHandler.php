@@ -43,8 +43,8 @@ class DelegateToMessageHandler
      */
     protected function createMessage($frame, Handler $handler)
     {
-        if (method_exists($handler, 'messageClass')) {
-            $class = $handler->messageClass();
+        if (method_exists($handler, 'message')) {
+            $class = $handler->message();
         } else {
             $class = $this->config('websocket.message', RawMessage::class);
         }

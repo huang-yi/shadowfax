@@ -15,7 +15,7 @@
 ### Changed
 
 - Remove the WebSocket message configuration option
-- Use the return value of `HuangYi\Shadowfax\Contracts\WebSocket\Handler::messageClass()` method first to create the message instance (if any)
+- Use the return value of `HuangYi\Shadowfax\Contracts\WebSocket\Handler::message()` method first to create the message instance (if any)
 - Close the WebSocket connection when receiving an invalid message
 
 
