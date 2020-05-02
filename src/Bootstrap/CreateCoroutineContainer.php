@@ -47,7 +47,9 @@ REPLACE;
         $source = $this->getIlluminateContainerFile($shadowfax);
 
         file_put_contents($this->output, str_replace(
-            $search, $replace, file_get_contents($source)
+            $search,
+            $replace,
+            file_get_contents($source)
         ));
     }
 

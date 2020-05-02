@@ -22,7 +22,7 @@ class HandleTask
             return;
         }
 
-        $this->handleWithoutException(function($app) use ($event) {
+        $this->handleWithoutException(function ($app) use ($event) {
             $event->task->handle($event->server, $event->taskId, $event->fromWorkerId, $event->flags);
         });
     }

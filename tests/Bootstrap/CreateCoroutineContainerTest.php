@@ -4,8 +4,8 @@ namespace HuangYi\Shadowfax\Tests\Bootstrap;
 
 use HuangYi\Shadowfax\Bootstrap\CreateCoroutineContainer;
 use HuangYi\Shadowfax\Shadowfax;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
 class CreateCoroutineContainerTest extends TestCase
 {

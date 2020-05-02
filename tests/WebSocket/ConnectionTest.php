@@ -3,8 +3,8 @@
 namespace HuangYi\Shadowfax\Tests\WebSocket;
 
 use HuangYi\Shadowfax\WebSocket\Connection;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Swoole\Process;
 use Swoole\WebSocket\Server;
 

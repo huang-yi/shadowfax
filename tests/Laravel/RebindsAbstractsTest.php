@@ -13,7 +13,7 @@ class RebindsAbstractsTest extends TestCase
     {
         $app = new Container;
 
-        $app->singleton('foo', function() {
+        $app->singleton('foo', function () {
             return new stdClass;
         });
 
@@ -31,7 +31,7 @@ class RebindsAbstractsTest extends TestCase
     {
         $app = new Container;
 
-        $app->singleton('foo', function() {
+        $app->singleton('foo', function () {
             return new stdClass;
         });
 

@@ -2,9 +2,9 @@
 
 namespace HuangYi\Shadowfax\Tests\Http;
 
+use HuangYi\Shadowfax\Http\Request;
 use Illuminate\Http\Request as IlluminateRequest;
 use Illuminate\Http\UploadedFile;
-use HuangYi\Shadowfax\Http\Request;
 use PHPUnit\Framework\TestCase;
 use Swoole\Http\Request as SwooleRequest;
 

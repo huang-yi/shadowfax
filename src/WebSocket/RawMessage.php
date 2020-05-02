@@ -3,7 +3,6 @@
 namespace HuangYi\Shadowfax\WebSocket;
 
 use HuangYi\Shadowfax\Contracts\WebSocket\Message;
-use Swoole\WebSocket\Frame;
 
 class RawMessage implements Message
 {

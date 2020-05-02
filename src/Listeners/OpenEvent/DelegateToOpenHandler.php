@@ -7,7 +7,6 @@ use HuangYi\Shadowfax\Http\Request;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 use HuangYi\Shadowfax\WebSocket\Connection;
 use HuangYi\Shadowfax\WebSocket\ConnectionCollection;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DelegateToOpenHandler
 {

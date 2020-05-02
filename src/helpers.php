@@ -1,8 +1,8 @@
 <?php
 
 use HuangYi\Shadowfax\Shadowfax;
-use Illuminate\Contracts\Container\Container as ContainerContract;
 use Illuminate\Container\Container;
+use Illuminate\Contracts\Container\Container as ContainerContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Facade;
 use Swoole\Coroutine;

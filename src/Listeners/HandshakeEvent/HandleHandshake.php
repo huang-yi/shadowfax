@@ -28,7 +28,8 @@ class HandleHandshake
             $connection = Connection::init(shadowfax('server'), $request);
 
             $request->getIlluminateRequest()->attributes->set(
-                'swoole_connection', $connection
+                'swoole_connection',
+                $connection
             );
 
             $response = $app->make(Kernel::class)->handle($request, true);

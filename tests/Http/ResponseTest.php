@@ -2,10 +2,10 @@
 
 namespace HuangYi\Shadowfax\Tests\Http;
 
-use Illuminate\Http\Response as IlluminateResponse;
 use HuangYi\Shadowfax\Http\Response;
-use PHPUnit\Framework\TestCase;
+use Illuminate\Http\Response as IlluminateResponse;
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 use Swoole\Http\Response as SwooleResponse;
 
 class ResponseTest extends TestCase
