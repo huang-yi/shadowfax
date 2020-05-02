@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Facade;
 
 /**
  * @method static void listen(string $uri, \HuangYi\Shadowfax\Contracts\WebSocket\Handler $handler)
- * @method static \HuangYi\Shadowfax\Contracts\WebSocket\Handler findHandler(\Illuminate\Http\Request $request)
  */
 class WebSocket extends Facade
 {
