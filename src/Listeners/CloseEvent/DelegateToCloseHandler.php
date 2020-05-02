@@ -5,6 +5,7 @@ namespace HuangYi\Shadowfax\Listeners\CloseEvent;
 use HuangYi\Shadowfax\Events\CloseEvent;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 use HuangYi\Shadowfax\WebSocket\ConnectionCollection;
+use Swoole\WebSocket\Server;
 
 class DelegateToCloseHandler
 {
@@ -18,11 +19,13 @@ class DelegateToCloseHandler
      */
     public function handle(CloseEvent $event)
     {
-        $this->handleWithoutException(function ($app) use ($event) {
-            if ($connection = ConnectionCollection::find($event->fd)) {
-                list($connection, $handler) = $connection;
+        if (! $event->server instanceof Server) {
+            return;
+        }
 
-                $handler->onClose($connection);
+        $this->handleWithoutException(function () use ($event) {
+            if ($connection = ConnectionCollection::find($event->fd)) {
+                $connection->getHandler()->onClose($connection);
             }
         });
 
