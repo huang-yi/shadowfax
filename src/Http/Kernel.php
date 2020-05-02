@@ -5,7 +5,6 @@ namespace HuangYi\Shadowfax\Http;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as IlluminateHttpKernel;
 use Laravel\Lumen\Application as Lumen;
-use Throwable;
 
 class Kernel
 {
