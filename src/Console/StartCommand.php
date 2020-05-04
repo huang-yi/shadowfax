@@ -103,7 +103,7 @@ class StartCommand extends Command
      */
     protected function watch(InputInterface $input, OutputInterface $output)
     {
-        $this->startServerInProcess($input);
+        $this->startServerInProcess($input, $output);
 
         $this->startFswatchProcess($output);
     }
@@ -215,12 +215,13 @@ class StartCommand extends Command
      * Start the Shadowfax in a process.
      *
      * @param  \Symfony\Component\Console\Input\InputInterface  $input
+     * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @return void
      */
-    protected function startServerInProcess(InputInterface $input)
+    protected function startServerInProcess(InputInterface $input, OutputInterface $output)
     {
-        $process = new Process(function () use ($input) {
-            $this->start($input);
+        $process = new Process(function () use ($input, $output) {
+            $this->start($input, $output);
         });
 
         $process->start();

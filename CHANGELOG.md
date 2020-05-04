@@ -30,6 +30,7 @@
 ### Fixed
 
 - Fix `HuangYi\Shadowfax\WebSocket\Connection::close()`
+- Fix `--watch` option in `start` command
 
 ### Changed
 
