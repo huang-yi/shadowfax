@@ -20,6 +20,10 @@ class RegisterEventListeners
             \HuangYi\Shadowfax\Listeners\ControllerRequestEvent\HandleInstruction::class,
         ],
 
+        \HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent::class => [
+            \HuangYi\Shadowfax\Listeners\FrameworkBootstrappedEvent\OverrideDatabaseManager::class,
+        ],
+
         \HuangYi\Shadowfax\Events\HandshakeEvent::class => [
             \HuangYi\Shadowfax\Listeners\HandshakeEvent\HandleHandshake::class,
         ],
