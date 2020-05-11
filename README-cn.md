@@ -2,7 +2,8 @@
 
 # Shadowfax
 
-Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)之上，从而获得大幅的性能提升。
+Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)之上，从而获得大幅的性能提升。开发者可以
+放心地在Laravel中使用协程而不用担心IoC容器的问题。自v2.4开始支持MySQL连接池，不需要修改任何代码，继续像原来一样优雅地使用Model。
 
 ## 安装
 
@@ -51,9 +52,13 @@ php artisan shadowfax:publish
 
 - **message**: 指定消息实体类名，这个类必须实现`HuangYi\Shadowfax\Contracts\WebSocket\Message`接口.
 
-3. `controller`配置：
+5. `controller`配置：
 
 `controller`是指控制服务器，用于控制Shadowfax的停止与重载，这里可以配置控制服务器的`host`和`port`。
+
+6. `db_pools`配置：
+
+数据库连接池配置，可为多个数据库连接启用连接池。键名为连接名，键值为连接池容量。具体启用方法请阅读[这里](#数据库连接池)
 
 ## 命令
 
@@ -86,6 +91,32 @@ php artisan shadowfax:publish
 Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.enable_coroutine`和`server.task_enable_coroutine`。
 
 > 注意：如果启用了`一键协程化`或者配置了`hook_flags`，请注意`app_pool_capacity * server.worker_num`的值不能超过数据库的最大连接数，否则可能因为连接数过多而导致报错。
+
+## 数据库连接池
+
+Shadowfax完美地将数据库连接池融入到Laravel中，开发者只需要像平时一样使用Model或者构造查询，不用去考虑何时获取连接，何时回收连接，Shadowfax已为你处理好了一切。
+
+首先，必须启用Swoole协程与一键化协程：
+
+```yaml
+server:
+  enable_coroutine: true
+  hook_flags: 1879048191
+```
+
+其中`1879048191`为常量`SWOOLE_HOOK_ALL`的整数值，可根据自身需求自行调整。
+
+然后在配置文件中添加`db_pools`配置：
+
+```yaml
+db_pools:
+  mysql: 3
+  mysql2: 5
+```
+
+其中键名`mysql`与`mysql2`是Laravel数据库配置项`database.connections`中的连接名，可配置多个。键值为连接池容量，需要根据自身业务调整。
+
+> 注意：目前仅支持mysql驱动的连接池
 
 ## WebSocket服务器
 

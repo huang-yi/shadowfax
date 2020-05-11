@@ -55,6 +55,17 @@ This option allows you to set a group of abstracts in the Laravel IoC container.
 
 This section defines the controller server configuration. The controller server allows you to stop or reload your Shadowfax.
 
+6. `db_pools` configuration：
+
+This option allows you to configure database connection pools. You can add multiple key-value pairs in here.
+The key name is a connection name in your `database.connections`, the key value is the connection pool capacity. e.g.:
+
+```yaml
+db_pools:
+  mysql: 3
+  mysql2: 5
+``` 
+
 ## Command
 
 Shadowfax provides a `shadowfax` command to manage your server processes. This command is build on the Symfony console component, so you can run `php shadowfax list` for more information.
@@ -66,6 +77,28 @@ You may run the `php shadowfax start` command to start Shadowfax server. The `--
 The `php shadowfax reload` allows you to reload the Shadowfax processes.
 
 The `php shadowfax stop` allows you to stop the Shadowfax server.
+
+## Database Connection Pool
+
+Before using connection pools, you must enable Swoole coroutine and configure hook_flags:
+
+```yaml
+server:
+  enable_coroutine: true
+  hook_flags: 1879048191
+```
+
+`1879048191` is the value of constant `SWOOLE_HOOK_ALL`.
+
+Then, add your connection to the `db_pools` option, and specify a pool capacity:
+
+```yaml
+db_pools:
+  mysql: 3
+  mysql2: 5
+```
+
+> Notice: Currently only mysql driver connection is supported.
 
 ## WebSocket Server
 
