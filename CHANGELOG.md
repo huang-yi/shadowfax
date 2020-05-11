@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.4.0
+
+### Added
+
+- Add mysql connection pool support
+
+
 ## v2.3.0
 
 ### Added
