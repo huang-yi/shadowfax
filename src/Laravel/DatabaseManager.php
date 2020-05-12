@@ -39,7 +39,7 @@ class DatabaseManager extends LaravelDatabaseManager
      * @param  array  $poolsConfig
      * @return void
      */
-    public function __construct($app, ConnectionFactory $factory, array $poolsConfig)
+    public function __construct($app, ConnectionFactory $factory, array $poolsConfig = [])
     {
         parent::__construct($app, $factory);
 
