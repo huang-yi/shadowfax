@@ -80,7 +80,7 @@ The `php shadowfax stop` allows you to stop the Shadowfax server.
 
 ## Database Connection Pool
 
-Before using connection pools, you must enable Swoole coroutine and configure hook_flags:
+Before using database connection pools, you must enable Swoole coroutine and configure the hook_flags:
 
 ```yaml
 server:

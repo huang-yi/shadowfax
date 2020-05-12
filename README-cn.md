@@ -3,7 +3,7 @@
 # Shadowfax
 
 Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)之上，从而获得大幅的性能提升。开发者可以
-放心地在Laravel中使用协程而不用担心IoC容器的问题。自v2.4开始支持MySQL连接池，不需要修改任何代码，继续像原来一样优雅地使用Model。
+放心地在Laravel中使用协程而不用担心IoC容器的问题。完美支持MySQL连接池，不需要额外学习，继续像原来一样优雅地使用Model。
 
 ## 安装
 
@@ -90,13 +90,13 @@ php artisan shadowfax:publish
 
 Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.enable_coroutine`和`server.task_enable_coroutine`。
 
-> 注意：如果启用了`一键协程化`或者配置了`hook_flags`，请注意`app_pool_capacity * server.worker_num`的值不能超过数据库的最大连接数，否则可能因为连接数过多而导致报错。
+> 注意：在协程模式下操作数据库，如果未使用连接池技术，很容易引发连接数过多的异常。如果你的应用正在使用MySql，请[启用数据库连接池](#数据库连接池)，否则不建议启用协程。
 
 ## 数据库连接池
 
 Shadowfax完美地将数据库连接池融入到Laravel中，开发者只需要像平时一样使用Model或者构造查询，不用去考虑何时获取连接，何时回收连接，Shadowfax已为你处理好了一切。
 
-首先，必须启用Swoole协程与一键化协程：
+首先，必须启用Swoole的协程与一键化协程：
 
 ```yaml
 server:
@@ -106,7 +106,7 @@ server:
 
 其中`1879048191`为常量`SWOOLE_HOOK_ALL`的整数值，可根据自身需求自行调整。
 
-然后在配置文件中添加`db_pools`配置：
+然后，将需要创建连接池的数据库连接添加到`db_pools`配置中即可：
 
 ```yaml
 db_pools:
