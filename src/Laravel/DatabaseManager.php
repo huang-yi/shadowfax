@@ -25,6 +25,13 @@ class DatabaseManager extends LaravelDatabaseManager
     protected static $pools = [];
 
     /**
+     * The callback to be executed to reconnect to a database in pool.
+     *
+     * @var callable
+     */
+    protected $poolReconnector;
+
+    /**
      * Create a new DatabaseManager instance.
      *
      * @param  \Illuminate\Contracts\Foundation\Application  $app
@@ -37,6 +44,10 @@ class DatabaseManager extends LaravelDatabaseManager
         parent::__construct($app, $factory);
 
         $this->poolsConfig = $poolsConfig;
+
+        $this->poolReconnector = function ($connection) {
+            $this->poolReconnect($connection);
+        };
     }
 
     /**
@@ -50,7 +61,7 @@ class DatabaseManager extends LaravelDatabaseManager
         $name = $name ?: $this->getDefaultConnection();
 
         if (! $this->inCoroutine() ||
-            ! isset($this->poolsConfig[$name]) ||
+            ! $this->isPoolConnection($name) ||
             ! $this->isConnectionDriverSupportPool($name)
         ) {
             return parent::connection($name);
@@ -97,10 +108,19 @@ class DatabaseManager extends LaravelDatabaseManager
     protected function initializePool($name)
     {
         $capacity = (int) $this->poolsConfig[$name];
+
         $pool = new Channel($capacity);
 
         for ($i = 0; $i < $capacity; $i++) {
-            $pool->push($this->makeConnection($name));
+            [$database, $type] = $this->parseConnectionName($name);
+
+            $connection = $this->configure(
+                $this->makeConnection($database), $type
+            );
+
+            $connection->setReconnector($this->poolReconnector);
+
+            $pool->push($connection);
         }
 
         static::$pools[$name] = $pool;
@@ -164,6 +184,19 @@ class DatabaseManager extends LaravelDatabaseManager
     }
 
     /**
+     * Determine if the connection is a connection in pool.
+     *
+     * @param  string  $name
+     * @return bool
+     */
+    protected function isPoolConnection($name)
+    {
+        $name = $name ?: $this->getDefaultConnection();
+
+        return isset($this->poolsConfig[$name]);
+    }
+
+    /**
      * Determine if the connection driver support pool.
      *
      * @param  string  $name
@@ -174,5 +207,35 @@ class DatabaseManager extends LaravelDatabaseManager
         $config = $this->configuration($name);
 
         return in_array($config['driver'], ['mysql']);
+    }
+
+    /**
+     * Reconnect to the given database.
+     *
+     * @param  string|null  $name
+     * @return \Illuminate\Database\Connection
+     */
+    public function reconnect($name = null)
+    {
+        if (! $this->isPoolConnection($name)) {
+            return parent::reconnect($name);
+        }
+    }
+
+    /**
+     * Reconnect the connection in pool.
+     *
+     * @param  \Illuminate\Database\Connection  $connection
+     * @return \Illuminate\Database\Connection
+     */
+    public function poolReconnect(Connection $connection)
+    {
+        $connection->disconnect();
+
+        $fresh = $this->makeConnection($connection->getName());
+
+        return $connection
+            ->setPdo($fresh->getRawPdo())
+            ->setReadPdo($fresh->getRawReadPdo());
     }
 }
