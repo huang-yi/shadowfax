@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.4.1
+
+### Fixed
+
+- Fix rebind abstracts named with class name
+
+
 ## v2.4.0
 
 ### Added
