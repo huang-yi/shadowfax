@@ -19,7 +19,7 @@ abstracts:
   - redirect
   - auth
   - auth.driver
-  - \Illuminate\Session\Middleware\StartSession
+  - Illuminate\Session\Middleware\StartSession
 
 controller:
   host: 127.0.0.1

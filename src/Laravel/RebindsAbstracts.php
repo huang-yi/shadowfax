@@ -16,6 +16,8 @@ trait RebindsAbstracts
     public function rebindAbstracts(Container $app, array $abstracts)
     {
         foreach ($abstracts as $abstract) {
+            $abstract = trim($abstract, "\\");
+
             if ($app->bound($abstract)) {
                 static::rebindAbstract($app, $abstract);
             }
