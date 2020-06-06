@@ -305,7 +305,7 @@ Transfer/sec:     31.18MB
 - Shadowfax 2.0.0 (with 10 worker processes)
 
 ```shell
-$ wrk -c100 http://127.0.0.1:1215/
+wrk -c100 http://127.0.0.1:1215/
 ```
 
 Result:
