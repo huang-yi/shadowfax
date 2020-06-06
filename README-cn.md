@@ -92,9 +92,9 @@ Redis连接池配置，可为多个Redis连接启用连接池。键名为连接�
 
 ## 协程
 
-Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.enable_coroutine`和`server.task_enable_coroutine`。
+Shadowfax默认是关闭协程特性的，如需启用请调整配置项`server.enable_coroutine`。
 
-> 注意：在协程模式下操作数据库，如果未使用连接池技术，很容易引发连接数过多的异常。如果你的应用正在使用MySql，请[启用数据库连接池](#数据库连接池)，否则不建议启用协程。
+> 注意：如果你启用了协程并有数据库或者Redis操作，请务必启用[数据库连接池](#数据库连接池)或者[Redis连接池](#Redis连接池)，否则容易引发连接数过多的异常。
 
 ## 数据库连接池
 
