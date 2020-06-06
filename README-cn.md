@@ -105,10 +105,8 @@ Shadowfax完美地将数据库连接池融入到Laravel中，开发者只需要�
 ```yaml
 server:
   enable_coroutine: true
-  hook_flags: 1879048191
+  hook_flags: SWOOLE_HOOK_ALL
 ```
-
-其中`1879048191`为常量`SWOOLE_HOOK_ALL`的整数值，可根据自身需求自行调整。
 
 然后，将需要创建连接池的数据库连接添加到`db_pools`配置中即可：
 
@@ -120,7 +118,9 @@ db_pools:
 
 其中键名`mysql`与`mysql2`是Laravel数据库配置项`database.connections`中的连接名，可配置多个。键值为连接池容量，需要根据自身业务调整。
 
-> 注意：目前仅支持mysql驱动的连接池
+> 注意1：目前仅支持mysql驱动的连接池
+
+> 注意2：`server.hook_flags`仅支持计算好的整型和`SWOOLE_HOOK_ALL`这一个特殊的字符串，如果你想设置使用Swoole的内置常量来设置hook范围，请在`bootstrap/shadowfax.php`中使用`Swoole\Runtime::enableCoroutine()`或者`Swoole\Coroutine::set()`方法进行设置。
 
 ## Redis连接池
 

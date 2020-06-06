@@ -95,10 +95,8 @@ Before using database connection pools, you must enable Swoole coroutine and con
 ```yaml
 server:
   enable_coroutine: true
-  hook_flags: 1879048191
+  hook_flags: SWOOLE_HOOK_ALL
 ```
-
-`1879048191` is the value of constant `SWOOLE_HOOK_ALL`.
 
 Then, add your connection to the `db_pools` option, and specify a pool capacity:
 
