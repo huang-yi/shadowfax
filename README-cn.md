@@ -120,11 +120,11 @@ db_pools:
 
 > 注意1：目前仅支持mysql驱动的连接池
 
-> 注意2：`server.hook_flags`仅支持计算好的整型和`SWOOLE_HOOK_ALL`这一个特殊的字符串，如果你想设置使用Swoole的内置常量来设置hook范围，请在`bootstrap/shadowfax.php`中使用`Swoole\Runtime::enableCoroutine()`或者`Swoole\Coroutine::set()`方法进行设置。
+> 注意2：`server.hook_flags`仅支持整型和`SWOOLE_HOOK_ALL`这一个特殊的字符串，如果你想使用Swoole的内置常量来设置hook范围，请在`bootstrap/shadowfax.php`中使用`Swoole\Runtime::enableCoroutine()`或者`Swoole\Coroutine::set()`方法进行设置。
 
 ## Redis连接池
 
-和数据库连接池一样，使用之前都需要启用一键协程化，不同的是你需要将需要建立连接池的redis连接名配置到`redis_pools`下面：
+和数据库连接池一样，使用之前都需要启用一键协程化，不同的是你需要将redis连接名配置到`redis_pools`下面：
 
 ```yaml
 redis_pools:
