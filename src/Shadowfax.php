@@ -10,7 +10,7 @@ class Shadowfax extends Container
     /**
      * The current version.
      */
-    const VERSION = '2.4.1';
+    const VERSION = '2.5.0';
 
     /**
      * The base path.
