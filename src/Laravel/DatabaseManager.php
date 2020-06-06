@@ -5,24 +5,10 @@ namespace HuangYi\Shadowfax\Laravel;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Database\DatabaseManager as LaravelDatabaseManager;
-use Swoole\Coroutine;
-use Swoole\Coroutine\Channel;
 
 class DatabaseManager extends LaravelDatabaseManager
 {
-    /**
-     * The pools configuration.
-     *
-     * @var array
-     */
-    protected $poolsConfig;
-
-    /**
-     * The database pools.
-     *
-     * @var array
-     */
-    protected static $pools = [];
+    use HasConnectionPools;
 
     /**
      * The callback to be executed to reconnect to a database in pool.
@@ -75,91 +61,20 @@ class DatabaseManager extends LaravelDatabaseManager
     }
 
     /**
-     * Get the connection from pool.
+     * Resolve the connection.
      *
      * @param  string  $name
      * @return \Illuminate\Database\Connection
      */
-    protected function getConnectionFromPool($name)
+    protected function resolveConnection($name)
     {
-        if (! isset(static::$pools[$name])) {
-            $this->initializePool($name);
-        }
+        [$database, $type] = $this->parseConnectionName($name);
 
-        $pool = static::$pools[$name];
+        $connection = $this->configure($this->makeConnection($database), $type);
 
-        $connection = $pool->pop();
-
-        $this->setConnectionToContext($name, $connection);
-
-        Coroutine::defer(function () use ($pool, $connection) {
-            $pool->push($connection);
-        });
+        $connection->setReconnector($this->poolReconnector);
 
         return $connection;
-    }
-
-    /**
-     * Initialize the connection pool.
-     *
-     * @param  string  $name
-     * @return void
-     */
-    protected function initializePool($name)
-    {
-        $capacity = (int) $this->poolsConfig[$name];
-
-        $pool = new Channel($capacity);
-
-        for ($i = 0; $i < $capacity; $i++) {
-            [$database, $type] = $this->parseConnectionName($name);
-
-            $connection = $this->configure(
-                $this->makeConnection($database), $type
-            );
-
-            $connection->setReconnector($this->poolReconnector);
-
-            $pool->push($connection);
-        }
-
-        static::$pools[$name] = $pool;
-    }
-
-    /**
-     * Get the connection from coroutine context.
-     *
-     * @param  string  $name
-     * @param  int  $cid
-     * @return \Illuminate\Database\Connection|null
-     */
-    protected function getConnectionFromContext($name, $cid = null)
-    {
-        if (in_array($cid, [-1, false], true)) {
-            return null;
-        }
-
-        $key = $this->getConnectionKeyInContext($name);
-
-        if (! $connection = Coroutine::getContext($cid)[$key] ?? null) {
-            return $this->getConnectionFromContext($name, Coroutine::getPcid($cid));
-        }
-
-        return $connection;
-    }
-
-    /**
-     * Set the connection to coroutine context.
-     *
-     * @param  string  $name
-     * @param  \Illuminate\Database\Connection  $connection
-     * @return void
-     */
-    protected function setConnectionToContext($name, Connection $connection)
-    {
-        $key = $this->getConnectionKeyInContext($name);
-
-        Coroutine::getContext()[$key] = $connection;
     }
 
     /**
@@ -171,29 +86,6 @@ class DatabaseManager extends LaravelDatabaseManager
     protected function getConnectionKeyInContext($name)
     {
         return 'db.connections.'.$name;
-    }
-
-    /**
-     * Determine if run in coroutine.
-     *
-     * @return bool
-     */
-    protected function inCoroutine()
-    {
-        return Coroutine::getCid() !== -1;
-    }
-
-    /**
-     * Determine if the connection is a connection in pool.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    protected function isPoolConnection($name)
-    {
-        $name = $name ?: $this->getDefaultConnection();
-
-        return isset($this->poolsConfig[$name]);
     }
 
     /**
@@ -217,6 +109,8 @@ class DatabaseManager extends LaravelDatabaseManager
      */
     public function reconnect($name = null)
     {
+        $name = $name ?: $this->getDefaultConnection();
+
         if (! $this->isPoolConnection($name)) {
             return parent::reconnect($name);
         }

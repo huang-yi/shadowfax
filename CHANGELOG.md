@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.5.0
+
+### Added
+
+- Add redis connection pool support
+
+
 ## v2.4.1
 
 ### Fixed

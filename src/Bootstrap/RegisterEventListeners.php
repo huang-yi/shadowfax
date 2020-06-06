@@ -22,6 +22,7 @@ class RegisterEventListeners
 
         \HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent::class => [
             \HuangYi\Shadowfax\Listeners\FrameworkBootstrappedEvent\OverrideDatabaseManager::class,
+            \HuangYi\Shadowfax\Listeners\FrameworkBootstrappedEvent\OverrideRedisManager::class,
         ],
 
         \HuangYi\Shadowfax\Events\HandshakeEvent::class => [

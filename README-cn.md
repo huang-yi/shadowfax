@@ -60,6 +60,10 @@ php artisan shadowfax:publish
 
 数据库连接池配置，可为多个数据库连接启用连接池。键名为连接名，键值为连接池容量。具体启用方法请阅读[这里](#数据库连接池)
 
+6. `redis_pools`配置：
+
+Redis连接池配置，可为多个Redis连接启用连接池。键名为连接名，键值为连接池容量。具体启用方法请阅读[这里](#Redis连接池)
+
 ## 命令
 
 安装Shadowfax后，会发布一个`shadowfax`脚本位于项目根目录，该脚本提供一系列命令来控制服务器进程的启动、停止与重载。该脚本基于Symfony的Console模块实现，所以可以执行`php shadowfax list`来获得帮助。
@@ -117,6 +121,15 @@ db_pools:
 其中键名`mysql`与`mysql2`是Laravel数据库配置项`database.connections`中的连接名，可配置多个。键值为连接池容量，需要根据自身业务调整。
 
 > 注意：目前仅支持mysql驱动的连接池
+
+## Redis连接池
+
+和数据库连接池一样，使用之前都需要启用一键协程化，不同的是你需要将需要建立连接池的redis连接名配置到`redis_pools`下面：
+
+```yaml
+redis_pools:
+  default: 3
+```
 
 ## WebSocket服务器
 

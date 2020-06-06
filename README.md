@@ -64,7 +64,17 @@ The key name is a connection name in your `database.connections`, the key value 
 db_pools:
   mysql: 3
   mysql2: 5
-``` 
+```
+
+7. `redis_pools` configuration：
+
+This option allows you to configure redis connection pools. You can add multiple key-value pairs in here.
+The key name is a connection name in your `database.redis`, the key value is the connection pool capacity. e.g.:
+
+```yaml
+db_pools:
+  default: 3
+```
 
 ## Command
 
@@ -99,6 +109,15 @@ db_pools:
 ```
 
 > Notice: Currently only mysql driver connection is supported.
+
+## Redis Connection Pool
+
+The difference with database connection pool is that redis connection pools are configured under the `redis_pools` option.
+
+```yaml
+redis_pools:
+  default: 3
+```
 
 ## WebSocket Server
 

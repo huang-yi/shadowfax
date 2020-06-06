@@ -3,10 +3,11 @@
 namespace HuangYi\Shadowfax\Listeners\FrameworkBootstrappedEvent;
 
 use HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent;
-use HuangYi\Shadowfax\Laravel\DatabaseManager;
+use HuangYi\Shadowfax\Laravel\RedisManager;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
+use Illuminate\Support\Arr;
 
-class OverrideDatabaseManager
+class OverrideRedisManager
 {
     use HasHelpers;
 
@@ -18,12 +19,13 @@ class OverrideDatabaseManager
      */
     public function handle(FrameworkBootstrappedEvent $event)
     {
-        if ($event->app->bound('db')) {
-            $event->app->singleton('db', function ($app) {
-                return new DatabaseManager(
+        if ($event->app->bound('redis')) {
+            $event->app->singleton('redis', function ($app) {
+                return new RedisManager(
                     $app,
-                    $app['db.factory'],
-                    $this->config('db_pools', [])
+                    Arr::pull($config, 'client', 'phpredis'),
+                    $app->make('config')->get('database.redis', []),
+                    $this->config('redis_pools', [])
                 );
             });
         }
