@@ -181,7 +181,28 @@ class StartCommand extends Command
      */
     protected function getSettings()
     {
-        return (array) $this->config('server', []);
+        $settings = (array) $this->config('server', []);
+
+        if (isset($settings['hook_flags'])) {
+            $settings['hook_flags'] = $this->formatHookFlags($settings['hook_flags']);
+        }
+
+        return $settings;
+    }
+
+    /**
+     * Format the hook flags.
+     *
+     * @param  int|string  $hookFlags
+     * @return int
+     */
+    protected function formatHookFlags($hookFlags)
+    {
+        if ($hookFlags == 'SWOOLE_HOOK_ALL') {
+            $hookFlags = SWOOLE_HOOK_ALL;
+        }
+
+        return (int) $hookFlags;
     }
 
     /**
