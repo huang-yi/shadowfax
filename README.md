@@ -72,7 +72,7 @@ This option allows you to configure redis connection pools. You can add multiple
 The key name is a connection name in your `database.redis`, the key value is the connection pool capacity. e.g.:
 
 ```yaml
-db_pools:
+redis_pools:
   default: 3
 ```
 
