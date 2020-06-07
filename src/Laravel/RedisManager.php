@@ -34,9 +34,7 @@ class RedisManager extends LaravelRedisManager
     {
         $name = $name ?: 'default';
 
-        if (! $this->inCoroutine() ||
-            ! $this->isPoolConnection($name)
-        ) {
+        if (! $this->isPoolConnection($name)) {
             return parent::connection($name);
         }
 

@@ -125,23 +125,13 @@ trait HasConnectionPools
     }
 
     /**
-     * Determine if run in coroutine.
-     *
-     * @return bool
-     */
-    protected function inCoroutine()
-    {
-        return Coroutine::getCid() !== -1;
-    }
-
-    /**
-     * Determine if the connection is a connection in pool.
+     * Determine if the connection is a pool connection.
      *
      * @param  string  $name
      * @return bool
      */
     protected function isPoolConnection($name)
     {
-        return isset($this->poolsConfig[$name]);
+        return Coroutine::getCid() !== -1 && isset($this->poolsConfig[$name]);
     }
 }
