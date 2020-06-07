@@ -1,6 +1,18 @@
 # Release Notes
 
 
+## v2.5.1
+
+### Fixed
+
+- Fix determine if a connection is a pool connection
+
+### Changed
+
+- Remove `server.task_worker_num` and `server.task_enable_coroutine` from `shadowfax.yml`
+- Add `db_pools` and `redis_pools` to `shadowfax.yml`
+
+
 ## v2.5.0
 
 ### Added
