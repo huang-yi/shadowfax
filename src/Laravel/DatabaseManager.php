@@ -110,7 +110,9 @@ class DatabaseManager extends LaravelDatabaseManager
     {
         $name = $name ?: $this->getDefaultConnection();
 
-        if (! $this->isPoolConnection($name)) {
+        if (! $this->isPoolConnection($name) ||
+            ! $this->isConnectionDriverSupportPool($name)
+        ) {
             return parent::reconnect($name);
         }
     }
