@@ -3,11 +3,14 @@
 namespace HuangYi\Shadowfax\Laravel;
 
 use HuangYi\Shadowfax\Contracts\AppPool;
+use HuangYi\Shadowfax\Events\AppRecyclingEvent;
+use HuangYi\Shadowfax\HasEventDispatcher;
 use Illuminate\Contracts\Container\Container;
 use Swoole\Coroutine\Channel;
 
 class CoroutineAppPool implements AppPool
 {
+    use HasEventDispatcher;
     use RebindsAbstracts;
 
     /**
@@ -94,6 +97,8 @@ class CoroutineAppPool implements AppPool
     public function push(Container $app)
     {
         $this->rebindAbstracts($app, $this->abstracts);
+
+        $this->dispatch(AppRecyclingEvent::class, $app);
 
         $this->channel->push($app);
     }

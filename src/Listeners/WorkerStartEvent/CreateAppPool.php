@@ -33,6 +33,8 @@ class CreateAppPool
             $pool = new AppPool($bootstrapper, $this->config('abstracts', []));
         }
 
+        $pool->setEvents(shadowfax('events'));
+
         shadowfax()->instance('app_pool', $pool);
     }
 
