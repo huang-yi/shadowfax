@@ -1,6 +1,14 @@
 # Release Notes
 
 
+## Unreleased
+
+### Added
+
+- Add `HuangYi\Shadowfax\HasEventDispatcher` trait
+- Add `HuangYi\Shadowfax\Events\AppRecyclingEvent`, it will be dispatched when recycling app instance
+
+
 ## v2.5.1
 
 ### Fixed
