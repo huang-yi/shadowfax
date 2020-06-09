@@ -5,6 +5,7 @@ namespace HuangYi\Shadowfax\Laravel;
 use HuangYi\Shadowfax\Contracts\EventDispatcher;
 use HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent;
 use HuangYi\Shadowfax\Exceptions\InvalidFrameworkBootstrapperException;
+use HuangYi\Shadowfax\HasEventDispatcher;
 use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
@@ -14,6 +15,8 @@ use Laravel\Lumen\Application as Lumen;
 
 class FrameworkBootstrapper
 {
+    use HasEventDispatcher;
+
     /**
      * The application bootstrap path.
      *
@@ -27,13 +30,6 @@ class FrameworkBootstrapper
      * @var bool
      */
     protected $isConsoleKernel;
-
-    /**
-     * The EventDispatcher instance.
-     *
-     * @var \HuangYi\Shadowfax\Contracts\EventDispatcher
-     */
-    protected $events;
 
     /**
      * Create a new FrameworkBootstrapper instance.
@@ -62,7 +58,7 @@ class FrameworkBootstrapper
 
         $this->bootstrapApplication($app);
 
-        $this->dispatch(new FrameworkBootstrappedEvent($app));
+        $this->dispatch(FrameworkBootstrappedEvent::class, $app);
 
         return $app;
     }
@@ -117,19 +113,6 @@ class FrameworkBootstrapper
             $app->instance('request', Request::create('http://localhost'));
 
             $app->make(HttpKernel::class)->bootstrap();
-        }
-    }
-
-    /**
-     * Dispatch the event.
-     *
-     * @param  object  $event
-     * @return void
-     */
-    protected function dispatch(object $event)
-    {
-        if ($this->events) {
-            $this->events->dispatch($event);
         }
     }
 }
