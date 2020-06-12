@@ -46,9 +46,7 @@ class DatabaseManager extends LaravelDatabaseManager
     {
         $name = $name ?: $this->getDefaultConnection();
 
-        if (! $this->isPoolConnection($name) ||
-            ! $this->isConnectionDriverSupportPool($name)
-        ) {
+        if (! $this->isPoolConnection($name)) {
             return parent::connection($name);
         }
 
@@ -88,19 +86,6 @@ class DatabaseManager extends LaravelDatabaseManager
     }
 
     /**
-     * Determine if the connection driver support pool.
-     *
-     * @param  string  $name
-     * @return bool
-     */
-    protected function isConnectionDriverSupportPool($name)
-    {
-        $config = $this->configuration($name);
-
-        return in_array($config['driver'], ['mysql']);
-    }
-
-    /**
      * Reconnect to the given database.
      *
      * @param  string|null  $name
@@ -110,9 +95,7 @@ class DatabaseManager extends LaravelDatabaseManager
     {
         $name = $name ?: $this->getDefaultConnection();
 
-        if (! $this->isPoolConnection($name) ||
-            ! $this->isConnectionDriverSupportPool($name)
-        ) {
+        if (! $this->isPoolConnection($name)) {
             return parent::reconnect($name);
         }
     }
