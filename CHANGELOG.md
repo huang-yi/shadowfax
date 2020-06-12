@@ -8,6 +8,10 @@
 - Add `HuangYi\Shadowfax\HasEventDispatcher` trait
 - Add `HuangYi\Shadowfax\Events\AppPushingEvent`, it will be dispatched when recycling app instance
 
+### Changed
+
+- Remove driver support detection when creating database connection pool
+
 
 ## v2.5.1
 
