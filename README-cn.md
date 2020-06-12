@@ -3,11 +3,11 @@
 # Shadowfax
 
 Shadowfax可以使你的Laravel应用运行在[Swoole](https://www.swoole.com/)之上，从而获得大幅的性能提升。开发者可以
-放心地在Laravel中使用协程而不用担心IoC容器的问题。完美支持MySQL连接池，不需要额外学习，继续像原来一样优雅地使用Model。
+放心地在Laravel中使用协程而不用担心IoC容器的问题。完美支持数据库连接池，不需要额外学习，继续像原来一样优雅地使用Model。
 
 ## 安装
 
-你可以使用Composer将Shadowfax安装到你的Laravel项目中:
+你可以使用Composer将Shadowfax安装到你的Laravel项目中：
 
 ```shell
 composer require huang-yi/shadowfax
@@ -117,8 +117,6 @@ db_pools:
 ```
 
 其中键名`mysql`与`mysql2`是Laravel数据库配置项`database.connections`中的连接名，可配置多个。键值为连接池容量，需要根据自身业务调整。
-
-> 注意1：目前仅支持mysql驱动的连接池
 
 > 注意2：`server.hook_flags`仅支持整型和`SWOOLE_HOOK_ALL`这一个特殊的字符串，如果你想使用Swoole的内置常量来设置hook范围，请在`bootstrap/shadowfax.php`中使用`Swoole\Runtime::enableCoroutine()`或者`Swoole\Coroutine::set()`方法进行设置。
 

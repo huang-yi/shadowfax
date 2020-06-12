@@ -106,8 +106,6 @@ db_pools:
   mysql2: 5
 ```
 
-> Notice: Currently only mysql driver connection is supported.
-
 ## Redis Connection Pool
 
 The difference with database connection pool is that redis connection pools are configured under the `redis_pools` option.
