@@ -2,7 +2,7 @@
 
 namespace HuangYi\Shadowfax\Events;
 
-class AppRecyclingEvent
+class AppPushingEvent
 {
     /**
      * The Laravel application instance.

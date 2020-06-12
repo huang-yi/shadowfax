@@ -3,7 +3,7 @@
 namespace HuangYi\Shadowfax\Laravel;
 
 use HuangYi\Shadowfax\Contracts\AppPool as PoolContract;
-use HuangYi\Shadowfax\Events\AppRecyclingEvent;
+use HuangYi\Shadowfax\Events\AppPushingEvent;
 use HuangYi\Shadowfax\HasEventDispatcher;
 use Illuminate\Contracts\Container\Container;
 
@@ -60,6 +60,6 @@ class AppPool implements PoolContract
     {
         $this->rebindAbstracts($app, $this->abstracts);
 
-        $this->dispatch(AppRecyclingEvent::class, $app);
+        $this->dispatch(AppPushingEvent::class, $app);
     }
 }
