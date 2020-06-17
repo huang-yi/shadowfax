@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.6.1
+
+### Fixed
+
+- Fix override redis manager ([#14](https://github.com/huang-yi/shadowfax/issues/14))
+
+
 ## v2.6.0
 
 ### Added
