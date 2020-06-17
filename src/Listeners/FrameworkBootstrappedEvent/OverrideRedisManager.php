@@ -21,10 +21,12 @@ class OverrideRedisManager
     {
         if ($event->app->bound('redis')) {
             $event->app->singleton('redis', function ($app) {
+                $config = $app->make('config')->get('database.redis', []);
+
                 return new RedisManager(
                     $app,
                     Arr::pull($config, 'client', 'phpredis'),
-                    $app->make('config')->get('database.redis', []),
+                    $config,
                     $this->config('redis_pools', [])
                 );
             });
