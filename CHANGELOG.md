@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.6.2
+
+### Fixed
+
+- Fix RedisManager constructor in lower Laravel versions ([#17](https://github.com/huang-yi/shadowfax/issues/17))
+
+
 ## v2.6.1
 
 ### Fixed
