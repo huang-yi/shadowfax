@@ -1,0 +1,20 @@
+<?php
+
+namespace DummyNamespace;
+
+use HuangYi\Shadowfax\Contracts\Cleaner;
+use Illuminate\Contracts\Container\Container;
+
+class DummyClass implements Cleaner
+{
+    /**
+     * Clean something.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
+     */
+    public function clean(Container $app)
+    {
+        //
+    }
+}
