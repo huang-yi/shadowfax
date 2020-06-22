@@ -6,6 +6,7 @@
 ### Added
 
 - Add cleaner support
+- Add cleaner and handler scaffold commands
 
 
 ## v2.6.2
