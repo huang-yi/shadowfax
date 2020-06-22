@@ -102,4 +102,4 @@ if (defined('SHADOWFAX_START')) {
 
 现在你就可以通过`php shadowfax start`命令来启动你的WebSocket服务了。
 
-> {primary} WebSocket路由本质上还是一个Http路由，所以也可以使用domain、group、prefix、middleware等特性，不过middleware仅对`onOpen`回调有效。
+> {primary} WebSocket路由本质上还是一个Http路由，所以也可以使用domain、group、prefix、middleware等特性，不过middleware仅在握手阶段有效。
