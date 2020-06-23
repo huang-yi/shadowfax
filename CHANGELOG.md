@@ -1,12 +1,12 @@
 # Release Notes
 
 
-## Unrealsed
+## v2.7.0
 
 ### Added
 
 - Add cleaner support
-- Add cleaner and handler scaffold commands
+- Add cleaner and WebSocket handler scaffold commands
 
 
 ## v2.6.2
