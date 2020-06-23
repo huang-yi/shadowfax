@@ -19,6 +19,9 @@ abstracts:
   - auth.driver
   - Illuminate\Session\Middleware\StartSession
 
+cleaners:
+  - app/Cleaners/
+
 db_pools:
   mysql: 3
 
