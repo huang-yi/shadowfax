@@ -86,12 +86,18 @@ abstracts:
 <a name="cleaners"></a>
 ## Cleaners
 
-设置`Cleaner`列表。该配置项为数组类型，可帮助开发者注册自定义的`Cleaner`，所有的`Cleaner`将在请求结束时运行。例如：
+设置`Cleaner`列表。该配置项为数组类型，可帮助开发者注册自定义的`Cleaner`，所有的`Cleaner`将在请求结束时运行。
+该配置项除了可以添加Cleaner类名，也可以添加目录，Shadowfax会自动加载目录下所有的Cleaner类。
+需要注意的是，只支持配置`app/`目录下的目录，并且必须遵循PSR4规范。
+
+例如：
 
 ```yaml
 cleaners:
-  - App\Cleaners\FooCleaner
-  - App\Cleaners\BarCleaner
+  - app/Cleaners/
+  - app/OtherDir/
+  - CustomNamespace\FooCleaner
+  - CustomNamespace\BarCleaner
 ```
 
 <a name="db-pools"></a>

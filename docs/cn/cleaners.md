@@ -43,7 +43,7 @@ php artisan shadowfax:cleaner FooCleaner
 ```php
 <?php
 
-namespace App\Cleaners;
+namespace CustomNamespace;
 
 use HuangYi\Shadowfax\Contracts\Cleaner;
 use Illuminate\Contracts\Container\Container;
@@ -65,11 +65,12 @@ class FooCleaner implements Cleaner
 
 ### 注册Cleaner
 
-创建好Cleaner之后，只需要将其注册到配置文件的`cleaners`数组中即可：
+`cleaners`配置项支持目录，并且默认值为`app/Cleaners/`，如果你是使用`shadowfax:cleaner`命令创建的Cleaner类，就不需要做任何事情。否则需要手动将Cleaner类注册到`cleaners`数组中去：
 
 ```yaml
 cleaners:
-  - App\Cleaners\FooCleaner
+  - app/Cleaners/
+  - CustomNamespace\FooCleaner
 ```
 
 这样，每当请求结束后，你创建的Cleaner都会被自动调用。
