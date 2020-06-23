@@ -47,13 +47,19 @@ This section defines the `Swoole\Server` configuration. Read the [official docs]
 
 This option allows you to set a group of abstracts in the Laravel IoC container. These abstracts will be rebound after each request.
 
-4. `websocket` configuration:
+4. `cleaners` configuration:
+
+This option allows you to register custom cleaners. These cleaners will run after each request.
+
+```yaml
+cleaners:
+  - app/Cleaners/
+  - CustomNamespace/FooCleaner
+```
+
+5. `websocket` configuration:
 
 - **message**: Specify the message entity class. This class must implement the `HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
-
-5. `controller` configuration：
-
-This section defines the controller server configuration. The controller server allows you to stop or reload your Shadowfax.
 
 6. `db_pools` configuration：
 
@@ -75,6 +81,10 @@ The key name is a connection name in your `database.redis`, the key value is the
 redis_pools:
   default: 3
 ```
+
+8. `controller` configuration：
+
+This section defines the controller server configuration. The controller server allows you to stop or reload your Shadowfax.
 
 ## Command
 
