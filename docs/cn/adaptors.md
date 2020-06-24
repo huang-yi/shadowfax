@@ -97,7 +97,7 @@ class TymonJwtAuthCleaner implements Cleaner
     {
         $class = $app instanceof Lumen ? LumenServiceProvider::class : LaravelServiceProvider::class;
 
-        $provider = new $class;
+        $provider = new $class($app);
 
         $method = (new ReflectionObject($provider))->getMethod('extendAuthGuard');
 
