@@ -19,6 +19,9 @@ abstracts:
   - auth.driver
   - Illuminate\Session\Middleware\StartSession
 
+controllers:
+  - *
+
 cleaners:
   - app/Cleaners/
 
