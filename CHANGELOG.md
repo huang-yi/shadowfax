@@ -5,7 +5,7 @@
 
 ### Changed
 
-- The cleaners under the `app/Cleaners/` directory are automatically loaded even if the `app/Cleaners/` is not added to the `cleaners` configuration
+- The cleaners under the `app/Cleaners/` directory will be loaded automatically even if the `app/Cleaners/` is not added to the `cleaners` configuration
 
 
 ## v2.7.0
