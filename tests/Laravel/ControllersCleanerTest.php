@@ -6,7 +6,7 @@ use HuangYi\Shadowfax\Laravel\ControllersCleaner;
 use Illuminate\Foundation\Application;
 use PHPUnit\Framework\TestCase;
 
-class ControllerCleanerTest extends TestCase
+class ControllersCleanerTest extends TestCase
 {
     public function testControllers()
     {
