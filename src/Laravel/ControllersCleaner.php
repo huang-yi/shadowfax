@@ -19,7 +19,7 @@ class ControllersCleaner
      *
      * @var bool
      */
-    protected $isAll;
+    protected $isCleanAll;
 
     /**
      * Create a new ControllersCleaner instance.
@@ -40,7 +40,7 @@ class ControllersCleaner
      */
     protected function initialize(array $controllers)
     {
-        if (! $this->isAll = in_array('*', $controllers, true)) {
+        if (! $this->isCleanAll = in_array('*', $controllers, true)) {
             $this->controllers = array_unique($controllers);
         }
     }
@@ -53,7 +53,7 @@ class ControllersCleaner
      */
     public function clean(Container $app)
     {
-        if ($this->isAll) {
+        if ($this->isCleanAll) {
             $this->cleanAll($app);
         } else {
             $this->cacheRoutes($app);
@@ -115,12 +115,12 @@ class ControllersCleaner
     }
 
     /**
-     * Get the all flag.
+     * Get the clean all flag.
      *
      * @return bool
      */
-    public function getIsAll()
+    public function getIsCleanAll()
     {
-        return $this->isAll;
+        return $this->isCleanAll;
     }
 }

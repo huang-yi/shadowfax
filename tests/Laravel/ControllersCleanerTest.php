@@ -17,7 +17,7 @@ class ControllerCleanerTest extends TestCase
         $cleaner = new ControllersCleaner($controllers);
 
         $this->assertEquals($controllers, $cleaner->getControllers());
-        $this->assertFalse($cleaner->getIsAll());
+        $this->assertFalse($cleaner->getIsCleanAll());
     }
 
 
@@ -30,7 +30,7 @@ class ControllerCleanerTest extends TestCase
         $cleaner = new ControllersCleaner($controllers);
 
         $this->assertNull($cleaner->getControllers());
-        $this->assertTrue($cleaner->getIsAll());
+        $this->assertTrue($cleaner->getIsCleanAll());
     }
 
 
