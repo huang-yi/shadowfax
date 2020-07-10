@@ -56,16 +56,12 @@ class ControllersCleaner
         if ($this->isCleanAll) {
             $this->cleanAll($app);
         } else {
-            $this->cacheRoutes($app);
-
-            foreach ($app['shadowfax_controller_routes'] as $route) {
-                $route->controller = null;
-            }
+            $this->cleanPartial($app);
         }
     }
 
     /**
-     * Clean all controllers.
+     * Clean all the controller instances.
      *
      * @param  \Illuminate\Contracts\Container\Container  $app
      * @return void
@@ -73,6 +69,21 @@ class ControllersCleaner
     protected function cleanAll(Container $app)
     {
         foreach ($app['router']->getRoutes() as $route) {
+            $route->controller = null;
+        }
+    }
+
+    /**
+     * Clean the configured controllers.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
+     */
+    protected function cleanPartial(Container $app)
+    {
+        $this->cacheRoutes($app);
+
+        foreach ($app['shadowfax_controller_routes'] as $route) {
             $route->controller = null;
         }
     }
