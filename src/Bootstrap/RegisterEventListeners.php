@@ -13,6 +13,7 @@ class RegisterEventListeners
      */
     protected $listen = [
         \HuangYi\Shadowfax\Events\AppPushingEvent::class => [
+            \HuangYi\Shadowfax\Listeners\AppPushingEvent\CleanControllers::class,
             \HuangYi\Shadowfax\Listeners\AppPushingEvent\RunCleaners::class,
         ],
 
