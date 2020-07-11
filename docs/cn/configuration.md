@@ -9,6 +9,7 @@
 - [App Pool Capacity](#app-pool-capacity)
 - [Server](#server)
 - [Abstracts](#abstracts)
+- [Controllers](#controllers)
 - [Cleaners](#cleaners)
 - [DB Pools](#db-pools)
 - [Redis Polls](#redis-polls)
@@ -81,6 +82,26 @@ abstracts:
   - auth
   - auth.driver
   - Illuminate\Session\Middleware\StartSession
+```
+
+<a name="controllers"></a>
+## Controllers
+
+设置需要被清理的控制器类名列表，该数组内的控制器实例将会在请求结束时从Route中清理掉。有两种配置方式：
+
+1. 清除所有控制器（默认）：
+
+```yaml
+controllers:
+  - *
+```
+
+2. 指定需要被清除的控制器：
+
+```yaml
+controllers:
+  - App\Http\Controllers\FooController
+  - App\Http\Controllers\BarController
 ```
 
 <a name="cleaners"></a>

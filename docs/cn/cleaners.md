@@ -1,6 +1,7 @@
 # 清理器
 
 - [清理Laravel容器](#abstracts)
+- [清理控制器](#controllers)
 - [自定义Cleaner](#cleaners)
 
 Shadowfax会使Laravel程序常驻内存，那么不可避免的就是资源污染问题。如果不及时清理或者还原被污染的资源，就会对下一个请求造成影响，从而引发数据异常。
@@ -22,6 +23,21 @@ abstracts:
   - auth
   - auth.driver
   - Illuminate\Session\Middleware\StartSession
+```
+
+<a name="controllers"></a>
+## 清理控制器
+
+Laravel在dispatch路由时会将其控制器的实例缓存到当前Route中（闭包类型的除外）。在Swoole环境下，再次访问该路由时就不需要再次实例化控制器了。
+这样虽然性能好，但在Swoole环境下容易出问题。比如开发者在Controller中保存了一些数据，或者注入了一些有“副作用”的服务，都有可能对下一个请求造成影响。
+所有需要将这些控制器实例从Route中清理掉，以便每次dispatch路由时生成新的控制器实例。
+
+Shadowfax提供了一个`controllers`配置来帮助开发者自定义需要清理的控制器（默认配置为`*`，表示清除所有控制器实例）：
+
+```yaml
+controllers:
+  - App\Http\Controllers\FooController
+  - App\Http\Controllers\BarController
 ```
 
 <a name="cleaners"></a>
