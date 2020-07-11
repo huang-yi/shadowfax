@@ -67,11 +67,7 @@ cleaners:
   - CustomNamespace/FooCleaner
 ```
 
-6. `websocket` configuration:
-
-- **message**: Specify the message entity class. This class must implement the `HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
-
-7. `db_pools` configuration：
+6. `db_pools` configuration：
 
 This option allows you to configure database connection pools. You can add multiple key-value pairs in here.
 The key name is a connection name in your `database.connections`, the key value is the connection pool capacity. e.g.:
@@ -82,7 +78,7 @@ db_pools:
   mysql2: 5
 ```
 
-8. `redis_pools` configuration：
+7. `redis_pools` configuration：
 
 This option allows you to configure redis connection pools. You can add multiple key-value pairs in here.
 The key name is a connection name in your `database.redis`, the key value is the connection pool capacity. e.g.:
@@ -92,7 +88,7 @@ redis_pools:
   default: 3
 ```
 
-9. `controller` configuration：
+8. `controller` configuration：
 
 This section defines the controller server configuration. The controller server allows you to stop or reload your Shadowfax.
 
