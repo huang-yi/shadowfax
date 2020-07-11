@@ -47,7 +47,17 @@ This section defines the `Swoole\Server` configuration. Read the [official docs]
 
 This option allows you to set a group of abstracts in the Laravel IoC container. These abstracts will be rebound after each request.
 
-4. `cleaners` configuration:
+4. `controllers` configuration:
+
+This option allows you to clean the controller instances in route after each request.
+
+```yaml
+controllers:
+  - App\Http\Controllers\FooController
+  - App\Http\Controllers\BarController
+```
+
+5. `cleaners` configuration:
 
 This option allows you to register custom cleaners. These cleaners will run after each request.
 
@@ -57,11 +67,11 @@ cleaners:
   - CustomNamespace/FooCleaner
 ```
 
-5. `websocket` configuration:
+6. `websocket` configuration:
 
 - **message**: Specify the message entity class. This class must implement the `HuangYi\Shadowfax\Contracts\WebSocket\Message` interface.
 
-6. `db_pools` configuration：
+7. `db_pools` configuration：
 
 This option allows you to configure database connection pools. You can add multiple key-value pairs in here.
 The key name is a connection name in your `database.connections`, the key value is the connection pool capacity. e.g.:
@@ -72,7 +82,7 @@ db_pools:
   mysql2: 5
 ```
 
-7. `redis_pools` configuration：
+8. `redis_pools` configuration：
 
 This option allows you to configure redis connection pools. You can add multiple key-value pairs in here.
 The key name is a connection name in your `database.redis`, the key value is the connection pool capacity. e.g.:
@@ -82,7 +92,7 @@ redis_pools:
   default: 3
 ```
 
-8. `controller` configuration：
+9. `controller` configuration：
 
 This section defines the controller server configuration. The controller server allows you to stop or reload your Shadowfax.
 
