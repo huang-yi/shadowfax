@@ -50,10 +50,26 @@ class Command extends BaseCommand
      */
     public function httpClient()
     {
-        return new Client(
-            $this->shadowfax['config']['controller.host'] ?: '127.0.0.1',
-            $this->shadowfax['config']['controller.port'] ?: 1216
-        );
+        list($host, $port) = $this->getControllerServerHostAndPort();
+
+        return new Client($host, $port);
+    }
+
+    /**
+     * Get the controller server host and port.
+     *
+     * @return array
+     */
+    protected function getControllerServerHostAndPort()
+    {
+        if (! $option = $this->config('controller_server')) {
+            $option = $this->config('controller');
+        }
+
+        return [
+            $option['host'] ?? '127.0.0.1',
+            $option['port'] ?? 1216,
+        ];
     }
 
     /**

@@ -7,6 +7,10 @@
 
 - Add controllers cleaner
 
+### Changed
+
+- Change the controller server configuration key `controller` to `controller_server`
+
 
 ## v2.7.1
 

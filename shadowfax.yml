@@ -31,6 +31,6 @@ db_pools:
 redis_pools:
   default: 3
 
-controller:
+controller_server:
   host: 127.0.0.1
   port: 1216

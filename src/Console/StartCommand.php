@@ -85,7 +85,7 @@ class StartCommand extends Command
             ->setEvents($this->getEvents())
             ->create();
 
-        $this->listenControllerPort($server);
+        $this->createControllerPort($server);
 
         $this->shadowfax->instance('server', $server);
 
@@ -221,15 +221,13 @@ class StartCommand extends Command
      * @param  \Swoole\Server  $server
      * @return void
      */
-    protected function listenControllerPort($server)
+    protected function createControllerPort($server)
     {
-        $port = $server->addListener(
-            $this->config('controller.host', '127.0.0.1'),
-            $this->config('controller.port', 1216),
-            SWOOLE_SOCK_TCP
-        );
+        list($host, $port) = $this->getControllerServerHostAndPort();
 
-        $port->on('request', function (...$args) {
+        $controller = $server->addListener($host, $port, SWOOLE_SOCK_TCP);
+
+        $controller->on('request', function (...$args) {
             $this->shadowfax['events']->dispatch(new ControllerRequestEvent(...$args));
         });
     }
