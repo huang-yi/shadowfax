@@ -32,12 +32,19 @@ Laravel在dispatch路由时会将其控制器的实例缓存到当前Route中（
 这样虽然性能好，但在Swoole环境下容易出问题。比如开发者在Controller中保存了一些数据，或者注入了一些有“副作用”的服务，都有可能对下一个请求造成影响。
 所有需要将这些控制器实例从Route中清理掉，以便每次dispatch路由时生成新的控制器实例。
 
-Shadowfax提供了一个`controllers`配置来帮助开发者自定义需要清理的控制器（默认配置为`*`，表示清除所有控制器实例）：
+Shadowfax提供了一个`controllers`配置来帮助开发者自定义需要清理的控制器：
 
 ```yaml
 controllers:
   - App\Http\Controllers\FooController
   - App\Http\Controllers\BarController
+```
+
+如果配置为`*`表示清除所有控制器实例（默认）：
+
+```yaml
+controllers:
+  - *
 ```
 
 <a name="cleaners"></a>

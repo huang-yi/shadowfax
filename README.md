@@ -88,7 +88,7 @@ redis_pools:
   default: 3
 ```
 
-8. `controller` configuration：
+8. `controller server` configuration：
 
 This section defines the controller server configuration. The controller server allows you to stop or reload your Shadowfax.
 

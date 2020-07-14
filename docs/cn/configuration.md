@@ -13,7 +13,7 @@
 - [Cleaners](#cleaners)
 - [DB Pools](#db-pools)
 - [Redis Polls](#redis-polls)
-- [Controller](#controller)
+- [Controller Server](#controller-server)
 
 Shadowfax的配置文件是位于根目录的`shadowfax.yml`，如果你不熟悉YAML语法，需要提前了解一下。
 
@@ -145,8 +145,8 @@ redis_pools:
   cache: 5
 ```
 
-<a name="controller"></a>
-## Controller
+<a name="controller-server"></a>
+## Controller Server
 
 设置Shadowfax的Controller服务器配置，Controller服务器可以`stop|reload`Shadowfax服务器：
 
