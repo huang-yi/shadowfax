@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.8.1
+
+### Fixed
+
+- Fix the default value of the configuration option `controllers`
+
+
 ## v2.8.0
 
 ### Added
