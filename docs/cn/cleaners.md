@@ -44,7 +44,7 @@ controllers:
 
 ```yaml
 controllers:
-  - *
+  - "*"
 ```
 
 <a name="cleaners"></a>

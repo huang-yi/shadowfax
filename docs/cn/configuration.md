@@ -93,7 +93,7 @@ abstracts:
 
 ```yaml
 controllers:
-  - *
+  - "*"
 ```
 
 2. 指定需要被清除的控制器：
