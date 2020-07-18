@@ -3,6 +3,7 @@
 namespace HuangYi\Shadowfax\Laravel;
 
 use HuangYi\Shadowfax\Contracts\AppPool;
+use HuangYi\Shadowfax\Events\AppPoppedEvent;
 use HuangYi\Shadowfax\Events\AppPushingEvent;
 use HuangYi\Shadowfax\HasEventDispatcher;
 use Illuminate\Contracts\Container\Container;
@@ -84,6 +85,8 @@ class CoroutineAppPool implements AppPool
         $app = $this->channel->pop();
 
         shadowfax_set_global_container($app);
+
+        $this->dispatch(AppPoppedEvent::class, $app);
 
         return $app;
     }

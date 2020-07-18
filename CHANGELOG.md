@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## Unreleased
+
+### Added
+
+- Add the `AppPoppedEvent`, it will be dispatched after the Laravel Application is popped from the pool
+
+
 ## v2.8.1
 
 ### Fixed
