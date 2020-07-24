@@ -82,6 +82,7 @@ namespace App\Cleaners;
 use HuangYi\Shadowfax\Contracts\Cleaner;
 use Illuminate\Contracts\Container\Container;
 use Laravel\Lumen\Application as Lumen;
+use ReflectionObject;
 use Tymon\JWTAuth\Providers\LaravelServiceProvider;
 use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
