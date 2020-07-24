@@ -1,5 +1,11 @@
 # Release Notes
 
+## v2.8.2
+
+### Fixed
+
+- Fix the Facade. Clear all of the resolved instance in Facade when popping Laravel Application ([#35](https://github.com/huang-yi/shadowfax/issues/35))
+
 
 ## v2.8.1
 
