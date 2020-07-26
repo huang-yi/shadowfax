@@ -1,5 +1,11 @@
 # Release Notes
 
+## v2.8.3
+
+### Fixed
+
+- Fix the WebSocket "handshake" event handler ([#37](https://github.com/huang-yi/shadowfax/issues/37))
+
 ## v2.8.2
 
 ### Fixed
