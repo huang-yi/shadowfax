@@ -4,7 +4,6 @@ namespace HuangYi\Shadowfax\Http;
 
 use Illuminate\Http\Request as IlluminateRequest;
 use Swoole\Http\Request as SwooleRequest;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Request
@@ -67,14 +66,6 @@ class Request
             $this->formatServerVars(),
             $this->swooleRequest->rawContent()
         );
-
-        if (0 === strpos($symfonyRequest->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
-            && in_array(strtoupper($symfonyRequest->server->get('REQUEST_METHOD', 'GET')), ['PUT', 'DELETE', 'PATCH'])
-        ) {
-            parse_str($this->swooleRequest->rawContent(), $data);
-
-            $symfonyRequest->request = new ParameterBag($data);
-        }
 
         return $this->illuminateRequest = IlluminateRequest::createFromBase($symfonyRequest);
     }

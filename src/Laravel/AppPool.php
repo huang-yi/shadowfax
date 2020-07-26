@@ -7,6 +7,7 @@ use HuangYi\Shadowfax\Events\AppPoppedEvent;
 use HuangYi\Shadowfax\Events\AppPushingEvent;
 use HuangYi\Shadowfax\HasEventDispatcher;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Support\Facades\Facade;
 
 class AppPool implements PoolContract
 {
@@ -48,6 +49,8 @@ class AppPool implements PoolContract
      */
     public function pop(): Container
     {
+        Facade::clearResolvedInstances();
+
         $this->dispatch(AppPoppedEvent::class, $this->app);
 
         return $this->app;
