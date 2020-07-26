@@ -3,6 +3,7 @@
 namespace HuangYi\Shadowfax\Laravel;
 
 use DirectoryIterator;
+use HuangYi\Shadowfax\Contracts\BeforeCleaner;
 use HuangYi\Shadowfax\Contracts\Cleaner;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Str;
@@ -11,11 +12,18 @@ use ReflectionClass;
 class CleanersRunner
 {
     /**
-     * The cleaners list.
+     * The before cleaners.
      *
      * @var array
      */
-    protected $cleaners = [];
+    protected $beforeCleaners = [];
+
+    /**
+     * The after cleaners.
+     *
+     * @var array
+     */
+    protected $afterCleaners = [];
 
     /**
      * The app namespace.
@@ -48,16 +56,42 @@ class CleanersRunner
     }
 
     /**
-     * Run the cleaners.
+     * Run the before cleaners.
      *
      * @param  \Illuminate\Contracts\Container\Container  $app
      * @return void
      */
-    public function run(Container $app)
+    public function runBefore(Container $app)
     {
-        foreach ($this->cleaners as $cleaner) {
+        foreach ($this->beforeCleaners as $cleaner) {
             (new $cleaner)->clean($app);
         }
+    }
+
+    /**
+     * Run the after cleaners.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
+     */
+    public function runAfter(Container $app)
+    {
+        foreach ($this->afterCleaners as $cleaner) {
+            (new $cleaner)->clean($app);
+        }
+    }
+
+    /**
+     * Run the cleaners.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
+     *
+     * @deprecated
+     */
+    public function run(Container $app)
+    {
+        $this->runAfter($app);
     }
 
     /**
@@ -106,21 +140,51 @@ class CleanersRunner
      */
     protected function pushCleaner($cleaner)
     {
-        if (is_subclass_of($cleaner, Cleaner::class) &&
-            ! (new ReflectionClass($cleaner))->isAbstract()
-        ) {
-            $this->cleaners[] = $cleaner;
+        if (! is_subclass_of($cleaner, Cleaner::class)) {
+            return;
+        }
+
+        if ((new ReflectionClass($cleaner))->isAbstract()) {
+            return;
+        }
+
+        if (is_subclass_of($cleaner, BeforeCleaner::class)) {
+            $this->beforeCleaners[] = $cleaner;
+        } else {
+            $this->afterCleaners[] = $cleaner;
         }
     }
 
     /**
-     * Get the cleaners list.
+     * Get the before cleaners.
      *
      * @return array
      */
+    public function getBeforeCleaners()
+    {
+        return $this->beforeCleaners;
+    }
+
+    /**
+     * Get the after cleaners.
+     *
+     * @return array
+     */
+    public function getAfterCleaners()
+    {
+        return $this->afterCleaners;
+    }
+
+    /**
+     * Get the after cleaners.
+     *
+     * @return array
+     *
+     * @deprecated
+     */
     public function getCleaners()
     {
-        return $this->cleaners;
+        return $this->getAfterCleaners();
     }
 
     /**

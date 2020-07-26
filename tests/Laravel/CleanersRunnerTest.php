@@ -4,9 +4,10 @@ namespace HuangYi\Shadowfax\Tests\Laravel;
 
 use HuangYi\Shadowfax\Contracts\Cleaner;
 use HuangYi\Shadowfax\Laravel\CleanersRunner;
-use HuangYi\Shadowfax\Tests\Laravel\Cleaners\Dir\BarCleaner;
-use HuangYi\Shadowfax\Tests\Laravel\Cleaners\Dir\FooCleaner;
-use HuangYi\Shadowfax\Tests\Laravel\Cleaners\DummyCleaner;
+use HuangYi\Shadowfax\Tests\Laravel\Cleaners\AfterCleaner;
+use HuangYi\Shadowfax\Tests\Laravel\Cleaners\BeforeCleaner;
+use HuangYi\Shadowfax\Tests\Laravel\Cleaners\Dir\DirAfterCleaner;
+use HuangYi\Shadowfax\Tests\Laravel\Cleaners\Dir\DirBeforeCleaner;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Foundation\Application;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +35,8 @@ class CleanersRunnerTest extends TestCase
     {
         $cleaners = [
             __DIR__.'/Cleaners/Dir/',
-            DummyCleaner::class,
+            BeforeCleaner::class,
+            AfterCleaner::class,
         ];
 
         $namespace = "HuangYi\\Shadowfax\\Tests\\Laravel\\Cleaners\\";
@@ -43,34 +45,61 @@ class CleanersRunnerTest extends TestCase
 
         $runner = new CleanersRunner($cleaners, $namespace, $appPath);
 
-        $this->assertTrue(in_array(BarCleaner::class, $runner->getCleaners()));
-        $this->assertTrue(in_array(FooCleaner::class, $runner->getCleaners()));
-        $this->assertTrue(in_array(DummyCleaner::class, $runner->getCleaners()));
+        $this->assertTrue(in_array(BeforeCleaner::class, $runner->getBeforeCleaners()));
+        $this->assertTrue(in_array(DirBeforeCleaner::class, $runner->getBeforeCleaners()));
+        $this->assertTrue(in_array(AfterCleaner::class, $runner->getAfterCleaners()));
+        $this->assertTrue(in_array(DirAfterCleaner::class, $runner->getAfterCleaners()));
     }
 
 
-    public function testRun()
+    public function testRunBefore()
     {
         $cleaners = [
-            InstanceCleaner::class,
+            InstanceBeforeCleaner::class,
         ];
 
         $runner = new CleanersRunner($cleaners, '', '');
 
         $app = new Application();
 
-        $app->instance('shadowfax_test_instance', new stdClass);
+        $app->instance('shadowfax_before_instance', new stdClass);
 
-        $runner->run($app);
+        $runner->runBefore($app);
 
-        $this->assertFalse($app->bound('shadowfax_test_instance'));
+        $this->assertFalse($app->bound('shadowfax_before_instance'));
+    }
+
+
+    public function testRunAfter()
+    {
+        $cleaners = [
+            InstanceAfterCleaner::class,
+        ];
+
+        $runner = new CleanersRunner($cleaners, '', '');
+
+        $app = new Application();
+
+        $app->instance('shadowfax_after_instance', new stdClass);
+
+        $runner->runAfter($app);
+
+        $this->assertFalse($app->bound('shadowfax_after_instance'));
     }
 }
 
-class InstanceCleaner implements Cleaner
+class InstanceBeforeCleaner implements \HuangYi\Shadowfax\Contracts\BeforeCleaner
 {
     public function clean(Container $app)
     {
-        unset($app['shadowfax_test_instance']);
+        unset($app['shadowfax_before_instance']);
+    }
+}
+
+class InstanceAfterCleaner implements Cleaner
+{
+    public function clean(Container $app)
+    {
+        unset($app['shadowfax_after_instance']);
     }
 }

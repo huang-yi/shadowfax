@@ -12,9 +12,13 @@ class RegisterEventListeners
      * @var array
      */
     protected $listen = [
+        \HuangYi\Shadowfax\Events\AppPoppedEvent::class => [
+            \HuangYi\Shadowfax\Listeners\AppPoppedEvent\RunBeforeCleaners::class,
+        ],
+
         \HuangYi\Shadowfax\Events\AppPushingEvent::class => [
             \HuangYi\Shadowfax\Listeners\AppPushingEvent\CleanControllers::class,
-            \HuangYi\Shadowfax\Listeners\AppPushingEvent\RunCleaners::class,
+            \HuangYi\Shadowfax\Listeners\AppPushingEvent\RunAfterCleaners::class,
         ],
 
         \HuangYi\Shadowfax\Events\CloseEvent::class => [

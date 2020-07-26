@@ -13,6 +13,13 @@
 - Fix the Facade. Clear all of the resolved instance in Facade when popping Laravel Application ([#35](https://github.com/huang-yi/shadowfax/issues/35))
 
 
+## Unreleased
+
+### Added
+
+- Add the `AppPoppedEvent`, it will be dispatched after the Laravel Application is popped from the pool
+
+
 ## v2.8.1
 
 ### Fixed

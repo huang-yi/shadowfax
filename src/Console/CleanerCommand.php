@@ -3,6 +3,7 @@
 namespace HuangYi\Shadowfax\Console;
 
 use Illuminate\Console\GeneratorCommand;
+use Symfony\Component\Console\Input\InputOption;
 
 class CleanerCommand extends GeneratorCommand
 {
@@ -57,5 +58,43 @@ class CleanerCommand extends GeneratorCommand
     protected function getDefaultNamespace($rootNamespace)
     {
         return $rootNamespace.'\Cleaners';
+    }
+
+    /**
+     * Build the class with the given name.
+     *
+     * @param  string  $name
+     * @return string
+     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function buildClass($name)
+    {
+        return $this->replaceInterface(parent::buildClass($name));
+    }
+
+    /**
+     * Replace the interface name for the given stub.
+     *
+     * @param  string  $stub
+     * @return string
+     */
+    protected function replaceInterface($stub)
+    {
+        $interface = $this->option('before') ? 'BeforeCleaner' : 'Cleaner';
+
+        return str_replace('DummyInterface', $interface, $stub);
+    }
+
+    /**
+     * Get the console command options.
+     *
+     * @return array
+     */
+    protected function getOptions()
+    {
+        return [
+            ['before', 'b', InputOption::VALUE_NONE, 'Indicates that cleaner should run before request'],
+        ];
     }
 }

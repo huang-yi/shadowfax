@@ -5,7 +5,7 @@ namespace HuangYi\Shadowfax\Tests\Laravel\Cleaners\Dir;
 use HuangYi\Shadowfax\Contracts\Cleaner;
 use Illuminate\Contracts\Container\Container;
 
-class BarCleaner implements Cleaner
+class DirAfterCleaner implements Cleaner
 {
     /**
      * Clean something.
