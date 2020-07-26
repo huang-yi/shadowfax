@@ -8,6 +8,10 @@
 - Add before cleaner
 - Add pagination cleaner
 
+### Fixed
+
+- Fix close the WebSocket connection
+
 
 ## v2.8.3
 
