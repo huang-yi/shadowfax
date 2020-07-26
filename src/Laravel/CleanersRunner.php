@@ -109,6 +109,9 @@ class CleanersRunner
                 $this->pushCleaner($cleaner);
             }
         }
+
+        $this->beforeCleaners = array_unique($this->beforeCleaners);
+        $this->afterCleaners = array_unique($this->afterCleaners);
     }
 
     /**
