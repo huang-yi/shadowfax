@@ -4,7 +4,6 @@ namespace HuangYi\Shadowfax\Http;
 
 use Illuminate\Http\Request as IlluminateRequest;
 use Swoole\Http\Request as SwooleRequest;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 
 class Request
