@@ -86,6 +86,37 @@ class FooCleaner implements Cleaner
 }
 ```
 
+默认地，Cleaners会在请求结束后执行，如果你想让Cleaner在请求之前执行，需要将其`interface`改成`HuangYi\Shadowfax\Contracts\BeforeCleaner`，比如：
+
+```php
+<?php
+
+namespace CustomNamespace;
+
+use HuangYi\Shadowfax\Contracts\BeforeCleaner;
+use Illuminate\Contracts\Container\Container;
+
+class FooCleaner implements BeforeCleaner
+{
+    /**
+     * Clean something.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
+     */
+    public function clean(Container $app)
+    {
+        // Clean polluted data.
+    }
+}
+```
+
+你也可以使用Artisan命令`shadowfax:cleaner`加上一个`--before|-b`选项来创建一个前置Cleaner：
+
+```shell
+php artisan shadowfax:cleaner --before FooCleaner
+```
+
 ### 注册Cleaner
 
 `cleaners`配置项支持目录，并且默认值为`app/Cleaners/`，如果你是使用`shadowfax:cleaner`命令创建的Cleaner类，就不需要做任何事情。否则需要手动将Cleaner类注册到`cleaners`数组中去：
@@ -96,4 +127,4 @@ cleaners:
   - CustomNamespace\FooCleaner
 ```
 
-这样，每当请求结束后，你创建的Cleaner都会被自动调用。
+这样，每当请求结束或者请求开始前，你创建的Cleaner都会被自动调用。
