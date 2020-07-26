@@ -1,11 +1,11 @@
 <?php
 
-namespace DummyNamespace;
+namespace HuangYi\Shadowfax\Tests\Laravel\Cleaners\Dir;
 
-use HuangYi\Shadowfax\Contracts\DummyInterface;
+use HuangYi\Shadowfax\Contracts\BeforeCleaner as CleanerContract;
 use Illuminate\Contracts\Container\Container;
 
-class DummyClass implements DummyInterface
+class DirBeforeCleaner implements CleanerContract
 {
     /**
      * Clean something.

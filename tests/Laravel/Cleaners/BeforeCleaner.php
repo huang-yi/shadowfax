@@ -1,11 +1,11 @@
 <?php
 
-namespace HuangYi\Shadowfax\Tests\Laravel\Cleaners\Dir;
+namespace HuangYi\Shadowfax\Tests\Laravel\Cleaners;
 
-use HuangYi\Shadowfax\Contracts\Cleaner;
+use HuangYi\Shadowfax\Contracts\BeforeCleaner as BeforeCleanerContract;
 use Illuminate\Contracts\Container\Container;
 
-class FooCleaner implements Cleaner
+class BeforeCleaner implements BeforeCleanerContract
 {
     /**
      * Clean something.

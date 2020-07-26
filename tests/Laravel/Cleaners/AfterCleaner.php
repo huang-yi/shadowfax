@@ -5,7 +5,7 @@ namespace HuangYi\Shadowfax\Tests\Laravel\Cleaners;
 use HuangYi\Shadowfax\Contracts\Cleaner;
 use Illuminate\Contracts\Container\Container;
 
-class DummyCleaner implements Cleaner
+class AfterCleaner implements Cleaner
 {
     /**
      * Clean something.

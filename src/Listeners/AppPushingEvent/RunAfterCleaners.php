@@ -2,11 +2,10 @@
 
 namespace HuangYi\Shadowfax\Listeners\AppPushingEvent;
 
-use HuangYi\Shadowfax\Events\AppPushingEvent;
 use HuangYi\Shadowfax\Laravel\CleanersRunner;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 
-class RunCleaners
+class RunAfterCleaners
 {
     use HasHelpers;
 
@@ -23,11 +22,11 @@ class RunCleaners
      * @param  \HuangYi\Shadowfax\Events\AppPushingEvent  $event
      * @return void
      */
-    public function handle(AppPushingEvent $event)
+    public function handle($event)
     {
         $this->initialize();
 
-        static::$runner->run($event->app);
+        $this->callRunner($event->app);
     }
 
     /**
@@ -51,5 +50,16 @@ class RunCleaners
             app()->getNamespace(),
             app()->path()
         );
+    }
+
+    /**
+     * Call the runner.
+     *
+     * @param  \Illuminate\Contracts\Container\Container  $app
+     * @return void
+     */
+    protected function callRunner($app)
+    {
+        static::$runner->runAfter($app);
     }
 }
