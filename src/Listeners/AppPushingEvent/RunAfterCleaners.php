@@ -2,6 +2,7 @@
 
 namespace HuangYi\Shadowfax\Listeners\AppPushingEvent;
 
+use HuangYi\Shadowfax\Laravel\Cleaners\PaginationCleaner;
 use HuangYi\Shadowfax\Laravel\CleanersRunner;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
 
@@ -42,7 +43,10 @@ class RunAfterCleaners
 
         $cleaners = array_merge(
             (array) $this->config('cleaners', []),
-            ['app/Cleaners/']
+            [
+                'app/Cleaners/',
+                PaginationCleaner::class,
+            ]
         );
 
         static::$runner = new CleanersRunner(
