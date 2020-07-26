@@ -1,23 +1,26 @@
 # Release Notes
 
+## Unreleased
+
+### Added
+
+- Add the `AppPoppedEvent`, it will be dispatched after the Laravel Application is popped from the pool
+- Add before cleaner
+- Add pagination cleaner
+
+
 ## v2.8.3
 
 ### Fixed
 
 - Fix the WebSocket "handshake" event handler ([#37](https://github.com/huang-yi/shadowfax/issues/37))
 
+
 ## v2.8.2
 
 ### Fixed
 
 - Fix the Facade. Clear all of the resolved instance in Facade when popping Laravel Application ([#35](https://github.com/huang-yi/shadowfax/issues/35))
-
-
-## Unreleased
-
-### Added
-
-- Add the `AppPoppedEvent`, it will be dispatched after the Laravel Application is popped from the pool
 
 
 ## v2.8.1
