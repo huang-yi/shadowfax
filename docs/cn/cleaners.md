@@ -127,4 +127,4 @@ cleaners:
   - CustomNamespace\FooCleaner
 ```
 
-这样，每当请求结束或者请求开始前，你创建的Cleaner都会被自动调用。
+这样，你创建的Cleaner就会被自动调用。
