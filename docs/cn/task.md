@@ -10,11 +10,12 @@
 <a name="start"></a>
 ## 启动Task Worker进程
 
-首先你需要启动Swoole的Task Worker进程，只需要在配置文件`shadowfax.yml`的`server`选项配置Task Worker的进程数即可：
+首先你需要启动Swoole的Task Worker进程，只需要在配置文件`shadowfax.yml`的`server`选项配置Task Worker的进程数即可。当然，你也可以通过`task_enable_coroutine`选项来启用协程：
 
 ```yaml
 server:
   - task_worker_num: 5
+  - task_enable_coroutine: true
 ```
 
 当你使用命令`php shadowfax start`启动服务时，Swoole就会自动开启指定数量的Task Worker进程帮你处理任务。
@@ -22,13 +23,13 @@ server:
 <a name="reload"></a>
 ## 重载Task Worker进程
 
-当你修改了业务代码，可以使用`php shadowfax reload`来平滑重载Swoole的所有Worker进程，如果你只想重载Task Worker进程，指定选项`--task|-t`即可：
+当你修改了业务代码后，可以使用`php shadowfax reload`来平滑重载Swoole的所有Worker进程，如果你只想重载Task Worker进程，指定选项`--task|-t`即可：
 
 ```shell
 php shadowfax reload -t
 ```
 
-> {info} 在开启Task Worker的情况下，不建议使用`base`模式，因为Swoole的`base`模式不支持reload任务进程。
+> {info} Swoole的`base`模式不支持重载Task Worker进程。
 
 <a name="create"></a>
 ## 创建任务
@@ -51,11 +52,11 @@ use HuangYi\Shadowfax\Contracts\Task;
 class SendSms implements Task
 {
     /**
-     * The phone numbers.
+     * The phone number.
      *
-     * @var array
+     * @var string
      */
-    protected $phoneNumbers;
+    protected $phoneNumber;
 
     /**
      * The content.
@@ -67,13 +68,13 @@ class SendSms implements Task
     /**
      * Create a new task instance.
      *
-     * @param  array  $phoneNumbers
+     * @param  string  $phoneNumber
      * @param  string  $content
      * @return void
      */
-    public function __construct(array $phoneNumbers, string $content)
+    public function __construct(string $phoneNumber, string $content)
     {
-        $this->phoneNumbers = $phoneNumbers;
+        $this->phoneNumber = $phoneNumber;
         $this->content = $content;
     }
 
@@ -88,17 +89,19 @@ class SendSms implements Task
      */
     public function handle($server, $taskId, $fromWorkerId, $flags)
     {
-        app('sms')->send($this->phoneNumbers, $this->content);
+        app('sms')->send($this->phoneNumber, $this->content);
     }
 }
 ```
 
-`handle`方法的参数为Swoole的`task`事件回调的相关参数，具体含义可参考`Swoole`官方文档。
+`handle`方法的参数是Swoole的`task`事件回调函数的相关参数，具体含义可参考`Swoole`官方文档。
+
+当然，你也可以在任意位置手动创建Task类，需要注意的是，你的Task类必须实现`HuangYi\Shadowfax\Contracts\Task`接口。
 
 <a name="dispatch"></a>
 ## 投递任务
 
-创建好任务后，就可以在业务代码里面使用`HuangYi\Shadowfax\Facades\Task`Facade进行任务投递，比如发送一条欢迎短信：
+创建好任务后，就可以在业务代码里面使用`HuangYi\Shadowfax\Facades\Task::dispatch()`进行任务投递，比如发送一条欢迎短信：
 
 ```php
 <?php
@@ -126,4 +129,4 @@ class WelcomeController extends Controller
 }
 ```
 
-当程序调用`HuangYi\Shadowfax\Facades\Task::dispatch()`时，就会将任务投递到Task Worker去运行。
+当程序调用`HuangYi\Shadowfax\Facades\Task::dispatch()`后，就会将任务投递到Task Worker去运行。
