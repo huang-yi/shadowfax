@@ -129,4 +129,4 @@ class WelcomeController extends Controller
 }
 ```
 
-当程序调用`HuangYi\Shadowfax\Facades\Task::dispatch()`后，就会将任务投递到Task Worker去运行。
+当程序调用`HuangYi\Shadowfax\Facades\Task::dispatch()`后，就会将任务投递到Task Worker中运行。
