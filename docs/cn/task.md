@@ -5,7 +5,7 @@
 - [创建任务](#create)
 - [投递任务](#dispatch)
 
-如果你想使用Swoole的Task Worker进程来处理一些耗时的异步任务，Shadowfax为你提供了便捷的接口。
+如果你想使用Swoole的Task Worker进程来异步处理一些耗时任务，Shadowfax为你提供了便捷的接口。
 
 <a name="start"></a>
 ## 启动Task Worker进程
