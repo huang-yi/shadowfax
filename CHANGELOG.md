@@ -1,5 +1,12 @@
 # Release Notes
 
+## Unreleased
+
+### Added
+
+- Add a artisan command `shadowfax:task` to create task class
+
+
 ## v2.9.1
 
 ### Fixed
