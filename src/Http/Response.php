@@ -93,20 +93,12 @@ class Response
     {
         $illuminateResponse = $this->illuminateResponse;
 
-        /* RFC2616 - 14.18 says all Responses need to have a Date */
-        if (! $illuminateResponse->headers->has('Date')) {
-            $illuminateResponse->setDate(\DateTime::createFromFormat('U', time()));
-        }
-
-        // Set headers.
         foreach ($illuminateResponse->headers->allPreserveCaseWithoutCookies() as $name => $values) {
             $swooleResponse->header($name, implode('; ', $values));
         }
 
-        // Set status code.
         $swooleResponse->status($illuminateResponse->getStatusCode());
 
-        // Set cookies.
         foreach ($illuminateResponse->headers->getCookies() as $cookie) {
             $method = $cookie->isRaw() ? 'rawCookie' : 'cookie';
 
