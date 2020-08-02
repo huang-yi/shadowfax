@@ -1,5 +1,16 @@
 # Release Notes
 
+## v2.9.1
+
+### Fixed
+
+- Fix the file download
+
+### Changed
+
+- Send big response by HTTP chunk
+
+
 ## v2.9.0
 
 ### Added
