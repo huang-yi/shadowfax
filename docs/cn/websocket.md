@@ -18,10 +18,10 @@ type: websocket
 <a name="handlers"></a>
 ## 创建Handler
 
-你可以使用Artisan命令`shadowfax:websocket`创建一个Handler来编写WebSocket服务端的逻辑代码：
+你可以使用Artisan命令`shadowfax:handler`创建一个Handler来编写WebSocket服务端的逻辑代码：
 
 ```shell
-php artisan shadowfax:websocket EchoHandler
+php artisan shadowfax:handler EchoHandler
 ```
 
 上述命令会在`app/WebSocket/Handlers/`目录下创建一个名为EchoHandler的类，当然你也可手动创建Handler，
