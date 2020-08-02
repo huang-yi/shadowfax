@@ -76,6 +76,7 @@ class RegisterEventListeners
             \HuangYi\Shadowfax\Listeners\WorkerStartEvent\ClearCaches::class,
             \HuangYi\Shadowfax\Listeners\WorkerStartEvent\SetWorkerProcessName::class,
             \HuangYi\Shadowfax\Listeners\WorkerStartEvent\CreateAppPool::class,
+            \HuangYi\Shadowfax\Listeners\WorkerStartEvent\SetBufferOutputSizeToResponse::class,
             \HuangYi\Shadowfax\Listeners\WorkerStartEvent\OutputWorkerProcessStartedStatus::class,
         ],
 
