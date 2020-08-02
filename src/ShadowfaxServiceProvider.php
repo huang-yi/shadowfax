@@ -5,6 +5,7 @@ namespace HuangYi\Shadowfax;
 use HuangYi\Shadowfax\Console\CleanerCommand;
 use HuangYi\Shadowfax\Console\HandlerCommand;
 use HuangYi\Shadowfax\Console\PublishCommand;
+use HuangYi\Shadowfax\Console\TaskCommand;
 use HuangYi\Shadowfax\WebSocket\LaravelRouter;
 use HuangYi\Shadowfax\WebSocket\LumenRouter;
 use Illuminate\Support\ServiceProvider;
@@ -30,6 +31,7 @@ class ShadowfaxServiceProvider extends ServiceProvider
                 CleanerCommand::class,
                 HandlerCommand::class,
                 PublishCommand::class,
+                TaskCommand::class,
             ]);
         }
     }

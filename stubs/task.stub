@@ -1,0 +1,32 @@
+<?php
+
+namespace DummyNamespace;
+
+use HuangYi\Shadowfax\Contracts\Task;
+
+class DummyClass implements Task
+{
+    /**
+     * Create a new task instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the task.
+     *
+     * @param  \Swoole\Server  $server
+     * @param  int  $taskId
+     * @param  int  $fromWorkerId
+     * @param  int  $flags
+     * @return mixed
+     */
+    public function handle($server, $taskId, $fromWorkerId, $flags)
+    {
+        //
+    }
+}
