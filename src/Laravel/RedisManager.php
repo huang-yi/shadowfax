@@ -19,7 +19,8 @@ class RedisManager extends LaravelRedisManager
      */
     public function __construct($app, $driver, array $config, array $poolsConfig = [])
     {
-        if (version_compare($app->version(), '5.7', '<')) {
+        preg_match('/(?<=\()[^)]+/', app()->version(), $version);
+        if (version_compare($version[0], '5.7', '<')) {
             parent::__construct($driver, $config);
         } else {
             parent::__construct($app, $driver, $config);
