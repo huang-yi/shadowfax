@@ -1,5 +1,20 @@
 # Release Notes
 
+
+## v2.10.2
+
+### Fixed
+
+- Fix version comparison in Lumen
+
+
+## v2.10.1
+
+### Fixed
+
+- Support Laravel 8
+
+
 ## v2.10.0
 
 ### Added
