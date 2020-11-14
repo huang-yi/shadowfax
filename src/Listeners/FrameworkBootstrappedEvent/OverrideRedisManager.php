@@ -5,6 +5,8 @@ namespace HuangYi\Shadowfax\Listeners\FrameworkBootstrappedEvent;
 use HuangYi\Shadowfax\Events\FrameworkBootstrappedEvent;
 use HuangYi\Shadowfax\Laravel\RedisManager;
 use HuangYi\Shadowfax\Listeners\HasHelpers;
+use Illuminate\Foundation\Application as Laravel;
+use Illuminate\Redis\RedisServiceProvider;
 use Illuminate\Support\Arr;
 
 class OverrideRedisManager
@@ -19,6 +21,10 @@ class OverrideRedisManager
      */
     public function handle(FrameworkBootstrappedEvent $event)
     {
+        if ($event->app instanceof Laravel) {
+            $event->app->registerDeferredProvider(RedisServiceProvider::class);
+        }
+
         if ($event->app->bound('redis')) {
             $event->app->singleton('redis', function ($app) {
                 $config = $app->make('config')->get('database.redis', []);
