@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.10.3
+
+### Fixed
+
+- Fix redis service not being overridden
+
+
 ## v2.10.2
 
 ### Fixed
