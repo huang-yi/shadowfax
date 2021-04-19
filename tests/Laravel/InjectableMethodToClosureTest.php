@@ -20,11 +20,11 @@ class InjectableMethodToClosureTest extends TestCase
         $params = (new ReflectionFunction($closure))->getParameters();
 
         $this->assertSame('a', $params[0]->name);
-        $this->assertSame(InjectedClass::class, $params[0]->getClass()->name);
+        $this->assertSame(InjectedClass::class, $params[0]->getType()->getName());
         $this->assertSame('b', $params[1]->name);
-        $this->assertNull($params[1]->getClass());
+        $this->assertNull($params[1]->getType());
         $this->assertSame('c', $params[2]->name);
-        $this->assertSame(InjectedClass::class, $params[2]->getClass()->name);
+        $this->assertSame(InjectedClass::class, $params[2]->getType()->getName());
         $this->assertTrue($params[2]->isVariadic());
     }
 }

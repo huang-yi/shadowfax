@@ -2,6 +2,7 @@
 
 namespace HuangYi\Shadowfax\Laravel;
 
+use ReflectionNamedType;
 use ReflectionObject;
 
 class InjectableMethodToClosure
@@ -22,12 +23,12 @@ class InjectableMethodToClosure
         $params = [];
 
         foreach ($refMethod->getParameters() as $param) {
-            if (is_null($param->getClass())) {
+            if (! $param->getType() instanceof ReflectionNamedType) {
                 $params[] = '$'.$param->name;
             } elseif ($param->isVariadic()) {
-                $params[] = $param->getClass()->name.' ...$'.$param->name;
+                $params[] = $param->getType()->getName().' ...$'.$param->name;
             } else {
-                $params[] = $param->getClass()->name.' $'.$param->name;
+                $params[] = $param->getType()->getName().' $'.$param->name;
             }
         }
 
