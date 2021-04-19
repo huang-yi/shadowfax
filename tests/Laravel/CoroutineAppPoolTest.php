@@ -8,6 +8,8 @@ use Illuminate\Container\Container;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Swoole\Coroutine;
+use Swoole\Event;
+use Swoole\Coroutine\Scheduler;
 
 class CoroutineAppPoolTest extends TestCase
 {
@@ -18,6 +20,8 @@ class CoroutineAppPoolTest extends TestCase
 
             $this->assertEquals(5, $pool->getChannel()->length());
         });
+
+        Event::wait();
     }
 
 
@@ -31,6 +35,8 @@ class CoroutineAppPoolTest extends TestCase
             $this->assertInstanceOf(Container::class, $app);
             $this->assertEquals(4, $pool->getChannel()->length());
         });
+
+        Event::wait();
     }
 
 
@@ -45,6 +51,8 @@ class CoroutineAppPoolTest extends TestCase
 
             $this->assertEquals(5, $pool->getChannel()->length());
         });
+
+        Event::wait();
     }
 
 
