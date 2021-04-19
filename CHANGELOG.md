@@ -1,6 +1,13 @@
 # Release Notes
 
 
+## v2.10.4
+
+### Added
+
+- Support PHP 8
+
+
 ## v2.10.3
 
 ### Fixed
@@ -26,7 +33,7 @@
 
 ### Added
 
-- Add a artisan command `shadowfax:task` to create task class
+- Add an artisan command `shadowfax:task` to create task class
 
 
 ## v2.9.1
