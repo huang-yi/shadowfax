@@ -152,46 +152,50 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Determine if a given offset exists.
      *
-     * @param  string  $key
+     * @param  string  $offset
      * @return bool
      */
-    public function offsetExists($key)
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)
     {
-        return $this->has($key);
+        return $this->has($offset);
     }
 
     /**
      * Get the value at a given offset.
      *
-     * @param  string  $key
+     * @param  string  $offset
      * @return mixed
      */
-    public function offsetGet($key)
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
-        return $this->make($key);
+        return $this->make($offset);
     }
 
     /**
      * Set the value at a given offset.
      *
-     * @param  string  $key
+     * @param  string  $offset
      * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($key, $value)
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)
     {
-        $this->instance($key, $value);
+        $this->instance($offset, $value);
     }
 
     /**
      * Unset the value at a given offset.
      *
-     * @param  string  $key
+     * @param  string  $offset
      * @return void
      */
-    public function offsetUnset($key)
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)
     {
-        $this->forget($key);
+        $this->forget($offset);
     }
 
     /**

@@ -48,7 +48,7 @@ if (! function_exists('shadowfax_get_coroutine_container')) {
      * @param  int  $cid
      * @return \Illuminate\Contracts\Container\Container|null
      */
-    function shadowfax_get_coroutine_container($cid = null)
+    function shadowfax_get_coroutine_container($cid = 0)
     {
         if (in_array($cid, [-1, false], true)) {
             return null;

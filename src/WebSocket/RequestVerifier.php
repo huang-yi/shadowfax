@@ -102,7 +102,7 @@ class RequestVerifier
      */
     public function verifyConnection()
     {
-        foreach (explode(';', $this->request->header('Connection')) as $part) {
+        foreach (explode(';', $this->request->header('Connection') ?: '') as $part) {
             foreach (explode(',', trim($part)) as $value) {
                 if (strtolower(trim($value)) == 'upgrade') {
                     return true;
