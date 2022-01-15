@@ -1,9 +1,16 @@
 # Release Notes
 
 
+## v2.10.5
+
+### Fixed
+
+- Support PHP 8.1
+
+
 ## v2.10.4
 
-### Added
+### Fixed
 
 - Support PHP 8
 
